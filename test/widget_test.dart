@@ -1,30 +1,56 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:muyu_app/app.dart';
+import 'package:muyu_app/core/storage/user_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:muyu_app/main.dart';
+Future<void> pumpApp(WidgetTester tester) async {
+  // Same phone size the Kotlin previews use (402 x 874 dp).
+  tester.view.devicePixelRatio = 3;
+  tester.view.physicalSize = const Size(402 * 3, 874 * 3);
+  addTearDown(tester.view.reset);
+  SharedPreferences.setMockInitialValues({});
+  final prefs = await SharedPreferences.getInstance();
+  await tester.pumpWidget(
+    ProviderScope(
+      overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
+      child: const MuyuApp(),
+    ),
+  );
+  // Let the splash finish restoring the (empty) session.
+  await tester.pump(const Duration(milliseconds: 1300));
+  await tester.pumpAndSettle();
+}
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('a new user lands on the login screen in English', (tester) async {
+    await pumpApp(tester);
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(find.text('Don\'t have an account?'), findsOneWidget);
+    expect(find.text('EN'), findsOneWidget);
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  testWidgets('the language toggle switches to Latin American Spanish', (tester) async {
+    await pumpApp(tester);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    await tester.tap(find.text('EN'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('¿No tienes una cuenta?'), findsOneWidget);
+    expect(find.text('ES'), findsOneWidget);
+  });
+
+  testWidgets('register opens from login and validates the name first', (tester) async {
+    await pumpApp(tester);
+
+    await tester.tap(find.text('Register'));
+    await tester.pumpAndSettle();
+    final registerButton = find.widgetWithText(FilledButton, 'Register');
+    await tester.ensureVisible(registerButton);
+    await tester.tap(registerButton);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Enter a valid name using 2 to 60 letters.'), findsOneWidget);
   });
 }
