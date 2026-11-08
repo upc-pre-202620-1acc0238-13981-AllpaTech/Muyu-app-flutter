@@ -3,6 +3,7 @@ enum RegistrationError {
   name,
   email,
   phone,
+  dni,
   birthdateRequired,
   birthdateInvalid,
   password,
@@ -24,6 +25,9 @@ abstract final class RegistrationValidator {
 
   /// Peruvian mobile numbers: 9 digits starting with 9.
   static final RegExp _phone = RegExp(r'^9\d{8}$');
+
+  /// Peruvian national ID: exactly 8 digits.
+  static final RegExp _dni = RegExp(r'^\d{8}$');
 
   /// The same rules drive validation and the checklist under the password.
   static Map<PasswordRule, bool> passwordRules(String password) => {
@@ -47,6 +51,7 @@ abstract final class RegistrationValidator {
     required String name,
     required String email,
     required String phone,
+    required String dni,
     required DateTime? birthdate,
     required String password,
     required String confirmPassword,
@@ -54,8 +59,11 @@ abstract final class RegistrationValidator {
     DateTime? today,
   }) {
     if (!_name.hasMatch(name)) return RegistrationError.name;
-    if (!_email.hasMatch(email)) return RegistrationError.email;
+    if (!_email.hasMatch(email) || !email.toLowerCase().endsWith('@gmail.com')) {
+      return RegistrationError.email;
+    }
     if (!_phone.hasMatch(phone)) return RegistrationError.phone;
+    if (!_dni.hasMatch(dni)) return RegistrationError.dni;
     if (birthdate == null) return RegistrationError.birthdateRequired;
 
     final now = today ?? DateTime.now();

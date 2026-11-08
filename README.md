@@ -12,7 +12,7 @@ screens, texts, colors and flows.
 - Flutter 3.47 / Dart 3.13, Material 3
 - State management and DI: [Riverpod](https://riverpod.dev)
 - Navigation: [go_router](https://pub.dev/packages/go_router), with redirects driven by the session
-- HTTP: `package:http` against the Muyu Fake API on Render (`https://muyu-fake-api.onrender.com/api/`)
+- HTTP: `package:http` against the team backend (`https://muyu-backend-production.up.railway.app/api/v1/`)
 - i18n: `flutter gen-l10n` with English (default) and Latin American Spanish (`es_419`)
 - Local storage: `shared_preferences` (session, language, per-user settings)
 
@@ -23,13 +23,11 @@ flutter pub get
 flutter run
 ```
 
-To use another backend (for example the team's .NET API), pass its base URL:
+To use another backend (for example a local one), pass its base URL:
 
 ```bash
 flutter run --dart-define=MUYU_API_URL=https://example.com/api/
 ```
-
-The first request after a while can take up to a minute, because Render wakes the Fake API up.
 
 ## Project structure
 

@@ -16,11 +16,12 @@ abstract interface class AuthRepository {
   /// Throws [AuthException] when the credentials are rejected or the API is unreachable.
   Future<User> login(String email, String password);
 
-  Future<User> register({
+  Future<void> register({
     required String name,
     required String email,
     required String phone,
     required String birthdate,
     required String password,
+    required String dni,
   });
 }
