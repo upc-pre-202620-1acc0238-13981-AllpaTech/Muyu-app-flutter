@@ -39,35 +39,60 @@ class ApiClient {
     Map<String, dynamic> body, {
     String? token,
   }) async {
+    final response = await _send(
+      () => _client.post(_uri(path), headers: _headers(token), body: jsonEncode(body)),
+    );
+    return _decode(response) as Map<String, dynamic>;
+  }
+
+  Future<List<dynamic>> getList(String path, {String? token}) async {
+    final response = await _send(() => _client.get(_uri(path), headers: _headers(token)));
+    return (_decode(response) as List<dynamic>?) ?? const [];
+  }
+
+  Future<void> putJson(String path, Map<String, dynamic> body, {String? token}) async {
+    await _send(() => _client.put(_uri(path), headers: _headers(token), body: jsonEncode(body)));
+  }
+
+  Uri _uri(String path) => Uri.parse('$baseUrl$path');
+
+  Map<String, String> _headers(String? token) => {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    if (token != null) 'Authorization': 'Bearer $token',
+  };
+
+  Future<http.Response> _send(Future<http.Response> Function() request) async {
     final http.Response response;
     try {
-      response = await _client
-          .post(
-            Uri.parse('$baseUrl$path'),
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-              if (token != null) 'Authorization': 'Bearer $token',
-            },
-            body: jsonEncode(body),
-          )
-          .timeout(Environment.requestTimeout);
+      response = await request().timeout(Environment.requestTimeout);
     } on Exception catch (e) {
       // Timeouts, lost connections and TLS failures (HandshakeException is not
       // wrapped by package:http) all mean the same thing to the user.
       throw NetworkException(e);
     }
 
-    final decoded = response.body.isEmpty
-        ? const <String, dynamic>{}
-        : jsonDecode(utf8.decode(response.bodyBytes));
     if (response.statusCode < 200 || response.statusCode >= 300) {
+      final decoded = _tryDecode(response);
       final message = decoded is Map && decoded['message'] is String
           ? decoded['message'] as String
           : response.reasonPhrase ?? 'Request failed';
       throw ApiException(response.statusCode, message);
     }
-    return decoded as Map<String, dynamic>;
+    return response;
+  }
+
+  dynamic _decode(http.Response response) {
+    if (response.body.isEmpty) return <String, dynamic>{};
+    return jsonDecode(utf8.decode(response.bodyBytes));
+  }
+
+  dynamic _tryDecode(http.Response response) {
+    try {
+      return _decode(response);
+    } on FormatException {
+      return null;
+    }
   }
 }
 
