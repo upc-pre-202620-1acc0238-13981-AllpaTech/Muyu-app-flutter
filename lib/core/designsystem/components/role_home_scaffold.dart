@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../features/user_management/application/session_controller.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../router/app_routes.dart';
 import '../../theme/muyu_colors.dart';
 import '../../theme/muyu_theme.dart';
 import 'language_toggle_button.dart';
+import 'session_overflow_button.dart';
 
 /// Starting point for each role's home until its real screens are ported.
 /// It only shows an empty state: new users never get demo data.
@@ -21,34 +20,11 @@ class RoleHomeScaffold extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final user = ref.watch(sessionProvider).user;
-    final session = ref.read(sessionProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
-        actions: [
-          const LanguageToggleButton(),
-          PopupMenuButton<VoidCallback>(
-            icon: const Icon(Icons.more_vert),
-            onSelected: (action) => action(),
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: () {
-                  session.clearRole();
-                  context.go(AppRoutes.role);
-                },
-                child: ListTile(
-                  leading: const Icon(Icons.swap_horiz),
-                  title: Text(l10n.homeChangeRole),
-                ),
-              ),
-              PopupMenuItem(
-                value: session.logout,
-                child: ListTile(leading: const Icon(Icons.logout), title: Text(l10n.homeLogout)),
-              ),
-            ],
-          ),
-        ],
+        actions: const [LanguageToggleButton(), SessionOverflowButton()],
       ),
       body: Center(
         child: SingleChildScrollView(

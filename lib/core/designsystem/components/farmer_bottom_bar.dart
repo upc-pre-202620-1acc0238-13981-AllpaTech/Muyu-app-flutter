@@ -1,0 +1,124 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../../l10n/app_localizations.dart';
+import '../../theme/muyu_colors.dart';
+import '../../theme/muyu_theme.dart';
+
+const farmerScrollBottomInset = 140.0;
+
+/// Farmer tabs, matching `MuyuTab` in the Kotlin `MuyuBottomBar`.
+enum FarmerTab { home, plot, sync, payments, profile }
+
+extension FarmerTabUi on FarmerTab {
+  String label(AppLocalizations l10n) => switch (this) {
+    FarmerTab.home => l10n.navHome,
+    FarmerTab.plot => l10n.navPlot,
+    FarmerTab.sync => l10n.navSync,
+    FarmerTab.payments => l10n.navPayments,
+    FarmerTab.profile => l10n.navProfile,
+  };
+
+  String get iconAsset => switch (this) {
+    FarmerTab.home => 'assets/icons/ic_nav_home.svg',
+    FarmerTab.plot => 'assets/icons/ic_nav_plot.svg',
+    FarmerTab.sync => 'assets/icons/ic_nav_sync.svg',
+    FarmerTab.payments => 'assets/icons/ic_nav_payments.svg',
+    FarmerTab.profile => 'assets/icons/ic_nav_profile.svg',
+  };
+
+  Size get iconSize => switch (this) {
+    FarmerTab.home => const Size(26, 25),
+    FarmerTab.plot => const Size(26, 22),
+    FarmerTab.sync => const Size(24, 27),
+    FarmerTab.payments => const Size(24, 20),
+    FarmerTab.profile => const Size(24, 22),
+  };
+}
+
+class FarmerBottomBar extends StatelessWidget {
+  const FarmerBottomBar({super.key, required this.selectedTab, required this.onTabSelected});
+
+  final FarmerTab selectedTab;
+  final ValueChanged<FarmerTab> onTabSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: MuyuColors.navBar,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(30))),
+      clipBehavior: Clip.antiAlias,
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          height: 70,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Row(
+              children: [
+                for (final tab in FarmerTab.values)
+                  Expanded(
+                    child: _FarmerNavTab(
+                      tab: tab,
+                      selected: tab == selectedTab,
+                      onTap: () => onTabSelected(tab),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _FarmerNavTab extends StatelessWidget {
+  const _FarmerNavTab({required this.tab, required this.selected, required this.onTap});
+
+  final FarmerTab tab;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final label = tab.label(AppLocalizations.of(context));
+    final size = tab.iconSize;
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: SizedBox(
+        height: 56,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            if (selected)
+              Container(
+                width: 62,
+                height: 56,
+                decoration: BoxDecoration(color: MuyuColors.navSelected, borderRadius: BorderRadius.circular(16)),
+              ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(tab.iconAsset, width: size.width, height: size.height, semanticsLabel: label),
+                const SizedBox(height: 2),
+                Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.clip,
+                  style: const TextStyle(
+                    fontFamily: MuyuFonts.urbanist,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 11,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
