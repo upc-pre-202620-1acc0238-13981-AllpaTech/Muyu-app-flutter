@@ -6,8 +6,9 @@ void main() {
 
   RegistrationError? validate({
     String name = 'María Quispe',
-    String email = 'maria@example.com',
+    String email = 'maria@gmail.com',
     String phone = '987123456',
+    String dni = '12345678',
     DateTime? birthdate,
     bool noBirthdate = false,
     String password = 'Muyu*2026',
@@ -17,6 +18,7 @@ void main() {
     name: name,
     email: email,
     phone: phone,
+    dni: dni,
     birthdate: noBirthdate ? null : (birthdate ?? DateTime(2000, 5, 3)),
     password: password,
     confirmPassword: confirm ?? password,
@@ -30,6 +32,7 @@ void main() {
     expect(validate(name: 'M'), RegistrationError.name);
     expect(validate(email: 'maria@'), RegistrationError.email);
     expect(validate(phone: '887123456'), RegistrationError.phone);
+    expect(validate(dni: '1234567'), RegistrationError.dni);
     expect(validate(noBirthdate: true), RegistrationError.birthdateRequired);
     expect(validate(password: 'muyu2026'), RegistrationError.password);
     expect(validate(confirm: 'Other*2026'), RegistrationError.passwordMismatch);

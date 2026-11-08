@@ -11,16 +11,18 @@ class AuthRepositoryImpl implements AuthRepository {
   final AuthService _service;
 
   @override
-  Future<User> login(String email, String password) =>
-      _guard(() => _service.login(email: email, password: password));
+  Future<User> login(String email, String password) => _guard(() async {
+    return _userFromLogin(await _service.login(email: email, password: password));
+  });
 
   @override
-  Future<User> register({
+  Future<void> register({
     required String name,
     required String email,
     required String phone,
     required String birthdate,
     required String password,
+    required String dni,
   }) => _guard(
     () => _service.register(
       name: name,
@@ -28,12 +30,29 @@ class AuthRepositoryImpl implements AuthRepository {
       phone: phone,
       birthdate: birthdate,
       password: password,
+      dni: dni,
     ),
   );
 
-  Future<User> _guard(Future<Map<String, dynamic>> Function() call) async {
+  /// Maps the backend `LoginResponse` to the app's user, like `LoginResponseDto.kt`.
+  User _userFromLogin(Map<String, dynamic> json) {
+    final user = json['user'] as Map<String, dynamic>;
+    final displayName = (user['displayName'] as String? ?? '').trim();
+    final separator = displayName.indexOf(' ');
+    return User(
+      email: user['email'] as String? ?? '',
+      firstName: separator < 0 ? displayName : displayName.substring(0, separator),
+      lastName: separator < 0 ? '' : displayName.substring(separator + 1).trim(),
+      role: (user['role'] as String? ?? '').toUpperCase() == 'COMERCIANTE'
+          ? UserRole.merchant.value
+          : UserRole.farmer.value,
+      token: json['accessToken'] as String? ?? '',
+    );
+  }
+
+  Future<T> _guard<T>(Future<T> Function() call) async {
     try {
-      return User.fromJson(await call());
+      return await call();
     } on ApiException catch (e) {
       throw AuthException(
         e.statusCode == 401 ? AuthFailure.invalidCredentials : AuthFailure.rejected,

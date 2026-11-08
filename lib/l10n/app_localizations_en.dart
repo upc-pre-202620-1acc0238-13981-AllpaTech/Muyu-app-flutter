@@ -73,6 +73,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get registerPhone => 'Phone number';
 
   @override
+  String get registerDni => 'DNI';
+
+  @override
   String get registerBirthdate => 'Date of birth';
 
   @override
@@ -98,6 +101,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get registerPhoneInvalid => 'Enter a valid number.';
+
+  @override
+  String get registerDniInvalid => 'Enter a valid 8-digit DNI.';
 
   @override
   String get registerBirthdateRequired => 'Select your date of birth.';
