@@ -223,6 +223,12 @@ abstract class AppLocalizations {
   /// **'Phone number'**
   String get registerPhone;
 
+  /// No description provided for @registerDni.
+  ///
+  /// In en, this message translates to:
+  /// **'DNI'**
+  String get registerDni;
+
   /// No description provided for @registerBirthdate.
   ///
   /// In en, this message translates to:
@@ -268,7 +274,7 @@ abstract class AppLocalizations {
   /// No description provided for @registerEmailInvalid.
   ///
   /// In en, this message translates to:
-  /// **'Enter a valid email address.'**
+  /// **'Enter a valid Gmail address.'**
   String get registerEmailInvalid;
 
   /// No description provided for @registerPhoneInvalid.
@@ -276,6 +282,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter a valid number.'**
   String get registerPhoneInvalid;
+
+  /// No description provided for @registerDniInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid 8-digit DNI.'**
+  String get registerDniInvalid;
 
   /// No description provided for @registerBirthdateRequired.
   ///

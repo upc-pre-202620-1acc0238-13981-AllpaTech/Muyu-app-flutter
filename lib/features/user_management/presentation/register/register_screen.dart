@@ -24,6 +24,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _name = TextEditingController();
   final _email = TextEditingController();
   final _phone = TextEditingController();
+  final _dni = TextEditingController();
   final _password = TextEditingController();
   final _confirm = TextEditingController();
   DateTime? _birthdate;
@@ -36,7 +37,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   @override
   void dispose() {
-    for (final c in [_name, _email, _phone, _password, _confirm]) {
+    for (final c in [_name, _email, _phone, _dni, _password, _confirm]) {
       c.dispose();
     }
     super.dispose();
@@ -70,10 +71,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final name = _name.text.trim();
     final email = _email.text.trim();
     final phone = _phone.text.trim();
+    final dni = _dni.text.trim();
     final error = RegistrationValidator.validate(
       name: name,
       email: email,
       phone: phone,
+      dni: dni,
       birthdate: _birthdate,
       password: _password.text,
       confirmPassword: _confirm.text,
@@ -92,6 +95,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             name: name,
             email: email,
             phone: phone,
+            dni: dni,
             // Same format the Kotlin app sends to the API.
             birthdate: DateFormat('dd MMM yyyy', 'en_US').format(_birthdate!),
             password: _password.text,
@@ -114,6 +118,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       RegistrationError.name => l10n.registerNameInvalid,
       RegistrationError.email => l10n.registerEmailInvalid,
       RegistrationError.phone => l10n.registerPhoneInvalid,
+      RegistrationError.dni => l10n.registerDniInvalid,
       RegistrationError.birthdateRequired => l10n.registerBirthdateRequired,
       RegistrationError.birthdateInvalid => l10n.registerBirthdateInvalid,
       RegistrationError.password => l10n.registerPasswordInvalid,
@@ -174,6 +179,18 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             LengthLimitingTextInputFormatter(9),
                           ],
                           error: _messageFor(l10n, [RegistrationError.phone]),
+                        ),
+                        const SizedBox(height: 12),
+                        AuthTextField(
+                          label: l10n.registerDni,
+                          controller: _dni,
+                          onChanged: _clearError,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(8),
+                          ],
+                          error: _messageFor(l10n, [RegistrationError.dni]),
                         ),
                         const SizedBox(height: 12),
                         _BirthdateField(

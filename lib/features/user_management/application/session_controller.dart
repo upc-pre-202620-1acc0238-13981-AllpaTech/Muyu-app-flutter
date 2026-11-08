@@ -25,7 +25,7 @@ class SessionState {
 }
 
 /// Owns who is logged in and as which role, like the session kept by the
-/// Kotlin app's `FakeApiStore` plus `UserPreferences.KEY_LAST_ROLE`.
+/// Kotlin app's `BackendStateStore` plus `UserPreferences.KEY_LAST_ROLE`.
 class SessionController extends Notifier<SessionState> {
   static const String _sessionKey = 'session';
   static const Duration _minimumSplash = Duration(milliseconds: 1200);
