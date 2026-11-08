@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../theme/muyu_colors.dart';
@@ -19,12 +19,12 @@ extension FarmerTabUi on FarmerTab {
     FarmerTab.profile => l10n.navProfile,
   };
 
-  String get iconAsset => switch (this) {
-    FarmerTab.home => 'assets/icons/ic_farmer_nav_home.svg',
-    FarmerTab.plot => 'assets/icons/ic_farmer_nav_plot.svg',
-    FarmerTab.sync => 'assets/icons/ic_farmer_nav_sync.svg',
-    FarmerTab.payments => 'assets/icons/ic_farmer_nav_payment.svg',
-    FarmerTab.profile => 'assets/icons/ic_farmer_nav_profile.svg',
+  IconData get icon => switch (this) {
+    FarmerTab.home => Icons.home,
+    FarmerTab.plot => Symbols.article,
+    FarmerTab.sync => Icons.cloud_done,
+    FarmerTab.payments => Symbols.money_bag,
+    FarmerTab.profile => Icons.person,
   };
 }
 
@@ -92,7 +92,7 @@ class _FarmerNavTab extends StatelessWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SvgPicture.asset(tab.iconAsset, semanticsLabel: label),
+                Icon(tab.icon, size: 28, fill: 1, color: Colors.white, semanticLabel: label),
                 const SizedBox(height: 5),
                 Text(
                   label,
