@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -53,9 +52,9 @@ class ApiClient {
             body: jsonEncode(body),
           )
           .timeout(Environment.requestTimeout);
-    } on TimeoutException catch (e) {
-      throw NetworkException(e);
-    } on http.ClientException catch (e) {
+    } on Exception catch (e) {
+      // Timeouts, lost connections and TLS failures (HandshakeException is not
+      // wrapped by package:http) all mean the same thing to the user.
       throw NetworkException(e);
     }
 
