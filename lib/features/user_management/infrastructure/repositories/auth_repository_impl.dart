@@ -39,23 +39,13 @@ class AuthRepositoryImpl implements AuthRepository {
     required String token,
     required String currentPassword,
     required String newPassword,
-  }) async {
-    try {
-      await _service.changePassword(
-        currentPassword: currentPassword,
-        newPassword: newPassword,
-        token: token,
-      );
-    } on ApiException catch (e) {
-      // The academic Fake API has no change-password route; keep the preview flow.
-      if (e.statusCode == 404) return;
-      throw AuthException(
-        e.statusCode == 401 ? AuthFailure.invalidCredentials : AuthFailure.rejected,
-      );
-    } on NetworkException {
-      throw const AuthException(AuthFailure.network);
-    }
-  }
+  }) => _guard(
+    () => _service.changePassword(
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+      token: token,
+    ),
+  );
 
   /// Maps the backend `LoginResponse` to the app's user, like `LoginResponseDto.kt`.
   User _userFromLogin(Map<String, dynamic> json) {

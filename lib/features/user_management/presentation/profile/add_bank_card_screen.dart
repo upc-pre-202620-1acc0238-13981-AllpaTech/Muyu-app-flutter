@@ -40,16 +40,18 @@ class _AddBankCardScreenState extends ConsumerState<AddBankCardScreen> {
 
   Future<void> _save() async {
     final digits = _number.text.replaceAll(RegExp(r'\D'), '');
-    await ref.read(merchantPaymentProvider.notifier).saveCard(
-      SavedBankCard(
-        lastFour: digits.substring(digits.length - 4),
-        holderName: _holder.text.trim(),
-        expiration: _expiration.text,
-        type: _type,
-        brand: detectCardBrand(digits),
-        isPrimary: _isPrimary,
-      ),
-    );
+    await ref
+        .read(merchantPaymentProvider.notifier)
+        .saveCard(
+          SavedBankCard(
+            lastFour: digits.substring(digits.length - 4),
+            holderName: _holder.text.trim(),
+            expiration: _expiration.text,
+            type: _type,
+            brand: detectCardBrand(digits),
+            isPrimary: _isPrimary,
+          ),
+        );
     if (mounted) Navigator.of(context).pop();
   }
 
@@ -193,7 +195,9 @@ class _AddBankCardScreenState extends ConsumerState<AddBankCardScreen> {
                         ),
                         side: const BorderSide(color: _border),
                       ),
-                      Expanded(child: Text(l10n.addCardPrimary, style: const TextStyle(fontSize: 16))),
+                      Expanded(
+                        child: Text(l10n.addCardPrimary, style: const TextStyle(fontSize: 16)),
+                      ),
                     ],
                   ),
                 ),
@@ -255,8 +259,14 @@ class _AddBankCardScreenState extends ConsumerState<AddBankCardScreen> {
       fillColor: Colors.white,
       suffixIcon: suffix == null ? null : UnconstrainedBox(child: suffix),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: _border)),
-      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: _green)),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: const BorderSide(color: _border),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: const BorderSide(color: _green),
+      ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
         borderSide: const BorderSide(color: MuyuColors.errorBorder),
@@ -302,7 +312,10 @@ class _TypeOption extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: selected ? _green : Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14), side: const BorderSide(color: _border)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(14),
+        side: const BorderSide(color: _border),
+      ),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(14),

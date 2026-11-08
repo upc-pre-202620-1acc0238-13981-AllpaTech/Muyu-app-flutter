@@ -66,7 +66,10 @@ class BankAccountScreen extends ConsumerWidget {
             child: ListView(
               padding: const EdgeInsets.fromLTRB(18, 18, 18, 24),
               children: [
-                if (card != null) _DebitCard(card: card, balance: balance) else _EmptyCard(balance: balance),
+                if (card != null)
+                  _DebitCard(card: card, balance: balance)
+                else
+                  _EmptyCard(balance: balance),
                 const SizedBox(height: 12),
                 OutlinedButton.icon(
                   onPressed: () => _open(context, const AddBankCardScreen()),
@@ -78,15 +81,25 @@ class BankAccountScreen extends ConsumerWidget {
                     minimumSize: const Size.fromHeight(50),
                     backgroundColor: Colors.white,
                     shape: _shape,
-                    textStyle: const TextStyle(fontFamily: MuyuFonts.urbanist, fontWeight: FontWeight.w700, fontSize: 16),
+                    textStyle: const TextStyle(
+                      fontFamily: MuyuFonts.urbanist,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 24),
-                Text(l10n.bankAccountDetails, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                Text(
+                  l10n.bankAccountDetails,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                ),
                 const SizedBox(height: 10),
                 _DetailsCard(card: card),
                 const SizedBox(height: 24),
-                Text(l10n.bankAccountDigitalWallets, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                Text(
+                  l10n.bankAccountDigitalWallets,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                ),
                 const SizedBox(height: 10),
                 _WalletRow(
                   asset: 'assets/images/yape_logo.jpg',
@@ -94,7 +107,10 @@ class BankAccountScreen extends ConsumerWidget {
                   subtitle: _walletSubtitle(l10n, wallets.yape, isYape: true),
                   onTap: () => _open(
                     context,
-                    const EditDigitalWalletScreen(provider: DigitalWalletProvider.yape, forMerchant: false),
+                    const EditDigitalWalletScreen(
+                      provider: DigitalWalletProvider.yape,
+                      forMerchant: false,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -104,11 +120,17 @@ class BankAccountScreen extends ConsumerWidget {
                   subtitle: _walletSubtitle(l10n, wallets.plin, isYape: false),
                   onTap: () => _open(
                     context,
-                    const EditDigitalWalletScreen(provider: DigitalWalletProvider.plin, forMerchant: false),
+                    const EditDigitalWalletScreen(
+                      provider: DigitalWalletProvider.plin,
+                      forMerchant: false,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 10),
-                Text(l10n.bankAccountWalletLimitNote, style: const TextStyle(color: _secondary, fontSize: 13)),
+                Text(
+                  l10n.bankAccountWalletLimitNote,
+                  style: const TextStyle(color: _secondary, fontSize: 13),
+                ),
               ],
             ),
           ),
@@ -117,10 +139,16 @@ class BankAccountScreen extends ConsumerWidget {
     );
   }
 
-  String _walletSubtitle(AppLocalizations l10n, DigitalWalletAccount? account, {required bool isYape}) {
+  String _walletSubtitle(
+    AppLocalizations l10n,
+    DigitalWalletAccount? account, {
+    required bool isYape,
+  }) {
     if (account == null) return isYape ? l10n.yapeNotLinked : l10n.plinNotLinked;
     final masked = maskWalletPhone(account.phone);
-    return account.isPrimary ? l10n.bankAccountYapeLinkedDefaultValue(masked) : l10n.bankAccountYapeLinkedValue(masked);
+    return account.isPrimary
+        ? l10n.bankAccountYapeLinkedDefaultValue(masked)
+        : l10n.bankAccountYapeLinkedValue(masked);
   }
 }
 
@@ -147,7 +175,9 @@ class _DebitCard extends StatelessWidget {
           Row(
             children: [
               Text(
-                card.type == BankCardType.debit ? l10n.bankAccountDebitLabel : l10n.bankAccountCreditLabel,
+                card.type == BankCardType.debit
+                    ? l10n.bankAccountDebitLabel
+                    : l10n.bankAccountCreditLabel,
                 style: const TextStyle(color: Colors.white, fontSize: 18),
               ),
               const Spacer(),
@@ -155,13 +185,22 @@ class _DebitCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          Text(maskedCardNumber(card.lastFour), style: const TextStyle(color: Colors.white, fontSize: 18, letterSpacing: 1)),
+          Text(
+            maskedCardNumber(card.lastFour),
+            style: const TextStyle(color: Colors.white, fontSize: 18, letterSpacing: 1),
+          ),
           const SizedBox(height: 12),
           Row(
             children: [
-              Text(l10n.bankAccountExpirationValue(card.expiration), style: const TextStyle(color: Colors.white, fontSize: 16)),
+              Text(
+                l10n.bankAccountExpirationValue(card.expiration),
+                style: const TextStyle(color: Colors.white, fontSize: 16),
+              ),
               const Spacer(),
-              Text(l10n.bankAccountCvvMasked, style: const TextStyle(color: Colors.white, fontSize: 16)),
+              Text(
+                l10n.bankAccountCvvMasked,
+                style: const TextStyle(color: Colors.white, fontSize: 16),
+              ),
             ],
           ),
           const Spacer(),
@@ -196,13 +235,20 @@ class _EmptyCard extends StatelessWidget {
         children: [
           const Icon(Icons.credit_card_outlined, color: MuyuColors.olive, size: 32),
           const SizedBox(height: 8),
-          Text(l10n.bankAccountNoCardTitle, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+          Text(
+            l10n.bankAccountNoCardTitle,
+            style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+          ),
           const SizedBox(height: 8),
           Text(l10n.bankAccountNoCardBody, style: const TextStyle(color: _secondary, fontSize: 14)),
           const SizedBox(height: 16),
           Text(
             l10n.bankAccountBalance(formatReleasedBalance(balance)),
-            style: const TextStyle(color: MuyuColors.olive, fontSize: 16, fontWeight: FontWeight.w700),
+            style: const TextStyle(
+              color: MuyuColors.olive,
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ],
       ),
@@ -227,10 +273,16 @@ class _DetailsCard extends StatelessWidget {
         border: Border.all(color: _border),
       ),
       child: card == null
-          ? Text(l10n.bankAccountNoDetails, style: const TextStyle(color: Color(0xFF557052), fontSize: 13))
+          ? Text(
+              l10n.bankAccountNoDetails,
+              style: const TextStyle(color: Color(0xFF557052), fontSize: 13),
+            )
           : Column(
               children: [
-                _row(l10n.bankAccountHolderLabel, card!.holderName.isEmpty ? '—' : card!.holderName),
+                _row(
+                  l10n.bankAccountHolderLabel,
+                  card!.holderName.isEmpty ? '—' : card!.holderName,
+                ),
                 const SizedBox(height: 9),
                 _row(l10n.bankAccountCardLabel, bankCardSummary(card!)),
               ],
@@ -241,15 +293,25 @@ class _DetailsCard extends StatelessWidget {
   Widget _row(String label, String value) {
     return Row(
       children: [
-        SizedBox(width: 96, child: Text(label, style: const TextStyle(color: Color(0xFF557052), fontSize: 13))),
-        Expanded(child: Text(value, style: const TextStyle(color: Color(0xFF557052), fontSize: 13))),
+        SizedBox(
+          width: 96,
+          child: Text(label, style: const TextStyle(color: Color(0xFF557052), fontSize: 13)),
+        ),
+        Expanded(
+          child: Text(value, style: const TextStyle(color: Color(0xFF557052), fontSize: 13)),
+        ),
       ],
     );
   }
 }
 
 class _WalletRow extends StatelessWidget {
-  const _WalletRow({required this.asset, required this.title, required this.subtitle, required this.onTap});
+  const _WalletRow({
+    required this.asset,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
 
   final String asset;
   final String title;
@@ -260,7 +322,10 @@ class _WalletRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: const BorderSide(color: _border)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: const BorderSide(color: _border),
+      ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
@@ -270,7 +335,13 @@ class _WalletRow extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(7),
-                child: Image.asset(asset, width: 46, height: 46, fit: BoxFit.cover, semanticLabel: title),
+                child: Image.asset(
+                  asset,
+                  width: 46,
+                  height: 46,
+                  fit: BoxFit.cover,
+                  semanticLabel: title,
+                ),
               ),
               const SizedBox(width: 14),
               Expanded(

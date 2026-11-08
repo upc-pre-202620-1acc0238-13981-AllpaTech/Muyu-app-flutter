@@ -103,7 +103,11 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
                 onBack: _goBack,
               ),
               const SizedBox(height: 8),
-              Image.asset('assets/images/pin_hero.png', height: 180, semanticLabel: l10n.passwordHeroDescription),
+              Image.asset(
+                'assets/images/pin_hero.png',
+                height: 180,
+                semanticLabel: l10n.passwordHeroDescription,
+              ),
               const SizedBox(height: 12),
               Expanded(
                 child: AuthSheet(
@@ -211,8 +215,15 @@ class _PinBox extends StatelessWidget {
           textAlign: TextAlign.center,
           obscureText: true,
           keyboardType: TextInputType.number,
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(1)],
-          style: const TextStyle(fontFamily: MuyuFonts.urbanist, fontWeight: FontWeight.w700, fontSize: 24),
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly,
+            LengthLimitingTextInputFormatter(1),
+          ],
+          style: const TextStyle(
+            fontFamily: MuyuFonts.urbanist,
+            fontWeight: FontWeight.w700,
+            fontSize: 24,
+          ),
           decoration: InputDecoration(
             border: InputBorder.none,
             isDense: true,
@@ -241,7 +252,11 @@ class _PinComplete extends StatelessWidget {
           children: [
             AuthHeader(title: l10n.changePinCompleteTitle, onBack: onContinue),
             const SizedBox(height: 8),
-            Image.asset('assets/images/pin_hero.png', height: 180, semanticLabel: l10n.passwordHeroDescription),
+            Image.asset(
+              'assets/images/pin_hero.png',
+              height: 180,
+              semanticLabel: l10n.passwordHeroDescription,
+            ),
             const SizedBox(height: 12),
             Expanded(
               child: AuthSheet(
@@ -249,7 +264,11 @@ class _PinComplete extends StatelessWidget {
                   children: [
                     Text(
                       l10n.changePinCompleteBody,
-                      style: const TextStyle(fontFamily: MuyuFonts.urbanist, fontSize: 20, color: Colors.white),
+                      style: const TextStyle(
+                        fontFamily: MuyuFonts.urbanist,
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
                     ),
                     const SizedBox(height: 32),
                     AuthPrimaryButton(text: l10n.passwordBackProfile, onPressed: onContinue),

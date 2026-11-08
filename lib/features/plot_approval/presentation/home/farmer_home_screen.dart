@@ -9,6 +9,7 @@ import '../../../../core/theme/muyu_theme.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../user_management/application/session_controller.dart';
 import '../../../user_management/presentation/profile/farmer_profile_screen.dart';
+import '../myplots/my_plots_view.dart';
 
 /// Farmer home shell with the five-tab bar from `FarmerHomeScreen` / `MuyuBottomBar`.
 class FarmerHomeScreen extends ConsumerStatefulWidget {
@@ -31,6 +32,14 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
         children: [
           switch (_tab) {
             FarmerTab.home => const _FarmerPlotsEmpty(),
+            FarmerTab.plot => SizedBox.expand(
+              child: Column(
+                children: [
+                  _FarmerSectionHeader(title: _tab.label(l10n)),
+                  const Expanded(child: MyPlotsView(bottomInset: farmerScrollBottomInset)),
+                ],
+              ),
+            ),
             FarmerTab.profile => const SizedBox.expand(child: FarmerProfileScreen()),
             _ => Column(
               children: [
@@ -44,7 +53,10 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
             child: MediaQuery.removeViewInsets(
               context: context,
               removeBottom: true,
-              child: FarmerBottomBar(selectedTab: _tab, onTabSelected: (tab) => setState(() => _tab = tab)),
+              child: FarmerBottomBar(
+                selectedTab: _tab,
+                onTabSelected: (tab) => setState(() => _tab = tab),
+              ),
             ),
           ),
         ],
@@ -102,7 +114,11 @@ class _FarmerPlotsEmpty extends ConsumerWidget {
                       style: MuyuTextStyles.screenTitle.copyWith(fontSize: 26),
                     ),
                   const SizedBox(height: 24),
-                  Image.asset('assets/images/mascot_search.png', height: 180, excludeFromSemantics: true),
+                  Image.asset(
+                    'assets/images/mascot_search.png',
+                    height: 180,
+                    excludeFromSemantics: true,
+                  ),
                   const SizedBox(height: 24),
                   Text(
                     l10n.farmerHomeEmpty,
@@ -165,7 +181,11 @@ class _FarmerComingSoon extends StatelessWidget {
     return Center(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(30, 30, 30, farmerScrollBottomInset),
-        child: Text(message, textAlign: TextAlign.center, style: const TextStyle(fontSize: 18, color: MuyuColors.forest)),
+        child: Text(
+          message,
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 18, color: MuyuColors.forest),
+        ),
       ),
     );
   }

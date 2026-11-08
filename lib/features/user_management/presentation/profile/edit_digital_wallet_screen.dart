@@ -67,19 +67,23 @@ class _EditDigitalWalletScreenState extends ConsumerState<EditDigitalWalletScree
 
   Future<void> _save(String holderName) async {
     if (widget.forMerchant) {
-      await ref.read(merchantPaymentProvider.notifier).saveWallet(
-        MerchantWallet(provider: widget.provider, phone: _phoneDigits, holderName: holderName),
-      );
+      await ref
+          .read(merchantPaymentProvider.notifier)
+          .saveWallet(
+            MerchantWallet(provider: widget.provider, phone: _phoneDigits, holderName: holderName),
+          );
     } else {
-      await ref.read(farmerPaymentProvider.notifier).saveAccount(
-        widget.provider,
-        DigitalWalletAccount(
-          phone: _phoneDigits,
-          holderName: holderName,
-          isPrimary: _isPrimary,
-          isVerified: true,
-        ),
-      );
+      await ref
+          .read(farmerPaymentProvider.notifier)
+          .saveAccount(
+            widget.provider,
+            DigitalWalletAccount(
+              phone: _phoneDigits,
+              holderName: holderName,
+              isPrimary: _isPrimary,
+              isVerified: true,
+            ),
+          );
     }
     if (mounted) Navigator.of(context).pop();
   }
@@ -183,7 +187,9 @@ class _EditDigitalWalletScreenState extends ConsumerState<EditDigitalWalletScree
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              maskWalletPhone(_phoneDigits).isEmpty ? l10n.yapeNoPhone : maskWalletPhone(_phoneDigits),
+                              maskWalletPhone(_phoneDigits).isEmpty
+                                  ? l10n.yapeNoPhone
+                                  : maskWalletPhone(_phoneDigits),
                               style: const TextStyle(fontSize: 17, color: Color(0xFF555555)),
                             ),
                           ],
@@ -297,7 +303,10 @@ class _EditDigitalWalletScreenState extends ConsumerState<EditDigitalWalletScree
                       borderSide: const BorderSide(color: Color(0xFFD0D5D0)),
                     ),
                   ),
-                  child: Text(holderName, style: const TextStyle(color: Color(0xFF222222), fontSize: 16)),
+                  child: Text(
+                    holderName,
+                    style: const TextStyle(color: Color(0xFF222222), fontSize: 16),
+                  ),
                 ),
                 if (!widget.forMerchant) ...[
                   const SizedBox(height: 14),
@@ -309,7 +318,8 @@ class _EditDigitalWalletScreenState extends ConsumerState<EditDigitalWalletScree
                           value: _isPrimary,
                           onChanged: (value) => setState(() => _isPrimary = value ?? false),
                           fillColor: WidgetStateProperty.resolveWith(
-                            (states) => states.contains(WidgetState.selected) ? _green : Colors.white,
+                            (states) =>
+                                states.contains(WidgetState.selected) ? _green : Colors.white,
                           ),
                           side: const BorderSide(color: _border),
                         ),
@@ -332,11 +342,17 @@ class _EditDigitalWalletScreenState extends ConsumerState<EditDigitalWalletScree
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.account_balance_wallet_outlined, color: Color(0xFF155B35), size: 30),
+                      const Icon(
+                        Icons.account_balance_wallet_outlined,
+                        color: Color(0xFF155B35),
+                        size: 30,
+                      ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          widget.forMerchant ? l10n.merchantWalletPaymentInfo : l10n.yapeDisbursementInfo,
+                          widget.forMerchant
+                              ? l10n.merchantWalletPaymentInfo
+                              : l10n.yapeDisbursementInfo,
                           style: const TextStyle(fontSize: 14, color: Color(0xFF273326)),
                         ),
                       ),

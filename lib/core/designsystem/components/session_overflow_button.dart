@@ -9,11 +9,7 @@ import '../../theme/muyu_colors.dart';
 
 /// Three-dot menu for change-role and log-out, shared by role homes.
 class SessionOverflowButton extends ConsumerWidget {
-  const SessionOverflowButton({
-    super.key,
-    this.iconColor = MuyuColors.forest,
-    this.iconSize = 28,
-  });
+  const SessionOverflowButton({super.key, this.iconColor = MuyuColors.forest, this.iconSize = 28});
 
   final Color iconColor;
   final double iconSize;
@@ -34,10 +30,7 @@ class SessionOverflowButton extends ConsumerWidget {
             session.clearRole();
             context.go(AppRoutes.role);
           },
-          child: ListTile(
-            leading: const Icon(Icons.swap_horiz),
-            title: Text(l10n.homeChangeRole),
-          ),
+          child: ListTile(leading: const Icon(Icons.swap_horiz), title: Text(l10n.homeChangeRole)),
         ),
         PopupMenuItem(
           value: session.logout,

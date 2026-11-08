@@ -10,6 +10,7 @@ import '../../../../core/theme/muyu_colors.dart';
 import '../../../../core/theme/muyu_theme.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../application/session_controller.dart';
+import '../../domain/registration_validator.dart';
 import '../incident/report_incident_screen.dart';
 import '../legal/legal_document_screen.dart';
 import '../password/change_password_screen.dart';
@@ -35,6 +36,8 @@ class _FarmerProfileScreenState extends ConsumerState<FarmerProfileScreen> {
   late final TextEditingController _phone;
   late final TextEditingController _email;
   var _editingContact = false;
+  String? _phoneError;
+  String? _emailError;
   var _syncWifiOnly = true;
   _AlertChannel _channel = _AlertChannel.call;
   String _emailKey = '';
@@ -57,7 +60,7 @@ class _FarmerProfileScreenState extends ConsumerState<FarmerProfileScreen> {
     _phone.text = localPhoneDigits(
       prefs.loadString(email, UserPreferences.keyContactPhone) ?? user?.phone ?? '',
     );
-    _email.text = prefs.loadString(email, UserPreferences.keyContactEmail) ?? user?.email ?? '';
+    _email.text = user?.email ?? '';
     _channel = _AlertChannel.values.firstWhere(
       (value) => value.name == prefs.loadString(email, UserPreferences.keyAlertChannel),
       orElse: () => _AlertChannel.call,
@@ -77,24 +80,45 @@ class _FarmerProfileScreenState extends ConsumerState<FarmerProfileScreen> {
   }
 
   Future<void> _saveContact() async {
-    await ref.read(sessionProvider.notifier).updateContact(
-      phone: _phone.text.trim(),
-      email: _email.text.trim(),
-    );
-    if (mounted) setState(() => _editingContact = false);
+    final l10n = AppLocalizations.of(context);
+    final phone = _phone.text.trim();
+    final email = _email.text.trim();
+    final phoneError = RegistrationValidator.isValidPhone(phone) ? null : l10n.registerPhoneInvalid;
+    final emailError = RegistrationValidator.isValidContactEmail(email)
+        ? null
+        : l10n.registerEmailInvalid;
+    if (phoneError != null || emailError != null) {
+      setState(() {
+        _phoneError = phoneError;
+        _emailError = emailError;
+      });
+      return;
+    }
+    await ref.read(sessionProvider.notifier).updateContact(phone: phone);
+    if (mounted) {
+      setState(() {
+        _editingContact = false;
+        _phoneError = null;
+        _emailError = null;
+      });
+    }
   }
 
   Future<void> _selectChannel(_AlertChannel channel) async {
     setState(() => _channel = channel);
     if (_emailKey.isEmpty) return;
-    await ref.read(userPreferencesProvider).saveString(_emailKey, UserPreferences.keyAlertChannel, channel.name);
+    await ref
+        .read(userPreferencesProvider)
+        .saveString(_emailKey, UserPreferences.keyAlertChannel, channel.name);
   }
 
   Future<void> _toggleSync() async {
     final next = !_syncWifiOnly;
     setState(() => _syncWifiOnly = next);
     if (_emailKey.isEmpty) return;
-    await ref.read(userPreferencesProvider).saveBool(_emailKey, UserPreferences.keySyncWifiOnly, next);
+    await ref
+        .read(userPreferencesProvider)
+        .saveBool(_emailKey, UserPreferences.keySyncWifiOnly, next);
   }
 
   Future<void> _callSupport() async {
@@ -119,11 +143,17 @@ class _FarmerProfileScreenState extends ConsumerState<FarmerProfileScreen> {
               children: [
                 Row(
                   children: [
-                    Expanded(child: _MetricCard(number: '0', label: l10n.farmerStatPlots)),
+                    Expanded(
+                      child: _MetricCard(number: '0', label: l10n.farmerStatPlots),
+                    ),
                     const SizedBox(width: 10),
-                    Expanded(child: _MetricCard(number: '0', label: l10n.farmerStatMilestones)),
+                    Expanded(
+                      child: _MetricCard(number: '0', label: l10n.farmerStatMilestones),
+                    ),
                     const SizedBox(width: 10),
-                    Expanded(child: _MetricCard(number: '0', label: l10n.farmerStatCrop)),
+                    Expanded(
+                      child: _MetricCard(number: '0', label: l10n.farmerStatCrop),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -135,7 +165,10 @@ class _FarmerProfileScreenState extends ConsumerState<FarmerProfileScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(l10n.profileWeatherAlertsQuestion, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                      Text(
+                        l10n.profileWeatherAlertsQuestion,
+                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                      ),
                       const SizedBox(height: 12),
                       Row(
                         children: [
@@ -172,7 +205,12 @@ class _FarmerProfileScreenState extends ConsumerState<FarmerProfileScreen> {
                 _Card(
                   child: Row(
                     children: [
-                      Expanded(child: Text(l10n.profileSyncWifi, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500))),
+                      Expanded(
+                        child: Text(
+                          l10n.profileSyncWifi,
+                          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                        ),
+                      ),
                       Material(
                         color: _syncWifiOnly ? _darkGreen : Colors.grey[400],
                         borderRadius: BorderRadius.circular(16),
@@ -183,7 +221,11 @@ class _FarmerProfileScreenState extends ConsumerState<FarmerProfileScreen> {
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                             child: Text(
                               _syncWifiOnly ? l10n.actionYes : l10n.actionNo,
-                              style: const TextStyle(fontWeight: FontWeight.w700, color: Colors.white, fontSize: 14),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                                fontSize: 14,
+                              ),
                             ),
                           ),
                         ),
@@ -198,9 +240,15 @@ class _FarmerProfileScreenState extends ConsumerState<FarmerProfileScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(l10n.profileBankAccount, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                      Text(
+                        l10n.profileBankAccount,
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                      ),
                       const SizedBox(height: 4),
-                      Text(l10n.profileBankAccountBody, style: const TextStyle(fontSize: 14, color: Colors.grey)),
+                      Text(
+                        l10n.profileBankAccountBody,
+                        style: const TextStyle(fontSize: 14, color: Colors.grey),
+                      ),
                     ],
                   ),
                 ),
@@ -209,16 +257,25 @@ class _FarmerProfileScreenState extends ConsumerState<FarmerProfileScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Column(
                     children: [
-                      _NavRow(label: l10n.profileChangePassword, onTap: () => _open(const ChangePasswordScreen())),
+                      _NavRow(
+                        label: l10n.profileChangePassword,
+                        onTap: () => _open(const ChangePasswordScreen()),
+                      ),
                       const Divider(height: 1),
-                      _NavRow(label: l10n.profileChangePin, onTap: () => _open(const ChangePinScreen())),
+                      _NavRow(
+                        label: l10n.profileChangePin,
+                        onTap: () => _open(const ChangePinScreen()),
+                      ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 16),
                 _OutlinedAction(label: l10n.profileCallSupport, onTap: _callSupport),
                 const SizedBox(height: 12),
-                _OutlinedAction(label: l10n.profileReportIssue, onTap: () => _open(const ReportIncidentScreen())),
+                _OutlinedAction(
+                  label: l10n.profileReportIssue,
+                  onTap: () => _open(const ReportIncidentScreen()),
+                ),
                 const SizedBox(height: 20),
                 Center(
                   child: TextButton(
@@ -239,9 +296,15 @@ class _FarmerProfileScreenState extends ConsumerState<FarmerProfileScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _LegalLink(label: l10n.profileTerms, onTap: () => _open(const TermsAndConditionsScreen())),
+                      _LegalLink(
+                        label: l10n.profileTerms,
+                        onTap: () => _open(const TermsAndConditionsScreen()),
+                      ),
                       const SizedBox(height: 12),
-                      _LegalLink(label: l10n.profilePrivacy, onTap: () => _open(const PrivacyPolicyScreen())),
+                      _LegalLink(
+                        label: l10n.profilePrivacy,
+                        onTap: () => _open(const PrivacyPolicyScreen()),
+                      ),
                     ],
                   ),
                 ),
@@ -253,11 +316,17 @@ class _FarmerProfileScreenState extends ConsumerState<FarmerProfileScreen> {
                     style: FilledButton.styleFrom(
                       backgroundColor: _logoutRed,
                       foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(_cardRadius)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(_cardRadius),
+                      ),
                     ),
                     child: Text(
                       l10n.profileLogout,
-                      style: const TextStyle(fontFamily: MuyuFonts.urbanist, fontWeight: FontWeight.w700, fontSize: 18),
+                      style: const TextStyle(
+                        fontFamily: MuyuFonts.urbanist,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 18,
+                      ),
                     ),
                   ),
                 ),
@@ -277,7 +346,10 @@ class _FarmerProfileScreenState extends ConsumerState<FarmerProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(phone.isEmpty ? l10n.profilePhoneLabel : phone, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+              Text(
+                phone.isEmpty ? l10n.profilePhoneLabel : phone,
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+              ),
               const SizedBox(height: 2),
               Text(_email.text, style: const TextStyle(fontSize: 14, color: Colors.grey)),
             ],
@@ -298,14 +370,23 @@ class _FarmerProfileScreenState extends ConsumerState<FarmerProfileScreen> {
         TextField(
           controller: _phone,
           keyboardType: TextInputType.phone,
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(9)],
-          decoration: _editDecoration(l10n.profilePhoneLabel, prefix: '+51 '),
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly,
+            LengthLimitingTextInputFormatter(9),
+          ],
+          decoration: _editDecoration(
+            l10n.profilePhoneLabel,
+            prefix: '+51 ',
+            errorText: _phoneError,
+          ),
         ),
         const SizedBox(height: 10),
         TextField(
           controller: _email,
+          readOnly: true,
+          enableInteractiveSelection: false,
           keyboardType: TextInputType.emailAddress,
-          decoration: _editDecoration(l10n.profileEmailLabel),
+          decoration: _editDecoration(l10n.profileEmailLabel, errorText: _emailError),
         ),
         const SizedBox(height: 12),
         Row(
@@ -316,6 +397,8 @@ class _FarmerProfileScreenState extends ConsumerState<FarmerProfileScreen> {
                 setState(() {
                   _phone.text = localPhoneDigits(user?.phone ?? '');
                   _email.text = user?.email ?? '';
+                  _phoneError = null;
+                  _emailError = null;
                   _editingContact = false;
                 });
               },
@@ -333,14 +416,18 @@ class _FarmerProfileScreenState extends ConsumerState<FarmerProfileScreen> {
     );
   }
 
-  InputDecoration _editDecoration(String hint, {String? prefix}) {
+  InputDecoration _editDecoration(String hint, {String? prefix, String? errorText}) {
     return InputDecoration(
       hintText: hint,
       prefixText: prefix,
+      errorText: errorText,
       isDense: true,
       filled: true,
       fillColor: MuyuColors.pageGray,
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
+      ),
     );
   }
 }
@@ -378,14 +465,24 @@ class _Header extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 6),
-                    Text(subtitle, style: TextStyle(fontSize: 13, color: Colors.white.withValues(alpha: 0.9))),
+                    Text(
+                      subtitle,
+                      style: TextStyle(fontSize: 13, color: Colors.white.withValues(alpha: 0.9)),
+                    ),
                     const SizedBox(height: 6),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                      decoration: BoxDecoration(color: _verifiedBg, borderRadius: BorderRadius.circular(12)),
+                      decoration: BoxDecoration(
+                        color: _verifiedBg,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       child: Text(
                         l10n.profileVerified,
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: _darkGreen),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: _darkGreen,
+                        ),
                       ),
                     ),
                   ],
@@ -408,15 +505,23 @@ class _MetricCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 110,
+      constraints: const BoxConstraints(minHeight: 110),
       padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(_cardRadius)),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(_cardRadius),
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(number, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
           const SizedBox(height: 4),
-          Text(label, textAlign: TextAlign.center, style: const TextStyle(fontSize: 12, color: Colors.grey, height: 14 / 12)),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 12, color: Colors.grey, height: 1.2),
+          ),
         ],
       ),
     );
@@ -432,7 +537,10 @@ class _SectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
-      child: Text(text, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF616161))),
+      child: Text(
+        text,
+        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF616161)),
+      ),
     );
   }
 }
@@ -453,7 +561,10 @@ class _Card extends StatelessWidget {
         side: BorderSide(color: _darkGreen.withValues(alpha: 0.6)),
       ),
       clipBehavior: Clip.antiAlias,
-      child: InkWell(onTap: onTap, child: Padding(padding: padding, child: child)),
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(padding: padding, child: child),
+      ),
     );
   }
 }
@@ -478,7 +589,11 @@ class _Chip extends StatelessWidget {
           child: Center(
             child: Text(
               label,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: selected ? Colors.white : Colors.black),
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: selected ? Colors.white : Colors.black,
+              ),
             ),
           ),
         ),
@@ -501,7 +616,9 @@ class _NavRow extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 12),
         child: Row(
           children: [
-            Expanded(child: Text(label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500))),
+            Expanded(
+              child: Text(label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+            ),
             const Icon(Icons.chevron_right, size: 20, color: Colors.black54),
           ],
         ),
@@ -527,7 +644,11 @@ class _OutlinedAction extends StatelessWidget {
           side: const BorderSide(color: _darkGreen),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(_cardRadius)),
           backgroundColor: Colors.white,
-          textStyle: const TextStyle(fontFamily: MuyuFonts.urbanist, fontWeight: FontWeight.w700, fontSize: 18),
+          textStyle: const TextStyle(
+            fontFamily: MuyuFonts.urbanist,
+            fontWeight: FontWeight.w700,
+            fontSize: 18,
+          ),
         ),
         child: Text(label),
       ),

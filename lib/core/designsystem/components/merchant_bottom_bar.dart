@@ -30,11 +30,7 @@ extension MerchantTabUi on MerchantTab {
 
 /// Dark green merchant navigation bar, reusable on every merchant screen.
 class MerchantBottomBar extends StatelessWidget {
-  const MerchantBottomBar({
-    super.key,
-    required this.selectedTab,
-    required this.onTabSelected,
-  });
+  const MerchantBottomBar({super.key, required this.selectedTab, required this.onTabSelected});
 
   final MerchantTab selectedTab;
   final ValueChanged<MerchantTab> onTabSelected;

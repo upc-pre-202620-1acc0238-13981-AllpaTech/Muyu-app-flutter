@@ -42,11 +42,7 @@ class DigitalWalletAccount {
 
 /// Yape or Plin the merchant uses to pay financing. A new account starts empty.
 class MerchantWallet {
-  const MerchantWallet({
-    required this.provider,
-    required this.phone,
-    required this.holderName,
-  });
+  const MerchantWallet({required this.provider, required this.phone, required this.holderName});
 
   final DigitalWalletProvider provider;
   final String phone;

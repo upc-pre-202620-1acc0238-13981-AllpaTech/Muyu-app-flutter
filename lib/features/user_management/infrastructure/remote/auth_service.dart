@@ -29,9 +29,8 @@ class AuthService {
     required String currentPassword,
     required String newPassword,
     String? token,
-  }) => _client.postJson(
-    'auth/change-password',
-    {'currentPassword': currentPassword, 'newPassword': newPassword},
-    token: token,
-  );
+  }) => _client.postJson('auth/change-password', {
+    'currentPassword': currentPassword,
+    'newPassword': newPassword,
+  }, token: token);
 }

@@ -60,5 +60,6 @@ class FarmerPaymentController extends Notifier<FarmerPaymentState> {
   }
 }
 
-final farmerPaymentProvider =
-    NotifierProvider<FarmerPaymentController, FarmerPaymentState>(FarmerPaymentController.new);
+final farmerPaymentProvider = NotifierProvider<FarmerPaymentController, FarmerPaymentState>(
+  FarmerPaymentController.new,
+);

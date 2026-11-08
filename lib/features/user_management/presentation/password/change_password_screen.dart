@@ -61,7 +61,9 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
       if (!mounted) return;
       final l10n = AppLocalizations.of(context);
       setState(() {
-        _error = e.failure == AuthFailure.network ? l10n.loginNetworkError : l10n.passwordChangeFailed;
+        _error = e.failure == AuthFailure.network
+            ? l10n.loginNetworkError
+            : l10n.passwordChangeFailed;
       });
     } finally {
       if (mounted) setState(() => _submitting = false);
@@ -76,7 +78,10 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
     }
 
     final canSubmit =
-        !_submitting && _current.text.trim().isNotEmpty && _password.text.length >= 8 && _confirmation.text.isNotEmpty;
+        !_submitting &&
+        _current.text.trim().isNotEmpty &&
+        _password.text.length >= 8 &&
+        _confirmation.text.isNotEmpty;
 
     return Scaffold(
       backgroundColor: MuyuColors.background,

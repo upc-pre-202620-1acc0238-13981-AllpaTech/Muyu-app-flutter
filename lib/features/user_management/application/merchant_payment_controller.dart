@@ -43,5 +43,6 @@ class MerchantPaymentController extends Notifier<MerchantPaymentState> {
   }
 }
 
-final merchantPaymentProvider =
-    NotifierProvider<MerchantPaymentController, MerchantPaymentState>(MerchantPaymentController.new);
+final merchantPaymentProvider = NotifierProvider<MerchantPaymentController, MerchantPaymentState>(
+  MerchantPaymentController.new,
+);

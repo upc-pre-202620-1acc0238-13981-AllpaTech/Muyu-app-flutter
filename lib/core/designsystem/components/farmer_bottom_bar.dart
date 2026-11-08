@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../theme/muyu_colors.dart';
@@ -21,9 +20,9 @@ extension FarmerTabUi on FarmerTab {
 
   IconData get icon => switch (this) {
     FarmerTab.home => Icons.home,
-    FarmerTab.plot => Symbols.article,
+    FarmerTab.plot => Icons.article,
     FarmerTab.sync => Icons.cloud_done,
-    FarmerTab.payments => Symbols.money_bag,
+    FarmerTab.payments => Icons.savings,
     FarmerTab.profile => Icons.person,
   };
 }
@@ -38,7 +37,9 @@ class FarmerBottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: MuyuColors.navBar,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(30))),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+      ),
       clipBehavior: Clip.antiAlias,
       child: SafeArea(
         top: false,
@@ -87,12 +88,15 @@ class _FarmerNavTab extends StatelessWidget {
               Container(
                 width: 62,
                 height: 56,
-                decoration: BoxDecoration(color: MuyuColors.navSelected, borderRadius: BorderRadius.circular(20)),
+                decoration: BoxDecoration(
+                  color: MuyuColors.navSelected,
+                  borderRadius: BorderRadius.circular(20),
+                ),
               ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(tab.icon, size: 28, fill: 1, color: Colors.white, semanticLabel: label),
+                Icon(tab.icon, size: 28, color: Colors.white, semanticLabel: label),
                 const SizedBox(height: 5),
                 Text(
                   label,

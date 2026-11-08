@@ -63,7 +63,7 @@ class _MerchantCatalogScreenState extends ConsumerState<MerchantCatalogScreen> {
     final user = ref.watch(sessionProvider).user;
     final companyName = (user?.displayName.trim().isNotEmpty ?? false)
         ? user!.displayName
-        : l10n.merchantCompanyName;
+        : (user?.email ?? '');
 
     return Scaffold(
       backgroundColor: MuyuColors.background,

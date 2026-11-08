@@ -60,6 +60,65 @@
   "roleMerchantImage": "Merchant",
   "roleNext": "Next",
 
+  "plotsPublish": "Publish",
+  "plotsSearchHint": "Search plots",
+  "plotsFilterAll": "All",
+  "plotsFilterFunded": "Funded",
+  "plotsFilterAvailable": "Available",
+  "plotsNoMatch": "No plots match your search or filter.",
+  "plotsLoadError": "Unable to load plots. Please try again.",
+  "plotsRetry": "Try again",
+  "plotHarvest": "Harvest: {date}",
+  "@plotHarvest": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+
+  "publishTitle": "Publish",
+  "publishStep": "STEP {current} OF {total}",
+  "@publishStep": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "publishStepInfo": "PLOT INFORMATION",
+  "publishStepLocation": "PLOT LOCATION",
+  "publishStepFinancing": "FINANCING",
+  "publishPlotName": "Plot name",
+  "publishCrop": "Crop type",
+  "publishArea": "Area (hectares)",
+  "publishHarvest": "Estimated harvest",
+  "publishHarvestHint": "Select a date",
+  "publishNextLocation": "Next: location",
+  "publishRegion": "Region",
+  "publishProvince": "Province",
+  "publishDistrict": "District",
+  "publishAddress": "Address or landmark",
+  "publishNextFinancing": "Next: financing",
+  "publishTotal": "Total financing amount (S/)",
+  "publishCycle": "Cycle duration",
+  "publishCycleMonths": "{months} months",
+  "@publishCycleMonths": {
+    "placeholders": {
+      "months": { "type": "int" }
+    }
+  },
+  "publishMilestones": "Payment milestones: 4",
+  "publishPlan": "Disbursement plan",
+  "publishPlanPlanting": "Planting",
+  "publishPlanIrrigation": "Irrigation",
+  "publishPlanFertilization": "Fertilization",
+  "publishPlanHarvest": "Harvest",
+  "publishFundsHeld": "Funds will remain in custody and will be released after each milestone is approved.",
+  "publishAcceptCustody": "I have read and accept the custody (escrow) agreement",
+  "publishConfirm": "Publish plot",
+  "publishSuccess": "Your plot is published!",
+  "publishRequired": "Complete this field.",
+  "publishNumberInvalid": "Enter an amount greater than zero.",
+  "publishRejected": "We could not publish the plot. Please try again.",
+
   "homeGreeting": "Hello, {name}",
   "@homeGreeting": {
     "placeholders": {

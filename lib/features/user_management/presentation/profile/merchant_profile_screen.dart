@@ -52,13 +52,12 @@ class _MerchantProfileScreenState extends ConsumerState<MerchantProfileScreen> {
     final email = user?.email ?? '';
     if (email == _emailKey) return;
     _emailKey = email;
-    final l10n = AppLocalizations.of(context);
     final prefs = ref.read(userPreferencesProvider);
-    _legalName.text = prefs.loadString(email, UserPreferences.keyCompanyLegalName) ?? l10n.profileCompanyLegalName;
-    _activity.text = prefs.loadString(email, UserPreferences.keyCompanyActivity) ?? l10n.profileWholesale;
-    _ruc.text = prefs.loadString(email, UserPreferences.keyCompanyRuc) ?? '20123456789';
-    _location.text = prefs.loadString(email, UserPreferences.keyCompanyLocation) ?? l10n.profileMerchantPlace;
-    _email.text = prefs.loadString(email, UserPreferences.keyCompanyEmail) ?? user?.email ?? 'contacto@lacosecha.pe';
+    _legalName.text = prefs.loadString(email, UserPreferences.keyCompanyLegalName) ?? '';
+    _activity.text = prefs.loadString(email, UserPreferences.keyCompanyActivity) ?? '';
+    _ruc.text = prefs.loadString(email, UserPreferences.keyCompanyRuc) ?? '';
+    _location.text = prefs.loadString(email, UserPreferences.keyCompanyLocation) ?? '';
+    _email.text = user?.email ?? '';
     _channel = _AlertChannel.values.firstWhere(
       (value) => value.name == prefs.loadString(email, UserPreferences.keyAlertChannel),
       orElse: () => _AlertChannel.call,
@@ -81,14 +80,15 @@ class _MerchantProfileScreenState extends ConsumerState<MerchantProfileScreen> {
     await prefs.saveString(_emailKey, UserPreferences.keyCompanyActivity, _activity.text.trim());
     await prefs.saveString(_emailKey, UserPreferences.keyCompanyRuc, _ruc.text.trim());
     await prefs.saveString(_emailKey, UserPreferences.keyCompanyLocation, _location.text.trim());
-    await prefs.saveString(_emailKey, UserPreferences.keyCompanyEmail, _email.text.trim());
     setState(() => _editingContact = false);
   }
 
   Future<void> _selectChannel(_AlertChannel channel) async {
     setState(() => _channel = channel);
     if (_emailKey.isEmpty) return;
-    await ref.read(userPreferencesProvider).saveString(_emailKey, UserPreferences.keyAlertChannel, channel.name);
+    await ref
+        .read(userPreferencesProvider)
+        .saveString(_emailKey, UserPreferences.keyAlertChannel, channel.name);
   }
 
   Future<void> _open(Widget page) {
@@ -101,8 +101,8 @@ class _MerchantProfileScreenState extends ConsumerState<MerchantProfileScreen> {
     final user = ref.watch(sessionProvider).user;
     final headerName = (user?.displayName.trim().isNotEmpty ?? false)
         ? user!.displayName
-        : l10n.merchantCompanyName;
-    final place = _location.text.trim().isEmpty ? l10n.profileMerchantPlace : _location.text.trim();
+        : (user?.email ?? '');
+    final place = _location.text.trim();
 
     return ColoredBox(
       color: MuyuColors.pageGray,
@@ -110,16 +110,16 @@ class _MerchantProfileScreenState extends ConsumerState<MerchantProfileScreen> {
         children: [
           _ProfileHeader(
             name: headerName,
-            subtitle: l10n.profileRolePlace(l10n.roleMerchantShort, place),
+            subtitle: place.isEmpty
+                ? l10n.roleMerchantShort
+                : l10n.profileRolePlace(l10n.roleMerchantShort, place),
           ),
           Expanded(
             child: ListView(
               padding: const EdgeInsets.fromLTRB(21, 26, 21, merchantScrollBottomInset),
               children: [
                 _SectionTitle(l10n.profileContactDetails),
-                _ProfileCard(
-                  child: _editingContact ? _contactEditor(l10n) : _contactPreview(l10n),
-                ),
+                _ProfileCard(child: _editingContact ? _contactEditor(l10n) : _contactPreview(l10n)),
                 const SizedBox(height: 20),
                 _SectionTitle(l10n.profileNotificationPrefs),
                 _ProfileCard(
@@ -162,11 +162,7 @@ class _MerchantProfileScreenState extends ConsumerState<MerchantProfileScreen> {
                 _ProfileCard(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(l10n.profileNewPlotAlerts, style: _titleStyle),
-                      const SizedBox(height: 8),
-                      Text(l10n.profileNewPlotAlertsBody, style: _bodyStyle),
-                    ],
+                    children: [Text(l10n.profileNewPlotAlerts, style: _titleStyle)],
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -191,9 +187,15 @@ class _MerchantProfileScreenState extends ConsumerState<MerchantProfileScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _LegalLink(label: l10n.profileTerms, onTap: () => _open(const TermsAndConditionsScreen())),
+                      _LegalLink(
+                        label: l10n.profileTerms,
+                        onTap: () => _open(const TermsAndConditionsScreen()),
+                      ),
                       const SizedBox(height: 12),
-                      _LegalLink(label: l10n.profilePrivacy, onTap: () => _open(const PrivacyPolicyScreen())),
+                      _LegalLink(
+                        label: l10n.profilePrivacy,
+                        onTap: () => _open(const PrivacyPolicyScreen()),
+                      ),
                     ],
                   ),
                 ),
@@ -274,11 +276,15 @@ class _MerchantProfileScreenState extends ConsumerState<MerchantProfileScreen> {
           controller: _email,
           hint: l10n.profileEmailLabel,
           keyboardType: TextInputType.emailAddress,
+          readOnly: true,
         ),
         const SizedBox(height: 12),
         Row(
           children: [
-            TextButton(onPressed: () => setState(() => _editingContact = false), child: Text(l10n.profileCancel)),
+            TextButton(
+              onPressed: () => setState(() => _editingContact = false),
+              child: Text(l10n.profileCancel),
+            ),
             const Spacer(),
             FilledButton(
               onPressed: _saveContact,
@@ -314,7 +320,10 @@ class _ProfileHeader extends StatelessWidget {
                   Container(
                     width: 64,
                     height: 64,
-                    decoration: const BoxDecoration(color: Color(0xFFD9D9D9), shape: BoxShape.circle),
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFD9D9D9),
+                      shape: BoxShape.circle,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Container(
@@ -327,10 +336,7 @@ class _ProfileHeader extends StatelessWidget {
                     ),
                     child: Text(
                       l10n.profileVerified,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: MuyuColors.verifiedChipText,
-                      ),
+                      style: const TextStyle(fontSize: 14, color: MuyuColors.verifiedChipText),
                     ),
                   ),
                 ],
@@ -402,8 +408,18 @@ class _PaymentMethodsCard extends ConsumerWidget {
             label: wallet == null ? l10n.profileNoWallet : merchantWalletSummary(wallet),
             actions: wallet == null
                 ? [
-                    (l10n.bankAccountYape, () => onOpen(const EditDigitalWalletScreen(provider: DigitalWalletProvider.yape))),
-                    (l10n.bankAccountPlin, () => onOpen(const EditDigitalWalletScreen(provider: DigitalWalletProvider.plin))),
+                    (
+                      l10n.bankAccountYape,
+                      () => onOpen(
+                        const EditDigitalWalletScreen(provider: DigitalWalletProvider.yape),
+                      ),
+                    ),
+                    (
+                      l10n.bankAccountPlin,
+                      () => onOpen(
+                        const EditDigitalWalletScreen(provider: DigitalWalletProvider.plin),
+                      ),
+                    ),
                   ]
                 : [
                     (
@@ -562,23 +578,34 @@ class _LegalLink extends StatelessWidget {
 }
 
 class _EditField extends StatelessWidget {
-  const _EditField({required this.controller, required this.hint, this.keyboardType});
+  const _EditField({
+    required this.controller,
+    required this.hint,
+    this.keyboardType,
+    this.readOnly = false,
+  });
 
   final TextEditingController controller;
   final String hint;
   final TextInputType? keyboardType;
+  final bool readOnly;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
       keyboardType: keyboardType,
+      readOnly: readOnly,
+      enableInteractiveSelection: !readOnly,
       decoration: InputDecoration(
         hintText: hint,
         isDense: true,
         filled: true,
         fillColor: MuyuColors.pageGray,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
       ),
     );
   }

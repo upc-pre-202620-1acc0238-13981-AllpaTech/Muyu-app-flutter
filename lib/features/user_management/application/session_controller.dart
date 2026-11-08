@@ -28,7 +28,7 @@ class SessionState {
 /// Kotlin app's `BackendStateStore` plus `UserPreferences.KEY_LAST_ROLE`.
 class SessionController extends Notifier<SessionState> {
   static const String _sessionKey = 'session';
-  static const Duration _minimumSplash = Duration(milliseconds: 1200);
+  static const Duration _minimumSplash = Duration(milliseconds: 700);
 
   @override
   SessionState build() {
@@ -78,30 +78,29 @@ class SessionController extends Notifier<SessionState> {
     state = const SessionState.signedOut();
   }
 
-  Future<void> updateContact({required String phone, required String email}) async {
+  /// Phone only. Changing the session email would orphan Yape, Plin, cards
+  /// and the last role, which are stored under the original address.
+  Future<void> updateContact({required String phone}) async {
     final user = state.user;
     if (user == null) return;
-    final updated = user.copyWith(phone: phone, email: email);
+    final updated = user.copyWith(phone: phone);
     await ref.read(sharedPreferencesProvider).setString(_sessionKey, jsonEncode(updated.toJson()));
-    final prefs = ref.read(userPreferencesProvider);
-    await prefs.saveString(user.email, UserPreferences.keyContactPhone, phone);
-    await prefs.saveString(user.email, UserPreferences.keyContactEmail, email);
-    if (email.toLowerCase() != user.email.toLowerCase()) {
-      await prefs.saveString(email, UserPreferences.keyContactPhone, phone);
-      await prefs.saveString(email, UserPreferences.keyContactEmail, email);
-    }
+    await ref
+        .read(userPreferencesProvider)
+        .saveString(user.email, UserPreferences.keyContactPhone, phone);
     state = SessionState.signedIn(updated, role: state.role);
   }
 
-  /// Validates against the API when it exists; a 404 is treated as a local preview.
   Future<void> changePassword(String currentPassword, String newPassword) async {
     final user = state.user;
     if (user == null) throw const AuthException(AuthFailure.rejected);
-    await ref.read(authRepositoryProvider).changePassword(
-      token: user.token,
-      currentPassword: currentPassword,
-      newPassword: newPassword,
-    );
+    await ref
+        .read(authRepositoryProvider)
+        .changePassword(
+          token: user.token,
+          currentPassword: currentPassword,
+          newPassword: newPassword,
+        );
   }
 
   UserRole? _lastRole(User user) => UserRole.tryParse(

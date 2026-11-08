@@ -39,7 +39,8 @@ class UserPreferences {
 
   bool? loadBool(String email, String key) => _prefs.getBool(_key(email, key));
 
-  Future<void> saveBool(String email, String key, bool value) => _prefs.setBool(_key(email, key), value);
+  Future<void> saveBool(String email, String key, bool value) =>
+      _prefs.setBool(_key(email, key), value);
 }
 
 final userPreferencesProvider = Provider<UserPreferences>(

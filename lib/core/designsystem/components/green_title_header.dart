@@ -30,7 +30,12 @@ class GreenTitleHeader extends StatelessWidget {
                     onTap: onBack,
                     child: Row(
                       children: [
-                        Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 18, semanticLabel: l10n.back),
+                        Icon(
+                          Icons.arrow_back_ios_new,
+                          color: Colors.white,
+                          size: 18,
+                          semanticLabel: l10n.back,
+                        ),
                         const SizedBox(width: 16),
                         Expanded(
                           child: Text(

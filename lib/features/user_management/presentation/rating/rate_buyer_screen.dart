@@ -31,10 +31,7 @@ class _RateBuyerScreenState extends ConsumerState<RateBuyerScreen> {
       return _RatingSubmitted(
         rating: _rating,
         comment: _comment.text.trim(),
-        farmerName: () {
-          final name = ref.watch(sessionProvider).user?.displayName.trim() ?? '';
-          return name.isEmpty ? l10n.ratingFarmerPreview : name;
-        }(),
+        farmerName: ref.watch(sessionProvider).user?.displayName.trim() ?? '',
         onBack: () => Navigator.of(context).pop(),
       );
     }
@@ -48,14 +45,29 @@ class _RateBuyerScreenState extends ConsumerState<RateBuyerScreen> {
             child: ListView(
               padding: const EdgeInsets.all(24),
               children: [
-                Text(l10n.ratingSection, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+                Text(
+                  l10n.ratingSection,
+                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+                ),
                 const SizedBox(height: 16),
-                Text(l10n.ratingContractEnded(l10n.ratingCycleDate), style: const TextStyle(fontSize: 12)),
-                Text(l10n.ratingPreviewPlot, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
-                Text(l10n.ratingBuyer(l10n.ratingPreviewBuyer), style: const TextStyle(color: Colors.black54)),
+                Text(
+                  l10n.ratingContractEnded(l10n.ratingCycleDate),
+                  style: const TextStyle(fontSize: 12),
+                ),
+                Text(
+                  l10n.ratingPreviewPlot,
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                ),
+                Text(
+                  l10n.ratingBuyer(l10n.ratingPreviewBuyer),
+                  style: const TextStyle(color: Colors.black54),
+                ),
                 Text(l10n.ratingPreviewCompany, style: const TextStyle(color: Colors.black54)),
                 const SizedBox(height: 16),
-                Text(l10n.ratingQuestion, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+                Text(
+                  l10n.ratingQuestion,
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                ),
                 const SizedBox(height: 8),
                 _Stars(value: _rating, onSelect: (value) => setState(() => _rating = value)),
                 if (_rating > 0)
@@ -64,7 +76,10 @@ class _RateBuyerScreenState extends ConsumerState<RateBuyerScreen> {
                     style: const TextStyle(fontSize: 12, color: MuyuColors.olive),
                   ),
                 const SizedBox(height: 16),
-                Text(l10n.ratingCommentTitle, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+                Text(
+                  l10n.ratingCommentTitle,
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                ),
                 const SizedBox(height: 8),
                 TextField(
                   controller: _comment,
@@ -87,14 +102,19 @@ class _RateBuyerScreenState extends ConsumerState<RateBuyerScreen> {
                 SizedBox(
                   height: 56,
                   child: FilledButton(
-                    onPressed: _rating >= 1 && _rating <= 5 ? () => setState(() => _submitted = true) : null,
+                    onPressed: _rating >= 1 && _rating <= 5
+                        ? () => setState(() => _submitted = true)
+                        : null,
                     style: FilledButton.styleFrom(
                       backgroundColor: MuyuColors.action,
                       disabledBackgroundColor: const Color(0xFFB8C7B9),
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                     ),
-                    child: Text(l10n.ratingSubmit, style: const TextStyle(fontWeight: FontWeight.w700)),
+                    child: Text(
+                      l10n.ratingSubmit,
+                      style: const TextStyle(fontWeight: FontWeight.w700),
+                    ),
                   ),
                 ),
               ],
@@ -144,20 +164,32 @@ class _RatingSubmitted extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           l10n.ratingLaterStage(l10n.ratingCycleDate),
-                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Color(0xFF854500)),
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF854500),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 12),
                       CircleAvatar(
                         radius: 32,
                         backgroundColor: MuyuColors.approvedBg,
-                        child: const Icon(Icons.check_circle_outline, size: 32, color: MuyuColors.forest),
+                        child: const Icon(
+                          Icons.check_circle_outline,
+                          size: 32,
+                          color: MuyuColors.forest,
+                        ),
                       ),
                       const SizedBox(height: 12),
                       Text(
                         l10n.ratingThanks,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: MuyuColors.forest),
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                          color: MuyuColors.forest,
+                        ),
                       ),
                       Text(
                         l10n.ratingThanksBody(l10n.ratingPreviewBuyer),
@@ -168,7 +200,10 @@ class _RatingSubmitted extends StatelessWidget {
                       _Stars(value: rating),
                       Text(
                         l10n.ratingSubmittedValue(rating),
-                        style: const TextStyle(fontWeight: FontWeight.w700, color: MuyuColors.forest),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w700,
+                          color: MuyuColors.forest,
+                        ),
                       ),
                     ],
                   ),
@@ -179,7 +214,10 @@ class _RatingSubmitted extends StatelessWidget {
                   style: const TextStyle(color: Colors.grey),
                 ),
                 const SizedBox(height: 8),
-                Text(l10n.ratingPreviewNotice, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                Text(
+                  l10n.ratingPreviewNotice,
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                ),
               ],
             ),
           ),
@@ -195,7 +233,10 @@ class _RatingSubmitted extends StatelessWidget {
                   side: const BorderSide(color: MuyuColors.forest),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                 ),
-                child: Text(l10n.ratingBackProfile, style: const TextStyle(fontWeight: FontWeight.w700)),
+                child: Text(
+                  l10n.ratingBackProfile,
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                ),
               ),
             ),
           ),
@@ -224,7 +265,10 @@ class _Stars extends StatelessWidget {
             icon: CircleAvatar(
               radius: 20,
               backgroundColor: score <= value ? MuyuColors.action : const Color(0xFFD5DDD8),
-              child: Icon(Icons.star_border, color: score <= value ? Colors.white : const Color(0xFF53605A)),
+              child: Icon(
+                Icons.star_border,
+                color: score <= value ? Colors.white : const Color(0xFF53605A),
+              ),
             ),
           ),
       ],
