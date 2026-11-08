@@ -31,6 +31,29 @@ class AuthRepositoryImpl implements AuthRepository {
     ),
   );
 
+  @override
+  Future<void> changePassword({
+    required String token,
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    try {
+      await _service.changePassword(
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+        token: token,
+      );
+    } on ApiException catch (e) {
+      // The academic Fake API has no change-password route; keep the preview flow.
+      if (e.statusCode == 404) return;
+      throw AuthException(
+        e.statusCode == 401 ? AuthFailure.invalidCredentials : AuthFailure.rejected,
+      );
+    } on NetworkException {
+      throw const AuthException(AuthFailure.network);
+    }
+  }
+
   Future<User> _guard(Future<Map<String, dynamic>> Function() call) async {
     try {
       return User.fromJson(await call());
