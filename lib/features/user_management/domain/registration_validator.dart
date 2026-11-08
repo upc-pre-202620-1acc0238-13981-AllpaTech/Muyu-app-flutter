@@ -59,7 +59,9 @@ abstract final class RegistrationValidator {
     DateTime? today,
   }) {
     if (!_name.hasMatch(name)) return RegistrationError.name;
-    if (!_email.hasMatch(email)) return RegistrationError.email;
+    if (!_email.hasMatch(email) || !email.toLowerCase().endsWith('@gmail.com')) {
+      return RegistrationError.email;
+    }
     if (!_phone.hasMatch(phone)) return RegistrationError.phone;
     if (!_dni.hasMatch(dni)) return RegistrationError.dni;
     if (birthdate == null) return RegistrationError.birthdateRequired;

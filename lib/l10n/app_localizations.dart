@@ -274,7 +274,7 @@ abstract class AppLocalizations {
   /// No description provided for @registerEmailInvalid.
   ///
   /// In en, this message translates to:
-  /// **'Enter a valid email address.'**
+  /// **'Enter a valid Gmail address.'**
   String get registerEmailInvalid;
 
   /// No description provided for @registerPhoneInvalid.

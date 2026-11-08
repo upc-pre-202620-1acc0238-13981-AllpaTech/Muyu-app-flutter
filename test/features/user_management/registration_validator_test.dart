@@ -39,6 +39,12 @@ void main() {
     expect(validate(terms: false), RegistrationError.terms);
   });
 
+  test('only accepts Gmail addresses, in any letter case', () {
+    expect(validate(email: 'Maria@GMAIL.com'), isNull);
+    expect(validate(email: 'maria@hotmail.com'), RegistrationError.email);
+    expect(validate(email: 'maria@gmail.com.pe'), RegistrationError.email);
+  });
+
   test('only allows people between 18 and 90 years old', () {
     expect(validate(birthdate: DateTime(2008, 11, 7)), isNull);
     expect(validate(birthdate: DateTime(2008, 11, 8)), RegistrationError.birthdateInvalid);

@@ -97,7 +97,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get registerNameInvalid => 'Enter a valid name using 2 to 60 letters.';
 
   @override
-  String get registerEmailInvalid => 'Enter a valid email address.';
+  String get registerEmailInvalid => 'Enter a valid Gmail address.';
 
   @override
   String get registerPhoneInvalid => 'Enter a valid number.';

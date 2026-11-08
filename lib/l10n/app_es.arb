@@ -31,7 +31,7 @@
   "registerHaveAccount": "¿Ya tienes una cuenta?",
   "registerAcceptTerms": "He leído y acepto los términos y condiciones",
   "registerNameInvalid": "Ingresa un nombre válido de 2 a 60 letras.",
-  "registerEmailInvalid": "Ingresa un correo electrónico válido.",
+  "registerEmailInvalid": "Ingresa un correo de Gmail válido.",
   "registerPhoneInvalid": "Ingresa un número válido.",
   "registerDniInvalid": "Ingresa un DNI válido de 8 dígitos.",
   "registerBirthdateRequired": "Selecciona tu fecha de nacimiento.",
