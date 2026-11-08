@@ -214,6 +214,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get navPayments => 'Pagos';
 
   @override
+  String get navPayment => 'Pago';
+
+  @override
   String get navProfile => 'Perfil';
 
   @override

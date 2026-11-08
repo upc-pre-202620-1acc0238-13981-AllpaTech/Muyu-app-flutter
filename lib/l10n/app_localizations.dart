@@ -493,6 +493,12 @@ abstract class AppLocalizations {
   /// **'Payments'**
   String get navPayments;
 
+  /// No description provided for @navPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get navPayment;
+
   /// No description provided for @navProfile.
   ///
   /// In en, this message translates to:

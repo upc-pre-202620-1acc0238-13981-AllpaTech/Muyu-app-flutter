@@ -213,6 +213,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navPayments => 'Payments';
 
   @override
+  String get navPayment => 'Payment';
+
+  @override
   String get navProfile => 'Profile';
 
   @override

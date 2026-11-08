@@ -15,24 +15,16 @@ extension FarmerTabUi on FarmerTab {
     FarmerTab.home => l10n.navHome,
     FarmerTab.plot => l10n.navPlot,
     FarmerTab.sync => l10n.navSync,
-    FarmerTab.payments => l10n.navPayments,
+    FarmerTab.payments => l10n.navPayment,
     FarmerTab.profile => l10n.navProfile,
   };
 
   String get iconAsset => switch (this) {
-    FarmerTab.home => 'assets/icons/ic_nav_home.svg',
-    FarmerTab.plot => 'assets/icons/ic_nav_plot.svg',
-    FarmerTab.sync => 'assets/icons/ic_nav_sync.svg',
-    FarmerTab.payments => 'assets/icons/ic_nav_payments.svg',
-    FarmerTab.profile => 'assets/icons/ic_nav_profile.svg',
-  };
-
-  Size get iconSize => switch (this) {
-    FarmerTab.home => const Size(26, 25),
-    FarmerTab.plot => const Size(26, 22),
-    FarmerTab.sync => const Size(24, 27),
-    FarmerTab.payments => const Size(24, 20),
-    FarmerTab.profile => const Size(24, 22),
+    FarmerTab.home => 'assets/icons/ic_farmer_nav_home.svg',
+    FarmerTab.plot => 'assets/icons/ic_farmer_nav_plot.svg',
+    FarmerTab.sync => 'assets/icons/ic_farmer_nav_sync.svg',
+    FarmerTab.payments => 'assets/icons/ic_farmer_nav_payment.svg',
+    FarmerTab.profile => 'assets/icons/ic_farmer_nav_profile.svg',
   };
 }
 
@@ -83,7 +75,6 @@ class _FarmerNavTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final label = tab.label(AppLocalizations.of(context));
-    final size = tab.iconSize;
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
@@ -96,13 +87,13 @@ class _FarmerNavTab extends StatelessWidget {
               Container(
                 width: 62,
                 height: 56,
-                decoration: BoxDecoration(color: MuyuColors.navSelected, borderRadius: BorderRadius.circular(16)),
+                decoration: BoxDecoration(color: MuyuColors.navSelected, borderRadius: BorderRadius.circular(20)),
               ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SvgPicture.asset(tab.iconAsset, width: size.width, height: size.height, semanticsLabel: label),
-                const SizedBox(height: 2),
+                SvgPicture.asset(tab.iconAsset, semanticsLabel: label),
+                const SizedBox(height: 5),
                 Text(
                   label,
                   maxLines: 1,
@@ -110,7 +101,7 @@ class _FarmerNavTab extends StatelessWidget {
                   style: const TextStyle(
                     fontFamily: MuyuFonts.urbanist,
                     fontWeight: FontWeight.w600,
-                    fontSize: 11,
+                    fontSize: 12,
                     color: Colors.white,
                   ),
                 ),
