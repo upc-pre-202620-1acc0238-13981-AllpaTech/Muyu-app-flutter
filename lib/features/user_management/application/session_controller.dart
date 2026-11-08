@@ -49,10 +49,13 @@ class SessionController extends Notifier<SessionState> {
   }
 
   /// Throws [AuthException] when the login fails.
+  ///
+  /// Always leaves [SessionState.role] empty so the router sends the user to
+  /// role selection, the same sequence as before the merchant catalog existed.
   Future<void> login(String email, String password) async {
     final user = await ref.read(authRepositoryProvider).login(email, password);
     await ref.read(sharedPreferencesProvider).setString(_sessionKey, jsonEncode(user.toJson()));
-    state = SessionState.signedIn(user, role: _lastRole(user));
+    state = SessionState.signedIn(user);
   }
 
   Future<void> chooseRole(UserRole role) async {
@@ -73,6 +76,32 @@ class SessionController extends Notifier<SessionState> {
   Future<void> logout() async {
     await ref.read(sharedPreferencesProvider).remove(_sessionKey);
     state = const SessionState.signedOut();
+  }
+
+  Future<void> updateContact({required String phone, required String email}) async {
+    final user = state.user;
+    if (user == null) return;
+    final updated = user.copyWith(phone: phone, email: email);
+    await ref.read(sharedPreferencesProvider).setString(_sessionKey, jsonEncode(updated.toJson()));
+    final prefs = ref.read(userPreferencesProvider);
+    await prefs.saveString(user.email, UserPreferences.keyContactPhone, phone);
+    await prefs.saveString(user.email, UserPreferences.keyContactEmail, email);
+    if (email.toLowerCase() != user.email.toLowerCase()) {
+      await prefs.saveString(email, UserPreferences.keyContactPhone, phone);
+      await prefs.saveString(email, UserPreferences.keyContactEmail, email);
+    }
+    state = SessionState.signedIn(updated, role: state.role);
+  }
+
+  /// Validates against the API when it exists; a 404 is treated as a local preview.
+  Future<void> changePassword(String currentPassword, String newPassword) async {
+    final user = state.user;
+    if (user == null) throw const AuthException(AuthFailure.rejected);
+    await ref.read(authRepositoryProvider).changePassword(
+      token: user.token,
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+    );
   }
 
   UserRole? _lastRole(User user) => UserRole.tryParse(
