@@ -433,6 +433,252 @@ abstract class AppLocalizations {
   /// **'Next'**
   String get roleNext;
 
+  /// No description provided for @plotsPublish.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish'**
+  String get plotsPublish;
+
+  /// No description provided for @plotsSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search plots'**
+  String get plotsSearchHint;
+
+  /// No description provided for @plotsFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get plotsFilterAll;
+
+  /// No description provided for @plotsFilterFunded.
+  ///
+  /// In en, this message translates to:
+  /// **'Funded'**
+  String get plotsFilterFunded;
+
+  /// No description provided for @plotsFilterAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Available'**
+  String get plotsFilterAvailable;
+
+  /// No description provided for @plotsNoMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'No plots match your search or filter.'**
+  String get plotsNoMatch;
+
+  /// No description provided for @plotsLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load plots. Please try again.'**
+  String get plotsLoadError;
+
+  /// No description provided for @plotsRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get plotsRetry;
+
+  /// No description provided for @plotHarvest.
+  ///
+  /// In en, this message translates to:
+  /// **'Harvest: {date}'**
+  String plotHarvest(String date);
+
+  /// No description provided for @publishTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish'**
+  String get publishTitle;
+
+  /// No description provided for @publishStep.
+  ///
+  /// In en, this message translates to:
+  /// **'STEP {current} OF {total}'**
+  String publishStep(int current, int total);
+
+  /// No description provided for @publishStepInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'PLOT INFORMATION'**
+  String get publishStepInfo;
+
+  /// No description provided for @publishStepLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'PLOT LOCATION'**
+  String get publishStepLocation;
+
+  /// No description provided for @publishStepFinancing.
+  ///
+  /// In en, this message translates to:
+  /// **'FINANCING'**
+  String get publishStepFinancing;
+
+  /// No description provided for @publishPlotName.
+  ///
+  /// In en, this message translates to:
+  /// **'Plot name'**
+  String get publishPlotName;
+
+  /// No description provided for @publishCrop.
+  ///
+  /// In en, this message translates to:
+  /// **'Crop type'**
+  String get publishCrop;
+
+  /// No description provided for @publishArea.
+  ///
+  /// In en, this message translates to:
+  /// **'Area (hectares)'**
+  String get publishArea;
+
+  /// No description provided for @publishHarvest.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated harvest'**
+  String get publishHarvest;
+
+  /// No description provided for @publishHarvestHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a date'**
+  String get publishHarvestHint;
+
+  /// No description provided for @publishNextLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Next: location'**
+  String get publishNextLocation;
+
+  /// No description provided for @publishRegion.
+  ///
+  /// In en, this message translates to:
+  /// **'Region'**
+  String get publishRegion;
+
+  /// No description provided for @publishProvince.
+  ///
+  /// In en, this message translates to:
+  /// **'Province'**
+  String get publishProvince;
+
+  /// No description provided for @publishDistrict.
+  ///
+  /// In en, this message translates to:
+  /// **'District'**
+  String get publishDistrict;
+
+  /// No description provided for @publishAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Address or landmark'**
+  String get publishAddress;
+
+  /// No description provided for @publishNextFinancing.
+  ///
+  /// In en, this message translates to:
+  /// **'Next: financing'**
+  String get publishNextFinancing;
+
+  /// No description provided for @publishTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total financing amount (S/)'**
+  String get publishTotal;
+
+  /// No description provided for @publishCycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cycle duration'**
+  String get publishCycle;
+
+  /// No description provided for @publishCycleMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'{months} months'**
+  String publishCycleMonths(int months);
+
+  /// No description provided for @publishMilestones.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment milestones: 4'**
+  String get publishMilestones;
+
+  /// No description provided for @publishPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Disbursement plan'**
+  String get publishPlan;
+
+  /// No description provided for @publishPlanPlanting.
+  ///
+  /// In en, this message translates to:
+  /// **'Planting'**
+  String get publishPlanPlanting;
+
+  /// No description provided for @publishPlanIrrigation.
+  ///
+  /// In en, this message translates to:
+  /// **'Irrigation'**
+  String get publishPlanIrrigation;
+
+  /// No description provided for @publishPlanFertilization.
+  ///
+  /// In en, this message translates to:
+  /// **'Fertilization'**
+  String get publishPlanFertilization;
+
+  /// No description provided for @publishPlanHarvest.
+  ///
+  /// In en, this message translates to:
+  /// **'Harvest'**
+  String get publishPlanHarvest;
+
+  /// No description provided for @publishFundsHeld.
+  ///
+  /// In en, this message translates to:
+  /// **'Funds will remain in custody and will be released after each milestone is approved.'**
+  String get publishFundsHeld;
+
+  /// No description provided for @publishAcceptCustody.
+  ///
+  /// In en, this message translates to:
+  /// **'I have read and accept the custody (escrow) agreement'**
+  String get publishAcceptCustody;
+
+  /// No description provided for @publishConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish plot'**
+  String get publishConfirm;
+
+  /// No description provided for @publishSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Your plot is published!'**
+  String get publishSuccess;
+
+  /// No description provided for @publishRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete this field.'**
+  String get publishRequired;
+
+  /// No description provided for @publishNumberInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter an amount greater than zero.'**
+  String get publishNumberInvalid;
+
+  /// No description provided for @publishRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'We could not publish the plot. Please try again.'**
+  String get publishRejected;
+
   /// No description provided for @homeGreeting.
   ///
   /// In en, this message translates to:

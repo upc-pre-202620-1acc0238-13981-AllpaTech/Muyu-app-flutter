@@ -182,6 +182,136 @@ class AppLocalizationsEs extends AppLocalizations {
   String get roleNext => 'Siguiente';
 
   @override
+  String get plotsPublish => 'Publicar';
+
+  @override
+  String get plotsSearchHint => 'Buscar parcelas';
+
+  @override
+  String get plotsFilterAll => 'Todas';
+
+  @override
+  String get plotsFilterFunded => 'Financiadas';
+
+  @override
+  String get plotsFilterAvailable => 'Disponibles';
+
+  @override
+  String get plotsNoMatch => 'Ninguna parcela coincide con tu búsqueda o filtro.';
+
+  @override
+  String get plotsLoadError => 'No se pudieron cargar las parcelas. Inténtalo de nuevo.';
+
+  @override
+  String get plotsRetry => 'Reintentar';
+
+  @override
+  String plotHarvest(String date) {
+    return 'Cosecha: $date';
+  }
+
+  @override
+  String get publishTitle => 'Publicar';
+
+  @override
+  String publishStep(int current, int total) {
+    return 'PASO $current DE $total';
+  }
+
+  @override
+  String get publishStepInfo => 'INFORMACIÓN DE LA PARCELA';
+
+  @override
+  String get publishStepLocation => 'UBICACIÓN DE LA PARCELA';
+
+  @override
+  String get publishStepFinancing => 'FINANCIAMIENTO';
+
+  @override
+  String get publishPlotName => 'Nombre de la parcela';
+
+  @override
+  String get publishCrop => 'Tipo de cultivo';
+
+  @override
+  String get publishArea => 'Área (hectáreas)';
+
+  @override
+  String get publishHarvest => 'Cosecha estimada';
+
+  @override
+  String get publishHarvestHint => 'Selecciona una fecha';
+
+  @override
+  String get publishNextLocation => 'Siguiente: ubicación';
+
+  @override
+  String get publishRegion => 'Región';
+
+  @override
+  String get publishProvince => 'Provincia';
+
+  @override
+  String get publishDistrict => 'Distrito';
+
+  @override
+  String get publishAddress => 'Dirección o referencia';
+
+  @override
+  String get publishNextFinancing => 'Siguiente: financiamiento';
+
+  @override
+  String get publishTotal => 'Monto total del financiamiento (S/)';
+
+  @override
+  String get publishCycle => 'Duración del ciclo';
+
+  @override
+  String publishCycleMonths(int months) {
+    return '$months meses';
+  }
+
+  @override
+  String get publishMilestones => 'Hitos de pago: 4';
+
+  @override
+  String get publishPlan => 'Plan de desembolsos';
+
+  @override
+  String get publishPlanPlanting => 'Siembra';
+
+  @override
+  String get publishPlanIrrigation => 'Riego';
+
+  @override
+  String get publishPlanFertilization => 'Fertilización';
+
+  @override
+  String get publishPlanHarvest => 'Cosecha';
+
+  @override
+  String get publishFundsHeld =>
+      'Los fondos permanecerán en custodia y se liberarán después de aprobar cada hito.';
+
+  @override
+  String get publishAcceptCustody => 'He leído y acepto el acuerdo de custodia (escrow)';
+
+  @override
+  String get publishConfirm => 'Publicar parcela';
+
+  @override
+  String get publishSuccess => '¡Tu parcela está publicada!';
+
+  @override
+  String get publishRequired => 'Completa este campo.';
+
+  @override
+  String get publishNumberInvalid => 'Ingresa un monto mayor que cero.';
+
+  @override
+  String get publishRejected => 'No pudimos publicar la parcela. Inténtalo de nuevo.';
+
+  @override
   String homeGreeting(String name) {
     return 'Hola, $name';
   }

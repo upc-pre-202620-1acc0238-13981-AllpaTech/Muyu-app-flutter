@@ -181,6 +181,136 @@ class AppLocalizationsEn extends AppLocalizations {
   String get roleNext => 'Next';
 
   @override
+  String get plotsPublish => 'Publish';
+
+  @override
+  String get plotsSearchHint => 'Search plots';
+
+  @override
+  String get plotsFilterAll => 'All';
+
+  @override
+  String get plotsFilterFunded => 'Funded';
+
+  @override
+  String get plotsFilterAvailable => 'Available';
+
+  @override
+  String get plotsNoMatch => 'No plots match your search or filter.';
+
+  @override
+  String get plotsLoadError => 'Unable to load plots. Please try again.';
+
+  @override
+  String get plotsRetry => 'Try again';
+
+  @override
+  String plotHarvest(String date) {
+    return 'Harvest: $date';
+  }
+
+  @override
+  String get publishTitle => 'Publish';
+
+  @override
+  String publishStep(int current, int total) {
+    return 'STEP $current OF $total';
+  }
+
+  @override
+  String get publishStepInfo => 'PLOT INFORMATION';
+
+  @override
+  String get publishStepLocation => 'PLOT LOCATION';
+
+  @override
+  String get publishStepFinancing => 'FINANCING';
+
+  @override
+  String get publishPlotName => 'Plot name';
+
+  @override
+  String get publishCrop => 'Crop type';
+
+  @override
+  String get publishArea => 'Area (hectares)';
+
+  @override
+  String get publishHarvest => 'Estimated harvest';
+
+  @override
+  String get publishHarvestHint => 'Select a date';
+
+  @override
+  String get publishNextLocation => 'Next: location';
+
+  @override
+  String get publishRegion => 'Region';
+
+  @override
+  String get publishProvince => 'Province';
+
+  @override
+  String get publishDistrict => 'District';
+
+  @override
+  String get publishAddress => 'Address or landmark';
+
+  @override
+  String get publishNextFinancing => 'Next: financing';
+
+  @override
+  String get publishTotal => 'Total financing amount (S/)';
+
+  @override
+  String get publishCycle => 'Cycle duration';
+
+  @override
+  String publishCycleMonths(int months) {
+    return '$months months';
+  }
+
+  @override
+  String get publishMilestones => 'Payment milestones: 4';
+
+  @override
+  String get publishPlan => 'Disbursement plan';
+
+  @override
+  String get publishPlanPlanting => 'Planting';
+
+  @override
+  String get publishPlanIrrigation => 'Irrigation';
+
+  @override
+  String get publishPlanFertilization => 'Fertilization';
+
+  @override
+  String get publishPlanHarvest => 'Harvest';
+
+  @override
+  String get publishFundsHeld =>
+      'Funds will remain in custody and will be released after each milestone is approved.';
+
+  @override
+  String get publishAcceptCustody => 'I have read and accept the custody (escrow) agreement';
+
+  @override
+  String get publishConfirm => 'Publish plot';
+
+  @override
+  String get publishSuccess => 'Your plot is published!';
+
+  @override
+  String get publishRequired => 'Complete this field.';
+
+  @override
+  String get publishNumberInvalid => 'Enter an amount greater than zero.';
+
+  @override
+  String get publishRejected => 'We could not publish the plot. Please try again.';
+
+  @override
   String homeGreeting(String name) {
     return 'Hello, $name';
   }
