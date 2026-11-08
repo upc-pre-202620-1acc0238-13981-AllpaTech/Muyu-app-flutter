@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../theme/muyu_colors.dart';
@@ -20,20 +19,12 @@ extension MerchantTabUi on MerchantTab {
     MerchantTab.profile => l10n.navProfile,
   };
 
-  String get iconAsset => switch (this) {
-    MerchantTab.catalog => 'assets/icons/ic_nav_catalog.svg',
-    MerchantTab.myPlots => 'assets/icons/ic_nav_plot.svg',
-    MerchantTab.alerts => 'assets/icons/ic_nav_alerts.svg',
-    MerchantTab.payments => 'assets/icons/ic_nav_payments.svg',
-    MerchantTab.profile => 'assets/icons/ic_nav_profile.svg',
-  };
-
-  Size get iconSize => switch (this) {
-    MerchantTab.catalog => const Size(22, 20),
-    MerchantTab.myPlots => const Size(26, 22),
-    MerchantTab.alerts => const Size(22, 24),
-    MerchantTab.payments => const Size(24, 20),
-    MerchantTab.profile => const Size(24, 22),
+  IconData get icon => switch (this) {
+    MerchantTab.catalog => Icons.shopping_cart,
+    MerchantTab.myPlots => Icons.landscape,
+    MerchantTab.alerts => Icons.notifications,
+    MerchantTab.payments => Icons.account_balance_wallet,
+    MerchantTab.profile => Icons.person,
   };
 }
 
@@ -91,7 +82,6 @@ class _MerchantNavTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final label = tab.label(AppLocalizations.of(context));
-    final size = tab.iconSize;
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -113,12 +103,7 @@ class _MerchantNavTab extends StatelessWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SvgPicture.asset(
-                  tab.iconAsset,
-                  width: size.width,
-                  height: size.height,
-                  semanticsLabel: label,
-                ),
+                Icon(tab.icon, size: 28, color: Colors.white, semanticLabel: label),
                 const SizedBox(height: 2),
                 Text(
                   label,
