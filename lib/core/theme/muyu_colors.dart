@@ -16,6 +16,8 @@ abstract final class MuyuColors {
   static const surface = Color(0xFFFBFBFB);
   static const weatherChip = Color(0xFF92C7C1);
   static const statCard = Color(0xFFDFFFC4);
+  static const financedBackground = Color(0xFFC8DBFF);
+  static const financedText = Color(0xFF3A5DD2);
 
   static const errorBorder = Color(0xFFE5484D);
   static const errorText = Color(0xFFFFC7C7);

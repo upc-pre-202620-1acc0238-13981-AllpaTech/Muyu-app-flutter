@@ -48,7 +48,7 @@ lib/
     theme/                 Muyu colors, fonts (Urbanist, Fredoka) and ThemeData
   features/
     user_management/       Splash, login, register, role selection, session
-    plot_approval/         Farmer side: home (my plots)
+    plot_approval/         Farmer side: My Plots and the Publish flow, through the backend
     plot_financing/        Merchant side: plot catalog
   l10n/                    app_en.arb, app_es.arb, app_es_419.arb (+ generated code)
 ```
