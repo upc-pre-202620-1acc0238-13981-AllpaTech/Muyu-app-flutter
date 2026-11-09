@@ -446,10 +446,32 @@ class _Header extends StatelessWidget {
       child: SafeArea(
         bottom: false,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(27, 16, 27, 24),
+          padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
           child: Row(
             children: [
-              EditableProfileAvatar(name: name, size: 72),
+              Column(
+                children: [
+                  EditableProfileAvatar(name: name, size: 64),
+                  const SizedBox(height: 8),
+                  Container(
+                    height: 23,
+                    padding: const EdgeInsets.fromLTRB(11, 0, 10, 0),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: _verifiedBg,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      l10n.profileVerified,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: _darkGreen,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -464,26 +486,10 @@ class _Header extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 8),
                     Text(
                       subtitle,
                       style: TextStyle(fontSize: 13, color: Colors.white.withValues(alpha: 0.9)),
-                    ),
-                    const SizedBox(height: 6),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: _verifiedBg,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        l10n.profileVerified,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                          color: _darkGreen,
-                        ),
-                      ),
                     ),
                   ],
                 ),
