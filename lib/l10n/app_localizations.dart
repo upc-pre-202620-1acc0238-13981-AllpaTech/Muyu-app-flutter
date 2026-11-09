@@ -1675,11 +1675,83 @@ abstract class AppLocalizations {
   /// **'Reports cannot be sent from the app yet. Call technical support and we will help you.'**
   String get reportUnavailable;
 
+  /// No description provided for @reportNoConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'No Connection'**
+  String get reportNoConnection;
+
+  /// No description provided for @reportOfflineBody.
+  ///
+  /// In en, this message translates to:
+  /// **'If you have no signal, the report will be sent automatically when the connection returns.'**
+  String get reportOfflineBody;
+
+  /// No description provided for @reportTypeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Issue type'**
+  String get reportTypeLabel;
+
+  /// No description provided for @reportTypeTechnical.
+  ///
+  /// In en, this message translates to:
+  /// **'Technical issue'**
+  String get reportTypeTechnical;
+
+  /// No description provided for @reportTypePayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment issue'**
+  String get reportTypePayment;
+
+  /// No description provided for @reportTypePlot.
+  ///
+  /// In en, this message translates to:
+  /// **'Plot or harvest'**
+  String get reportTypePlot;
+
+  /// No description provided for @reportTypeOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get reportTypeOther;
+
   /// No description provided for @reportDescriptionLabel.
   ///
   /// In en, this message translates to:
   /// **'Description'**
   String get reportDescriptionLabel;
+
+  /// No description provided for @reportDescriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe what happened and when'**
+  String get reportDescriptionHint;
+
+  /// No description provided for @reportAttachPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Attach photo (optional)'**
+  String get reportAttachPhoto;
+
+  /// No description provided for @reportPhotoAttached.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo attached'**
+  String get reportPhotoAttached;
+
+  /// No description provided for @reportSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send report'**
+  String get reportSend;
+
+  /// No description provided for @reportSendRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Send request'**
+  String get reportSendRequest;
 
   /// No description provided for @ratingTitle.
   ///
