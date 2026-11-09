@@ -182,6 +182,48 @@ class AppLocalizationsEs extends AppLocalizations {
   String get roleNext => 'Siguiente';
 
   @override
+  String get onboardingPlotTitle => 'Publica tu parcela';
+
+  @override
+  String get onboardingPlotBody =>
+      'Registra tus parcelas y cultivos para obtener financiamiento de comerciantes verificados.';
+
+  @override
+  String get onboardingPlotImage => 'Un nuevo cultivo creciendo en una parcela';
+
+  @override
+  String get onboardingEscrowTitle => 'Financiamiento en custodia';
+
+  @override
+  String get onboardingEscrowBody =>
+      'Los fondos se mantienen en custodia y se liberan cuando se aprueba cada hito.';
+
+  @override
+  String get onboardingEscrowImage => 'Un candado que representa fondos protegidos';
+
+  @override
+  String get onboardingWeatherTitle => 'Alertas climáticas gratis';
+
+  @override
+  String get onboardingWeatherBody =>
+      'Recibe alertas de heladas, lluvias intensas y sequías para proteger tu cultivo.';
+
+  @override
+  String get onboardingWeatherImage => 'Sol y nube que representan alertas climáticas';
+
+  @override
+  String get onboardingSkip => 'Omitir';
+
+  @override
+  String get onboardingNext => 'Siguiente';
+
+  @override
+  String get onboardingStart => 'Comenzar';
+
+  @override
+  String get onboardingBack => 'Volver a la selección de rol';
+
+  @override
   String get plotsPublish => 'Publicar';
 
   @override

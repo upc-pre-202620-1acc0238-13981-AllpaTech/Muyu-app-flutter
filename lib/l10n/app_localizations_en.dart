@@ -181,6 +181,48 @@ class AppLocalizationsEn extends AppLocalizations {
   String get roleNext => 'Next';
 
   @override
+  String get onboardingPlotTitle => 'List your plot';
+
+  @override
+  String get onboardingPlotBody =>
+      'Register your plots and crops to get funding from verified traders.';
+
+  @override
+  String get onboardingPlotImage => 'A new crop growing from a plot';
+
+  @override
+  String get onboardingEscrowTitle => 'Escrow financing';
+
+  @override
+  String get onboardingEscrowBody =>
+      'Funds held in Escrow; released when each milestone is approved.';
+
+  @override
+  String get onboardingEscrowImage => 'A padlock representing protected funds';
+
+  @override
+  String get onboardingWeatherTitle => 'Free weather alerts';
+
+  @override
+  String get onboardingWeatherBody =>
+      'Get frost, heavy rain and drought alerts to protect your crop.';
+
+  @override
+  String get onboardingWeatherImage => 'Sun and cloud representing weather alerts';
+
+  @override
+  String get onboardingSkip => 'Skip';
+
+  @override
+  String get onboardingNext => 'Next';
+
+  @override
+  String get onboardingStart => 'Get started';
+
+  @override
+  String get onboardingBack => 'Back to role selection';
+
+  @override
   String get plotsPublish => 'Publish';
 
   @override

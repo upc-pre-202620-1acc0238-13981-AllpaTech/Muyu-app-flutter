@@ -433,6 +433,84 @@ abstract class AppLocalizations {
   /// **'Next'**
   String get roleNext;
 
+  /// No description provided for @onboardingPlotTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'List your plot'**
+  String get onboardingPlotTitle;
+
+  /// No description provided for @onboardingPlotBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Register your plots and crops to get funding from verified traders.'**
+  String get onboardingPlotBody;
+
+  /// No description provided for @onboardingPlotImage.
+  ///
+  /// In en, this message translates to:
+  /// **'A new crop growing from a plot'**
+  String get onboardingPlotImage;
+
+  /// No description provided for @onboardingEscrowTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Escrow financing'**
+  String get onboardingEscrowTitle;
+
+  /// No description provided for @onboardingEscrowBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Funds held in Escrow; released when each milestone is approved.'**
+  String get onboardingEscrowBody;
+
+  /// No description provided for @onboardingEscrowImage.
+  ///
+  /// In en, this message translates to:
+  /// **'A padlock representing protected funds'**
+  String get onboardingEscrowImage;
+
+  /// No description provided for @onboardingWeatherTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Free weather alerts'**
+  String get onboardingWeatherTitle;
+
+  /// No description provided for @onboardingWeatherBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Get frost, heavy rain and drought alerts to protect your crop.'**
+  String get onboardingWeatherBody;
+
+  /// No description provided for @onboardingWeatherImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Sun and cloud representing weather alerts'**
+  String get onboardingWeatherImage;
+
+  /// No description provided for @onboardingSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get onboardingSkip;
+
+  /// No description provided for @onboardingNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get onboardingNext;
+
+  /// No description provided for @onboardingStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Get started'**
+  String get onboardingStart;
+
+  /// No description provided for @onboardingBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to role selection'**
+  String get onboardingBack;
+
   /// No description provided for @plotsPublish.
   ///
   /// In en, this message translates to:
