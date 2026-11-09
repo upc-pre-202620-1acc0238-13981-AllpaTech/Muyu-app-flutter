@@ -1139,6 +1139,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get resetBackLogin => 'Volver a iniciar sesión';
+
+  @override
+  String get loginForgotPassword => '¿Olvidaste tu contraseña?';
 }
 
 /// The translations for Spanish Castilian, as used in Latin America and the Caribbean (`es_419`).

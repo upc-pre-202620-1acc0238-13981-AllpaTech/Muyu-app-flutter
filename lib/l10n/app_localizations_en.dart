@@ -1135,4 +1135,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get resetBackLogin => 'Back to sign in';
+
+  @override
+  String get loginForgotPassword => 'Forgot your password?';
 }

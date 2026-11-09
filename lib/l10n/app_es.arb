@@ -366,5 +366,6 @@
   "resetSentTitle": "Revisa tu correo",
   "resetSentBody": "Si existe una cuenta para {email}, recibirás instrucciones de recuperación.",
   "resetDemoNotice": "Vista previa: el servidor todavía no envía correos de recuperación.",
-  "resetBackLogin": "Volver a iniciar sesión"
+  "resetBackLogin": "Volver a iniciar sesión",
+  "loginForgotPassword": "¿Olvidaste tu contraseña?"
 }

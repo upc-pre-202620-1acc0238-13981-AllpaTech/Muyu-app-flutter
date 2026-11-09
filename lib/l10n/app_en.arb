@@ -443,5 +443,6 @@
   "resetSentBody": "If an account exists for {email}, you will receive recovery instructions.",
   "@resetSentBody": { "placeholders": { "email": { "type": "String" } } },
   "resetDemoNotice": "Recovery preview: the server does not yet send reset emails.",
-  "resetBackLogin": "Back to sign in"
+  "resetBackLogin": "Back to sign in",
+  "loginForgotPassword": "Forgot your password?"
 }
