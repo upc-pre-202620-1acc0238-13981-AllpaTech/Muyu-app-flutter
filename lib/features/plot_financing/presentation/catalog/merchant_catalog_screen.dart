@@ -14,6 +14,7 @@ import '../../../plot_approval/domain/plot.dart';
 import '../../../user_management/application/session_controller.dart';
 import '../../../user_management/presentation/profile/merchant_profile_screen.dart';
 import '../../../escrow_custody/presentation/payments/payment_history_view.dart';
+import '../../../climate_monitoring/presentation/merchant_alerts_view.dart';
 import 'plot_offer_card.dart';
 import '../plotdetail/merchant_plot_detail_screen.dart';
 
@@ -113,6 +114,14 @@ class _MerchantCatalogScreenState extends ConsumerState<MerchantCatalogScreen> {
                 _MerchantSectionHeader(title: _tab.label(l10n)),
                 const Expanded(
                   child: PaymentHistoryView(bottomInset: merchantScrollBottomInset),
+                ),
+              ],
+            ),
+            MerchantTab.alerts => Column(
+              children: [
+                _MerchantSectionHeader(title: l10n.merchantAlertsTitle),
+                const Expanded(
+                  child: MerchantAlertsView(bottomInset: merchantScrollBottomInset),
                 ),
               ],
             ),
