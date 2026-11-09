@@ -18,6 +18,14 @@ abstract final class MuyuColors {
   static const statCard = Color(0xFFDFFFC4);
   static const financedBackground = Color(0xFFC8DBFF);
   static const financedText = Color(0xFF3A5DD2);
+  static const approvedBg = Color(0xFFB8DF98);
+  static const nearText = Color(0xFF579226);
+  static const mutedFooter = Color(0xFF5F675F);
+  static const pageGray = Color(0xFFF2F2F2);
+  static const verifiedChipBg = Color(0xFFFEF7FF);
+  static const verifiedChipText = Color(0xFF4F378A);
+  static const logoutRed = Color(0xFFB84444);
+  static const checkbox = Color(0xFFD9D9D9);
 
   static const errorBorder = Color(0xFFE5484D);
   static const errorText = Color(0xFFFFC7C7);

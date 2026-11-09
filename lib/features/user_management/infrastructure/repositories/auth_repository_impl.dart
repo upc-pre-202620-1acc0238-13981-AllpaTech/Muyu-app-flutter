@@ -34,6 +34,19 @@ class AuthRepositoryImpl implements AuthRepository {
     ),
   );
 
+  @override
+  Future<void> changePassword({
+    required String token,
+    required String currentPassword,
+    required String newPassword,
+  }) => _guard(
+    () => _service.changePassword(
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+      token: token,
+    ),
+  );
+
   /// Maps the backend `LoginResponse` to the app's user, like `LoginResponseDto.kt`.
   User _userFromLogin(Map<String, dynamic> json) {
     final user = json['user'] as Map<String, dynamic>;

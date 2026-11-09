@@ -24,4 +24,13 @@ class AuthService {
     'password': password,
     'dni': dni,
   });
+
+  Future<Map<String, dynamic>> changePassword({
+    required String currentPassword,
+    required String newPassword,
+    String? token,
+  }) => _client.postJson('auth/change-password', {
+    'currentPassword': currentPassword,
+    'newPassword': newPassword,
+  }, token: token);
 }
