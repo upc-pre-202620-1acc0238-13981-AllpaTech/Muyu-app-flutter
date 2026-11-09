@@ -54,6 +54,10 @@ class ApiClient {
     await _send(() => _client.put(_uri(path), headers: _headers(token), body: jsonEncode(body)));
   }
 
+  Future<void> delete(String path, {String? token}) async {
+    await _send(() => _client.delete(_uri(path), headers: _headers(token)));
+  }
+
   Uri _uri(String path) => Uri.parse('$baseUrl$path');
 
   Map<String, String> _headers(String? token) => {

@@ -10,6 +10,11 @@ class Plot {
     required this.status,
     required this.ownerName,
     required this.ownerEmail,
+    this.harvestDate = '',
+    this.stage = '',
+    this.progress = 0,
+    this.cycle = '',
+    this.milestones = '',
     this.imageAsset,
     this.ownerImageAsset,
   });
@@ -23,6 +28,11 @@ class Plot {
   final String status;
   final String ownerName;
   final String ownerEmail;
+  final String harvestDate;
+  final String stage;
+  final int progress;
+  final String cycle;
+  final String milestones;
   final String? imageAsset;
   final String? ownerImageAsset;
 }

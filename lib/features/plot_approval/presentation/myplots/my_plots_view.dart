@@ -8,13 +8,15 @@ import '../../../../l10n/app_localizations.dart';
 import '../../application/farmer_plots_controller.dart';
 import '../../domain/farmer_plot.dart';
 import '../publish/publish_plot_screen.dart';
+import '../plotdetail/farmer_plot_detail_screen.dart';
 
 enum _PlotFilter { all, funded, available }
 
 /// Opens the publish flow and confirms when the plot was saved.
 Future<void> openPublishPlot(BuildContext context) async {
-  final published = await Navigator.of(context)
-      .push<bool>(MaterialPageRoute(builder: (_) => const PublishPlotScreen()));
+  final published = await Navigator.of(
+    context,
+  ).push<bool>(MaterialPageRoute(builder: (_) => const PublishPlotScreen()));
   if (published == true && context.mounted) {
     final l10n = AppLocalizations.of(context);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.publishSuccess)));
@@ -115,6 +117,9 @@ class _MyPlotsViewState extends ConsumerState<MyPlotsView> {
               plots: all.where((p) => _passesFilter(p) && p.matches(_search.text)).toList(),
               bottomInset: widget.bottomInset,
               onRefresh: ref.read(farmerPlotsProvider.notifier).refresh,
+              onOpen: (plot) => Navigator.of(
+                context,
+              ).push<bool>(MaterialPageRoute(builder: (_) => FarmerPlotDetailScreen(plot: plot))),
             ),
           ),
         ),
@@ -129,12 +134,14 @@ class _PlotList extends StatelessWidget {
     required this.plots,
     required this.bottomInset,
     required this.onRefresh,
+    required this.onOpen,
   });
 
   final int ownedCount;
   final List<FarmerPlot> plots;
   final double bottomInset;
   final Future<void> Function() onRefresh;
+  final ValueChanged<FarmerPlot> onOpen;
 
   @override
   Widget build(BuildContext context) {
@@ -165,54 +172,67 @@ class _PlotList extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(24, MuyuSpacing.s8, 24, bottomInset),
               itemCount: plots.length,
               separatorBuilder: (_, _) => const SizedBox(height: 16),
-              itemBuilder: (_, index) => _PlotCard(plot: plots[index]),
+              itemBuilder: (_, index) =>
+                  _PlotCard(plot: plots[index], onTap: () => onOpen(plots[index])),
             ),
     );
   }
 }
 
 class _PlotCard extends StatelessWidget {
-  const _PlotCard({required this.plot});
+  const _PlotCard({required this.plot, required this.onTap});
 
   final FarmerPlot plot;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: Colors.white,
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(20),
+      child: InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: MuyuColors.forest),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: MuyuColors.forest),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(child: Text(plot.name, style: MuyuTextStyles.bodySemiBold)),
-                const SizedBox(width: MuyuSpacing.s8),
-                _StatusChip(funded: plot.isFunded),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(child: Text(plot.name, style: MuyuTextStyles.bodySemiBold)),
+                    const SizedBox(width: MuyuSpacing.s8),
+                    _StatusChip(funded: plot.isFunded),
+                  ],
+                ),
+                const SizedBox(height: MuyuSpacing.s4),
+                Text(
+                  [plot.crop, plot.area].where((part) => part.isNotEmpty).join(' · '),
+                  style: MuyuTextStyles.body,
+                ),
+                const SizedBox(height: MuyuSpacing.s8),
+                _InfoLine(icon: Icons.place_outlined, text: plot.place),
+                if (plot.harvestDate.isNotEmpty)
+                  _InfoLine(
+                    icon: Icons.calendar_today_outlined,
+                    text: l10n.plotHarvest(plot.harvestDate),
+                  ),
+                const SizedBox(height: MuyuSpacing.s8),
+                Text(
+                  plot.amount,
+                  style: MuyuTextStyles.bodyBold.copyWith(color: MuyuColors.forest),
+                ),
               ],
             ),
-            const SizedBox(height: MuyuSpacing.s4),
-            Text(
-              [plot.crop, plot.area].where((part) => part.isNotEmpty).join(' · '),
-              style: MuyuTextStyles.body,
-            ),
-            const SizedBox(height: MuyuSpacing.s8),
-            _InfoLine(icon: Icons.place_outlined, text: plot.place),
-            if (plot.harvestDate.isNotEmpty)
-              _InfoLine(
-                icon: Icons.calendar_today_outlined,
-                text: l10n.plotHarvest(plot.harvestDate),
-              ),
-            const SizedBox(height: MuyuSpacing.s8),
-            Text(plot.amount, style: MuyuTextStyles.bodyBold.copyWith(color: MuyuColors.forest)),
-          ],
+          ),
         ),
       ),
     );

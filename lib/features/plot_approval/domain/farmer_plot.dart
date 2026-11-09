@@ -53,6 +53,33 @@ class FarmerPlot {
     return [name, crop, place].any((value) => value.toLowerCase().contains(q));
   }
 
+  FarmerPlot copyWith({
+    String? name,
+    String? crop,
+    String? area,
+    String? harvestDate,
+    String? place,
+    String? amount,
+    String? cycle,
+  }) => FarmerPlot(
+    id: id,
+    name: name ?? this.name,
+    crop: crop ?? this.crop,
+    area: area ?? this.area,
+    harvestDate: harvestDate ?? this.harvestDate,
+    place: place ?? this.place,
+    stage: stage,
+    progress: progress,
+    status: status,
+    amount: amount ?? this.amount,
+    cycle: cycle ?? this.cycle,
+    milestones: milestones,
+    ownerEmail: ownerEmail,
+    ownerName: ownerName,
+    publishedAt: publishedAt,
+    fundedByEmail: fundedByEmail,
+  );
+
   factory FarmerPlot.fromJson(Map<String, dynamic> json) => FarmerPlot(
     id: (json['id'] as num?)?.toInt() ?? 0,
     name: json['name'] as String? ?? '',

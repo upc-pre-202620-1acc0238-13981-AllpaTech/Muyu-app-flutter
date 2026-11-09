@@ -134,6 +134,18 @@ void main() {
     expect(container.read(sessionProvider).status, SessionStatus.signedOut);
   });
 
+  testWidgets('tapping a catalog card opens the merchant plot details', (tester) async {
+    await show(tester, const MerchantCatalogScreen(), (_) async => http.Response(plots, 200));
+
+    await tester.tap(find.text('Esperanza'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Plot details'), findsOneWidget);
+    expect(find.text('Farmer'), findsOneWidget);
+    expect(find.text('Ana Rojas'), findsOneWidget);
+    expect(find.textContaining('Funds are held in escrow'), findsOneWidget);
+  });
+
   testWidgets('rating without a contract shows no demo data', (tester) async {
     await show(tester, const RateBuyerScreen(), (_) async => http.Response('[]', 200));
 

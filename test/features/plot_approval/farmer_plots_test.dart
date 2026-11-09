@@ -180,6 +180,47 @@ void main() {
         throwsA(isA<PlotException>().having((e) => e.failure, 'failure', PlotFailure.rejected)),
       );
     });
+
+    test('updates a plot in the backend and in the current list', () async {
+      http.Request? put;
+      final c = await containerWith((request) async {
+        if (request.method == 'PUT') {
+          put = request;
+          return http.Response('', 204);
+        }
+        return http.Response(jsonEncode([plotJson(4, farmer)]), 200);
+      });
+      final original = (await c.read(farmerPlotsProvider.future)).single;
+
+      await c
+          .read(farmerPlotsProvider.notifier)
+          .updatePlot(original.copyWith(name: 'Updated plot', area: '5 ha'));
+
+      expect(put!.url.path, '/mobile/plots/4');
+      expect(put!.headers['Authorization'], 'Bearer jwt');
+      final body = jsonDecode(put!.body) as Map<String, dynamic>;
+      expect(body['name'], 'Updated plot');
+      expect(body['area'], '5 ha');
+      expect(c.read(farmerPlotsProvider).value!.single.name, 'Updated plot');
+    });
+
+    test('deletes a plot from the backend and the current list', () async {
+      http.Request? deleted;
+      final c = await containerWith((request) async {
+        if (request.method == 'DELETE') {
+          deleted = request;
+          return http.Response('', 204);
+        }
+        return http.Response(jsonEncode([plotJson(5, farmer)]), 200);
+      });
+      await c.read(farmerPlotsProvider.future);
+
+      await c.read(farmerPlotsProvider.notifier).delete(5);
+
+      expect(deleted!.url.path, '/mobile/plots/5');
+      expect(deleted!.headers['Authorization'], 'Bearer jwt');
+      expect(c.read(farmerPlotsProvider).value, isEmpty);
+    });
   });
 
   group('screens', () {
@@ -216,6 +257,22 @@ void main() {
       await tester.enterText(find.byType(TextField), 'nothing like this');
       await tester.pumpAndSettle();
       expect(find.text('No plots match your search or filter.'), findsOneWidget);
+    });
+
+    testWidgets('tapping an owned plot opens its details and management actions', (tester) async {
+      final c = (await tester.runAsync(
+        () => containerWith((_) async => http.Response(jsonEncode([plotJson(1, farmer)]), 200)),
+      ))!;
+      await pumpScreen(tester, c, const MyPlotsView());
+      await tester.runAsync(() => c.read(farmerPlotsProvider.future));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Plot 1'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Plot details'), findsOneWidget);
+      expect(find.text('Edit plot'), findsOneWidget);
+      expect(find.text('Delete plot'), findsOneWidget);
     });
 
     testWidgets('the publish flow requires the first step before moving on', (tester) async {

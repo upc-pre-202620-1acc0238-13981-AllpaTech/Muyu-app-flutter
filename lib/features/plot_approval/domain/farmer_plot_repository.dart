@@ -18,4 +18,7 @@ abstract interface class FarmerPlotRepository {
 
   /// Creates or replaces a plot. Throws [PlotException].
   Future<void> save(String token, FarmerPlot plot);
+
+  /// Permanently removes a plot owned by the authenticated farmer.
+  Future<void> delete(String token, int id);
 }
