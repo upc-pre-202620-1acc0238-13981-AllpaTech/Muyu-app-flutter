@@ -361,9 +361,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get merchantWelcome => 'Welcome,';
 
   @override
-  String get merchantCompanyName => 'Distribuidora La Cosecha';
-
-  @override
   String get merchantSearch => 'Search plots or GPS…';
 
   @override
@@ -448,9 +445,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileSavedMethods => 'Saved payment methods';
 
   @override
-  String get profileVisaBcp => 'Visa ending in 4821 · BCP transfer';
-
-  @override
   String get profileSecurityHelp => 'SECURITY & HELP';
 
   @override
@@ -469,22 +463,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileLogout => 'Log out';
 
   @override
-  String get profileWholesale => 'Wholesale distributor';
-
-  @override
-  String get profileCompanyLegalName => 'Distribuidora La Cosecha SAC';
-
-  @override
-  String get profileMerchantPlace => 'Lima';
-
-  @override
-  String get profileCompanyLocationEmail => 'Lima · contacto@lacosecha.pe';
-
-  @override
   String get profileNewPlotAlerts => 'New plot alerts';
-
-  @override
-  String get profileNewPlotAlertsBody => 'Potatoes · Cusco · from 5,000 kg';
 
   @override
   String get profileComingSoon => 'This section is coming next.';
@@ -837,41 +816,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reportTitle => 'Report an issue';
 
   @override
-  String get reportNoConnection => 'No Connection';
+  String get ratingNoContracts => 'You have no finished contracts to rate yet.';
 
   @override
-  String get reportOfflineBody =>
-      'If you have no signal, the report will be sent automatically when the connection returns.';
-
-  @override
-  String get reportTypeLabel => 'Issue type';
-
-  @override
-  String get reportTypeTechnical => 'Technical issue';
-
-  @override
-  String get reportTypePayment => 'Payment issue';
-
-  @override
-  String get reportTypePlot => 'Plot or harvest';
-
-  @override
-  String get reportTypeOther => 'Other';
+  String get reportUnavailable =>
+      'Reports cannot be sent from the app yet. Call technical support and we will help you.';
 
   @override
   String get reportDescriptionLabel => 'Description';
-
-  @override
-  String get reportDescriptionHint => 'Describe what happened and when';
-
-  @override
-  String get reportAttachPhoto => 'Attach photo (optional)';
-
-  @override
-  String get reportPhotoAttached => 'Photo attached';
-
-  @override
-  String get reportSend => 'Send report';
 
   @override
   String get ratingTitle => 'Rate the buyer';
@@ -880,21 +832,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ratingSection => 'Rate';
 
   @override
-  String get ratingCycleDate => '15 Feb 2027';
-
-  @override
   String ratingContractEnded(String date) {
     return 'Contract ended · $date';
   }
-
-  @override
-  String get ratingPreviewBuyer => 'Valeria Mendoza';
-
-  @override
-  String get ratingPreviewCompany => 'Distribuidora La Cosecha';
-
-  @override
-  String get ratingPreviewPlot => 'Esperanza';
 
   @override
   String ratingBuyer(String name) {
@@ -957,9 +897,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ratingBackProfile => 'Back to profile';
-
-  @override
-  String get ratingFarmerPreview => 'Miguel Quispe';
 
   @override
   String profileRolePlace(String role, String place) {

@@ -775,12 +775,6 @@ abstract class AppLocalizations {
   /// **'Welcome,'**
   String get merchantWelcome;
 
-  /// No description provided for @merchantCompanyName.
-  ///
-  /// In en, this message translates to:
-  /// **'Distribuidora La Cosecha'**
-  String get merchantCompanyName;
-
   /// No description provided for @merchantSearch.
   ///
   /// In en, this message translates to:
@@ -949,12 +943,6 @@ abstract class AppLocalizations {
   /// **'Saved payment methods'**
   String get profileSavedMethods;
 
-  /// No description provided for @profileVisaBcp.
-  ///
-  /// In en, this message translates to:
-  /// **'Visa ending in 4821 · BCP transfer'**
-  String get profileVisaBcp;
-
   /// No description provided for @profileSecurityHelp.
   ///
   /// In en, this message translates to:
@@ -991,41 +979,11 @@ abstract class AppLocalizations {
   /// **'Log out'**
   String get profileLogout;
 
-  /// No description provided for @profileWholesale.
-  ///
-  /// In en, this message translates to:
-  /// **'Wholesale distributor'**
-  String get profileWholesale;
-
-  /// No description provided for @profileCompanyLegalName.
-  ///
-  /// In en, this message translates to:
-  /// **'Distribuidora La Cosecha SAC'**
-  String get profileCompanyLegalName;
-
-  /// No description provided for @profileMerchantPlace.
-  ///
-  /// In en, this message translates to:
-  /// **'Lima'**
-  String get profileMerchantPlace;
-
-  /// No description provided for @profileCompanyLocationEmail.
-  ///
-  /// In en, this message translates to:
-  /// **'Lima · contacto@lacosecha.pe'**
-  String get profileCompanyLocationEmail;
-
   /// No description provided for @profileNewPlotAlerts.
   ///
   /// In en, this message translates to:
   /// **'New plot alerts'**
   String get profileNewPlotAlerts;
-
-  /// No description provided for @profileNewPlotAlertsBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Potatoes · Cusco · from 5,000 kg'**
-  String get profileNewPlotAlertsBody;
 
   /// No description provided for @profileComingSoon.
   ///
@@ -1699,77 +1657,23 @@ abstract class AppLocalizations {
   /// **'Report an issue'**
   String get reportTitle;
 
-  /// No description provided for @reportNoConnection.
+  /// No description provided for @ratingNoContracts.
   ///
   /// In en, this message translates to:
-  /// **'No Connection'**
-  String get reportNoConnection;
+  /// **'You have no finished contracts to rate yet.'**
+  String get ratingNoContracts;
 
-  /// No description provided for @reportOfflineBody.
+  /// No description provided for @reportUnavailable.
   ///
   /// In en, this message translates to:
-  /// **'If you have no signal, the report will be sent automatically when the connection returns.'**
-  String get reportOfflineBody;
-
-  /// No description provided for @reportTypeLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Issue type'**
-  String get reportTypeLabel;
-
-  /// No description provided for @reportTypeTechnical.
-  ///
-  /// In en, this message translates to:
-  /// **'Technical issue'**
-  String get reportTypeTechnical;
-
-  /// No description provided for @reportTypePayment.
-  ///
-  /// In en, this message translates to:
-  /// **'Payment issue'**
-  String get reportTypePayment;
-
-  /// No description provided for @reportTypePlot.
-  ///
-  /// In en, this message translates to:
-  /// **'Plot or harvest'**
-  String get reportTypePlot;
-
-  /// No description provided for @reportTypeOther.
-  ///
-  /// In en, this message translates to:
-  /// **'Other'**
-  String get reportTypeOther;
+  /// **'Reports cannot be sent from the app yet. Call technical support and we will help you.'**
+  String get reportUnavailable;
 
   /// No description provided for @reportDescriptionLabel.
   ///
   /// In en, this message translates to:
   /// **'Description'**
   String get reportDescriptionLabel;
-
-  /// No description provided for @reportDescriptionHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Describe what happened and when'**
-  String get reportDescriptionHint;
-
-  /// No description provided for @reportAttachPhoto.
-  ///
-  /// In en, this message translates to:
-  /// **'Attach photo (optional)'**
-  String get reportAttachPhoto;
-
-  /// No description provided for @reportPhotoAttached.
-  ///
-  /// In en, this message translates to:
-  /// **'Photo attached'**
-  String get reportPhotoAttached;
-
-  /// No description provided for @reportSend.
-  ///
-  /// In en, this message translates to:
-  /// **'Send report'**
-  String get reportSend;
 
   /// No description provided for @ratingTitle.
   ///
@@ -1783,35 +1687,11 @@ abstract class AppLocalizations {
   /// **'Rate'**
   String get ratingSection;
 
-  /// No description provided for @ratingCycleDate.
-  ///
-  /// In en, this message translates to:
-  /// **'15 Feb 2027'**
-  String get ratingCycleDate;
-
   /// No description provided for @ratingContractEnded.
   ///
   /// In en, this message translates to:
   /// **'Contract ended · {date}'**
   String ratingContractEnded(String date);
-
-  /// No description provided for @ratingPreviewBuyer.
-  ///
-  /// In en, this message translates to:
-  /// **'Valeria Mendoza'**
-  String get ratingPreviewBuyer;
-
-  /// No description provided for @ratingPreviewCompany.
-  ///
-  /// In en, this message translates to:
-  /// **'Distribuidora La Cosecha'**
-  String get ratingPreviewCompany;
-
-  /// No description provided for @ratingPreviewPlot.
-  ///
-  /// In en, this message translates to:
-  /// **'Esperanza'**
-  String get ratingPreviewPlot;
 
   /// No description provided for @ratingBuyer.
   ///
@@ -1908,12 +1788,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Back to profile'**
   String get ratingBackProfile;
-
-  /// No description provided for @ratingFarmerPreview.
-  ///
-  /// In en, this message translates to:
-  /// **'Miguel Quispe'**
-  String get ratingFarmerPreview;
 
   /// No description provided for @profileRolePlace.
   ///
