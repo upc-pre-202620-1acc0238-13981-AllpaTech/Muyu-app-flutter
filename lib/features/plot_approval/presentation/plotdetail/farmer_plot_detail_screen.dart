@@ -7,6 +7,7 @@ import '../../../../core/theme/muyu_theme.dart';
 import '../../application/farmer_plots_controller.dart';
 import '../../domain/farmer_plot.dart';
 import '../../domain/farmer_plot_repository.dart';
+import '../../../climate_monitoring/presentation/weather_alert_screen.dart';
 
 class FarmerPlotDetailScreen extends ConsumerStatefulWidget {
   const FarmerPlotDetailScreen({super.key, required this.plot});
@@ -130,6 +131,14 @@ class _FarmerPlotDetailScreenState extends ConsumerState<FarmerPlotDetailScreen>
                     ),
                   ),
                 const SizedBox(height: 20),
+                FilledButton.icon(
+                  onPressed: () => Navigator.of(context).push<void>(
+                    MaterialPageRoute(builder: (_) => WeatherAlertScreen(plot: plot)),
+                  ),
+                  icon: const Icon(Icons.cloud_outlined),
+                  label: Text(es ? 'Ver alerta climática' : 'View weather alert'),
+                ),
+                const SizedBox(height: 10),
                 if (editable) ...[
                   FilledButton.icon(
                     onPressed: busy ? null : edit,
