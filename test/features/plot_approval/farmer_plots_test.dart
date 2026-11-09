@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
+import 'package:muyu_app/core/designsystem/components/muyu_controls.dart';
 import 'package:muyu_app/core/i18n/app_language.dart';
 import 'package:muyu_app/core/network/api_client.dart';
 import 'package:muyu_app/core/storage/user_preferences.dart';
@@ -207,7 +208,7 @@ void main() {
       expect(find.text('Plot 1'), findsOneWidget);
       expect(find.text('Plot 2'), findsOneWidget);
 
-      await tester.tap(find.widgetWithText(ChoiceChip, 'Funded'));
+      await tester.tap(find.widgetWithText(MuyuFilterChip, 'Funded'));
       await tester.pumpAndSettle();
       expect(find.text('Plot 1'), findsNothing);
       expect(find.text('Plot 2'), findsOneWidget);

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-/// Muyu palette, copied from `ui/theme/Color.kt` in the Kotlin app.
-/// Add colors here as more screens are ported.
+/// Muyu palette: the Figma design tokens, plus colors from `ui/theme/Color.kt`
+/// that have no token yet. Add colors here as more screens are ported.
 abstract final class MuyuColors {
   static const background = Color(0xFFEAFAE9);
   static const forest = Color(0xFF213D09);
@@ -12,13 +12,20 @@ abstract final class MuyuColors {
   static const action = Color(0xFF4A7C1E);
   static const header = Color(0xFF477B1C);
   static const navBar = Color(0xFF0F3F0D);
-  static const navSelected = Color(0xFF618840);
+  static const navSelected = Color(0xFF3E661F);
   static const surface = Color(0xFFFBFBFB);
   static const weatherChip = Color(0xFF92C7C1);
   static const statCard = Color(0xFFDFFFC4);
   static const financedBackground = Color(0xFFC8DBFF);
-  static const financedText = Color(0xFF3A5DD2);
+  static const financedText = Color(0xFF244398);
   static const approvedBg = Color(0xFFB8DF98);
+  static const pendingBackground = Color(0xFFFED2BD);
+  static const pendingText = Color(0xFF774308);
+  static const offlineBackground = Color(0xFFFFF3E0);
+  static const offlineText = Color(0xFF9A5B00);
+  static const dangerBackground = Color(0xFFFFD9D9);
+  static const dangerMessage = Color(0xFF9E2F2F);
+  static const textSecondary = Color(0xFF555555);
   static const nearText = Color(0xFF579226);
   static const mutedFooter = Color(0xFF5F675F);
   static const pageGray = Color(0xFFF2F2F2);
@@ -29,4 +36,12 @@ abstract final class MuyuColors {
 
   static const errorBorder = Color(0xFFE5484D);
   static const errorText = Color(0xFFFFC7C7);
+}
+
+/// Spacing tokens from Figma (Muyu - Spacing).
+abstract final class MuyuSpacing {
+  static const double s4 = 4;
+  static const double s8 = 8;
+  static const double s24 = 24;
+  static const double s48 = 48;
 }

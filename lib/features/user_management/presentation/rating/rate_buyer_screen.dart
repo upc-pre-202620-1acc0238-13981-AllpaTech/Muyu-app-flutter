@@ -6,8 +6,26 @@ import '../../../../core/theme/muyu_colors.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../application/session_controller.dart';
 
+/// A finished contract the farmer can rate.
+class RatingContract {
+  const RatingContract({
+    required this.plotName,
+    required this.buyerName,
+    required this.companyName,
+    required this.endedOn,
+  });
+
+  final String plotName;
+  final String buyerName;
+  final String companyName;
+  final String endedOn;
+}
+
 class RateBuyerScreen extends ConsumerStatefulWidget {
-  const RateBuyerScreen({super.key});
+  const RateBuyerScreen({super.key, this.contract});
+
+  /// Null until the backend provides finished contracts.
+  final RatingContract? contract;
 
   @override
   ConsumerState<RateBuyerScreen> createState() => _RateBuyerScreenState();
@@ -27,8 +45,11 @@ class _RateBuyerScreenState extends ConsumerState<RateBuyerScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final contract = widget.contract;
+    if (contract == null) return const _NoContractToRate();
     if (_submitted) {
       return _RatingSubmitted(
+        contract: contract,
         rating: _rating,
         comment: _comment.text.trim(),
         farmerName: ref.watch(sessionProvider).user?.displayName.trim() ?? '',
@@ -51,18 +72,18 @@ class _RateBuyerScreenState extends ConsumerState<RateBuyerScreen> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  l10n.ratingContractEnded(l10n.ratingCycleDate),
+                  l10n.ratingContractEnded(contract.endedOn),
                   style: const TextStyle(fontSize: 12),
                 ),
                 Text(
-                  l10n.ratingPreviewPlot,
+                  contract.plotName,
                   style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                 ),
                 Text(
-                  l10n.ratingBuyer(l10n.ratingPreviewBuyer),
+                  l10n.ratingBuyer(contract.buyerName),
                   style: const TextStyle(color: Colors.black54),
                 ),
-                Text(l10n.ratingPreviewCompany, style: const TextStyle(color: Colors.black54)),
+                Text(contract.companyName, style: const TextStyle(color: Colors.black54)),
                 const SizedBox(height: 16),
                 Text(
                   l10n.ratingQuestion,
@@ -126,14 +147,45 @@ class _RateBuyerScreenState extends ConsumerState<RateBuyerScreen> {
   }
 }
 
+class _NoContractToRate extends StatelessWidget {
+  const _NoContractToRate();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Scaffold(
+      backgroundColor: MuyuColors.background,
+      body: Column(
+        children: [
+          GreenTitleHeader(title: l10n.ratingTitle, onBack: () => Navigator.of(context).pop()),
+          Expanded(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(30),
+                child: Text(
+                  l10n.ratingNoContracts,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 18, color: MuyuColors.forest),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _RatingSubmitted extends StatelessWidget {
   const _RatingSubmitted({
+    required this.contract,
     required this.rating,
     required this.comment,
     required this.farmerName,
     required this.onBack,
   });
 
+  final RatingContract contract;
   final int rating;
   final String comment;
   final String farmerName;
@@ -163,7 +215,7 @@ class _RatingSubmitted extends StatelessWidget {
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          l10n.ratingLaterStage(l10n.ratingCycleDate),
+                          l10n.ratingLaterStage(contract.endedOn),
                           style: const TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w700,
@@ -192,7 +244,7 @@ class _RatingSubmitted extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        l10n.ratingThanksBody(l10n.ratingPreviewBuyer),
+                        l10n.ratingThanksBody(contract.buyerName),
                         textAlign: TextAlign.center,
                         style: const TextStyle(color: Colors.black54),
                       ),
@@ -210,7 +262,7 @@ class _RatingSubmitted extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  '${l10n.ratingSubmittedBy(farmerName, l10n.ratingPreviewBuyer, l10n.ratingPreviewCompany)} ${comment.isEmpty ? l10n.ratingNoComment : comment}',
+                  '${l10n.ratingSubmittedBy(farmerName, contract.buyerName, contract.companyName)} ${comment.isEmpty ? l10n.ratingNoComment : comment}',
                   style: const TextStyle(color: Colors.grey),
                 ),
                 const SizedBox(height: 8),

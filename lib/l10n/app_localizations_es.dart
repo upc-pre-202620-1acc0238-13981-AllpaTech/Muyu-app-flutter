@@ -362,9 +362,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get merchantWelcome => 'Bienvenido,';
 
   @override
-  String get merchantCompanyName => 'Distribuidora La Cosecha';
-
-  @override
   String get merchantSearch => 'Buscar parcelas o GPS…';
 
   @override
@@ -449,9 +446,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get profileSavedMethods => 'Métodos de pago guardados';
 
   @override
-  String get profileVisaBcp => 'Visa terminada en 4821 · Transferencia BCP';
-
-  @override
   String get profileSecurityHelp => 'SEGURIDAD Y AYUDA';
 
   @override
@@ -470,22 +464,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get profileLogout => 'Cerrar sesión';
 
   @override
-  String get profileWholesale => 'Distribuidor mayorista';
-
-  @override
-  String get profileCompanyLegalName => 'Distribuidora La Cosecha SAC';
-
-  @override
-  String get profileMerchantPlace => 'Lima';
-
-  @override
-  String get profileCompanyLocationEmail => 'Lima · contacto@lacosecha.pe';
-
-  @override
   String get profileNewPlotAlerts => 'Alertas de parcelas nuevas';
-
-  @override
-  String get profileNewPlotAlertsBody => 'Papas · Cusco · desde 5.000 kg';
 
   @override
   String get profileComingSoon => 'Esta sección llega a continuación.';
@@ -840,41 +819,14 @@ class AppLocalizationsEs extends AppLocalizations {
   String get reportTitle => 'Reportar incidencia';
 
   @override
-  String get reportNoConnection => 'Sin conexión';
+  String get ratingNoContracts => 'Aún no tienes contratos finalizados para calificar.';
 
   @override
-  String get reportOfflineBody =>
-      'Si no tienes señal, el reporte se enviará automáticamente cuando vuelva la conexión.';
-
-  @override
-  String get reportTypeLabel => 'Tipo de incidencia';
-
-  @override
-  String get reportTypeTechnical => 'Problema técnico';
-
-  @override
-  String get reportTypePayment => 'Problema de pago';
-
-  @override
-  String get reportTypePlot => 'Parcela o cosecha';
-
-  @override
-  String get reportTypeOther => 'Otro';
+  String get reportUnavailable =>
+      'Todava no se pueden enviar reportes desde la app. Llama a soporte tcnico y te ayudaremos.';
 
   @override
   String get reportDescriptionLabel => 'Descripción';
-
-  @override
-  String get reportDescriptionHint => 'Describe qué ocurrió y cuándo';
-
-  @override
-  String get reportAttachPhoto => 'Adjuntar foto (opcional)';
-
-  @override
-  String get reportPhotoAttached => 'Foto adjunta';
-
-  @override
-  String get reportSend => 'Enviar reporte';
 
   @override
   String get ratingTitle => 'Calificar al comprador';
@@ -883,21 +835,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ratingSection => 'Calificación';
 
   @override
-  String get ratingCycleDate => '15 feb 2027';
-
-  @override
   String ratingContractEnded(String date) {
     return 'Contrato finalizado · $date';
   }
-
-  @override
-  String get ratingPreviewBuyer => 'Valeria Mendoza';
-
-  @override
-  String get ratingPreviewCompany => 'Distribuidora La Cosecha';
-
-  @override
-  String get ratingPreviewPlot => 'Esperanza';
 
   @override
   String ratingBuyer(String name) {
@@ -960,9 +900,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get ratingBackProfile => 'Volver al perfil';
-
-  @override
-  String get ratingFarmerPreview => 'Miguel Quispe';
 
   @override
   String profileRolePlace(String role, String place) {
