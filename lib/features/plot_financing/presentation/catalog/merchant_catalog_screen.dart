@@ -3,11 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/designsystem/components/language_toggle_button.dart';
 import '../../../../core/designsystem/components/merchant_bottom_bar.dart';
+import '../../../../core/designsystem/components/muyu_controls.dart';
 import '../../../../core/designsystem/components/session_overflow_button.dart';
 import '../../../../core/theme/muyu_colors.dart';
 import '../../../../core/theme/muyu_theme.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../plot_approval/application/get_plots_use_case.dart';
+import '../../../plot_approval/domain/farmer_plot_repository.dart';
 import '../../../plot_approval/domain/plot.dart';
 import '../../../user_management/application/session_controller.dart';
 import '../../../user_management/presentation/profile/merchant_profile_screen.dart';
@@ -57,10 +59,20 @@ class _MerchantCatalogScreenState extends ConsumerState<MerchantCatalogScreen> {
     }).toList();
   }
 
+  Future<void> _refreshCatalog() async {
+    try {
+      ref.invalidate(_availablePlotsProvider);
+      await ref.read(_availablePlotsProvider.future);
+    } on PlotException {
+      // The catalog body shows the failure with a retry button.
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final user = ref.watch(sessionProvider).user;
+    final catalog = ref.watch(_availablePlotsProvider);
     final companyName = (user?.displayName.trim().isNotEmpty ?? false)
         ? user!.displayName
         : (user?.email ?? '');
@@ -80,12 +92,12 @@ class _MerchantCatalogScreenState extends ConsumerState<MerchantCatalogScreen> {
                 ),
                 Expanded(
                   child: _CatalogBody(
-                    plots: ref
-                        .watch(_availablePlotsProvider)
-                        .maybeWhen(data: _filtered, orElse: () => const <Plot>[]),
-                    loading: ref.watch(_availablePlotsProvider).isLoading,
+                    plots: _filtered(catalog.value ?? const <Plot>[]),
+                    loading: catalog.isLoading && !catalog.hasValue && !catalog.hasError,
+                    failed: catalog.hasError,
                     filter: _filter,
                     onFilterSelected: (value) => setState(() => _filter = value),
+                    onRefresh: _refreshCatalog,
                   ),
                 ),
               ],
@@ -115,10 +127,20 @@ class _MerchantCatalogScreenState extends ConsumerState<MerchantCatalogScreen> {
   }
 }
 
-final _availablePlotsProvider = FutureProvider<List<Plot>>((ref) async {
-  final plots = await ref.watch(getPlotsUseCaseProvider).execute();
-  return plots.where((plot) => plot.status == 'available').toList();
-});
+final _availablePlotsProvider = FutureProvider<List<Plot>>(
+  (ref) async {
+    final useCase = ref.watch(getPlotsUseCaseProvider);
+    try {
+      final plots = await useCase.execute();
+      return plots.where((plot) => plot.status == 'available').toList();
+    } on PlotException catch (e) {
+      if (e.failure == PlotFailure.sessionExpired) ref.read(sessionProvider.notifier).logout();
+      rethrow;
+    }
+  },
+  // The catalog offers its own retry button.
+  retry: (retryCount, error) => null,
+);
 
 class _CatalogHeader extends StatelessWidget {
   const _CatalogHeader({
@@ -184,7 +206,7 @@ class _CatalogHeader extends StatelessWidget {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  const _PeruFlag(),
+                  const PeruFlag(),
                   const SizedBox(width: 8),
                   Text(
                     l10n.farmerCountryPeru,
@@ -279,14 +301,18 @@ class _CatalogBody extends StatelessWidget {
   const _CatalogBody({
     required this.plots,
     required this.loading,
+    required this.failed,
     required this.filter,
     required this.onFilterSelected,
+    required this.onRefresh,
   });
 
   final List<Plot> plots;
   final bool loading;
+  final bool failed;
   final _CatalogFilter filter;
   final ValueChanged<_CatalogFilter> onFilterSelected;
+  final Future<void> Function() onRefresh;
 
   @override
   Widget build(BuildContext context) {
@@ -296,44 +322,64 @@ class _CatalogBody extends StatelessWidget {
       return const Center(child: CircularProgressIndicator(color: MuyuColors.forest));
     }
 
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, merchantScrollBottomInset),
-      children: [
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            _FilterChip(
-              label: l10n.merchantFilterAll,
-              selected: filter == _CatalogFilter.all,
-              onTap: () => onFilterSelected(_CatalogFilter.all),
-            ),
-            _FilterChip(
-              label: l10n.merchantFilterNear,
-              selected: filter == _CatalogFilter.near,
-              onTap: () => onFilterSelected(_CatalogFilter.near),
-            ),
-            _FilterChip(
-              label: l10n.merchantFilterRecommended,
-              selected: filter == _CatalogFilter.recommended,
-              onTap: () => onFilterSelected(_CatalogFilter.recommended),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        if (plots.isEmpty)
-          Text(
-            l10n.merchantNoPlots,
-            style: TextStyle(
-              fontFamily: MuyuFonts.urbanist,
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
-              color: Colors.black.withValues(alpha: 0.5),
-            ),
-          )
-        else
-          for (final plot in plots) ...[PlotOfferCard(plot: plot), const SizedBox(height: 16)],
-      ],
+    return RefreshIndicator(
+      onRefresh: onRefresh,
+      color: MuyuColors.forest,
+      child: ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.fromLTRB(24, 16, 24, merchantScrollBottomInset),
+        children: [
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              _FilterChip(
+                label: l10n.merchantFilterAll,
+                selected: filter == _CatalogFilter.all,
+                onTap: () => onFilterSelected(_CatalogFilter.all),
+              ),
+              _FilterChip(
+                label: l10n.merchantFilterNear,
+                selected: filter == _CatalogFilter.near,
+                onTap: () => onFilterSelected(_CatalogFilter.near),
+              ),
+              _FilterChip(
+                label: l10n.merchantFilterRecommended,
+                selected: filter == _CatalogFilter.recommended,
+                onTap: () => onFilterSelected(_CatalogFilter.recommended),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          if (failed)
+            Column(
+              children: [
+                const SizedBox(height: 24),
+                const Icon(Icons.cloud_off_outlined, size: 48, color: MuyuColors.forest),
+                const SizedBox(height: 12),
+                Text(
+                  l10n.plotsLoadError,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 16, color: MuyuColors.forest),
+                ),
+                const SizedBox(height: 12),
+                OutlinedButton(onPressed: onRefresh, child: Text(l10n.plotsRetry)),
+              ],
+            )
+          else if (plots.isEmpty)
+            Text(
+              l10n.merchantNoPlots,
+              style: TextStyle(
+                fontFamily: MuyuFonts.urbanist,
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+                color: Colors.black.withValues(alpha: 0.5),
+              ),
+            )
+          else
+            for (final plot in plots) ...[PlotOfferCard(plot: plot), const SizedBox(height: 16)],
+        ],
+      ),
     );
   }
 }
@@ -384,32 +430,6 @@ class _MerchantComingSoon extends StatelessWidget {
           message,
           textAlign: TextAlign.center,
           style: const TextStyle(fontSize: 18, color: MuyuColors.forest),
-        ),
-      ),
-    );
-  }
-}
-
-class _PeruFlag extends StatelessWidget {
-  const _PeruFlag();
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      label: AppLocalizations.of(context).farmerFlagPeru,
-      image: true,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(2),
-        child: const SizedBox(
-          width: 28,
-          height: 16,
-          child: Row(
-            children: [
-              Expanded(child: ColoredBox(color: Color(0xFFD22F27))),
-              Expanded(child: ColoredBox(color: Colors.white)),
-              Expanded(child: ColoredBox(color: Color(0xFFD22F27))),
-            ],
-          ),
         ),
       ),
     );
