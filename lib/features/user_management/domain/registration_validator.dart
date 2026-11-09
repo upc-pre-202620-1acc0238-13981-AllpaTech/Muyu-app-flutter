@@ -59,10 +59,8 @@ abstract final class RegistrationValidator {
     DateTime? today,
   }) {
     if (!_name.hasMatch(name)) return RegistrationError.name;
-    if (!_email.hasMatch(email) || !email.toLowerCase().endsWith('@gmail.com')) {
-      return RegistrationError.email;
-    }
-    if (!_phone.hasMatch(phone)) return RegistrationError.phone;
+    if (!isValidEmail(email)) return RegistrationError.email;
+    if (!isValidPhone(phone)) return RegistrationError.phone;
     if (!_dni.hasMatch(dni)) return RegistrationError.dni;
     if (birthdate == null) return RegistrationError.birthdateRequired;
 
@@ -76,4 +74,11 @@ abstract final class RegistrationValidator {
     if (!acceptedTerms) return RegistrationError.terms;
     return null;
   }
+
+  static bool isValidEmail(String email) =>
+      _email.hasMatch(email) && email.toLowerCase().endsWith('@gmail.com');
+
+  static bool isValidContactEmail(String email) => _email.hasMatch(email);
+
+  static bool isValidPhone(String phone) => _phone.hasMatch(phone);
 }

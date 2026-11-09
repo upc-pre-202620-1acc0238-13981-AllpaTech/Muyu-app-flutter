@@ -24,4 +24,11 @@ abstract interface class AuthRepository {
     required String password,
     required String dni,
   });
+
+  /// Throws [AuthException] when the API rejects the change.
+  Future<void> changePassword({
+    required String token,
+    required String currentPassword,
+    required String newPassword,
+  });
 }

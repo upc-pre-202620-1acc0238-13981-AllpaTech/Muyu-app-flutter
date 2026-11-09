@@ -28,7 +28,7 @@ class SessionState {
 /// Kotlin app's `BackendStateStore` plus `UserPreferences.KEY_LAST_ROLE`.
 class SessionController extends Notifier<SessionState> {
   static const String _sessionKey = 'session';
-  static const Duration _minimumSplash = Duration(milliseconds: 1200);
+  static const Duration _minimumSplash = Duration(milliseconds: 700);
 
   @override
   SessionState build() {
@@ -49,10 +49,13 @@ class SessionController extends Notifier<SessionState> {
   }
 
   /// Throws [AuthException] when the login fails.
+  ///
+  /// Always leaves [SessionState.role] empty so the router sends the user to
+  /// role selection, the same sequence as before the merchant catalog existed.
   Future<void> login(String email, String password) async {
     final user = await ref.read(authRepositoryProvider).login(email, password);
     await ref.read(sharedPreferencesProvider).setString(_sessionKey, jsonEncode(user.toJson()));
-    state = SessionState.signedIn(user, role: _lastRole(user));
+    state = SessionState.signedIn(user);
   }
 
   Future<void> chooseRole(UserRole role) async {
@@ -73,6 +76,31 @@ class SessionController extends Notifier<SessionState> {
   Future<void> logout() async {
     await ref.read(sharedPreferencesProvider).remove(_sessionKey);
     state = const SessionState.signedOut();
+  }
+
+  /// Phone only. Changing the session email would orphan Yape, Plin, cards
+  /// and the last role, which are stored under the original address.
+  Future<void> updateContact({required String phone}) async {
+    final user = state.user;
+    if (user == null) return;
+    final updated = user.copyWith(phone: phone);
+    await ref.read(sharedPreferencesProvider).setString(_sessionKey, jsonEncode(updated.toJson()));
+    await ref
+        .read(userPreferencesProvider)
+        .saveString(user.email, UserPreferences.keyContactPhone, phone);
+    state = SessionState.signedIn(updated, role: state.role);
+  }
+
+  Future<void> changePassword(String currentPassword, String newPassword) async {
+    final user = state.user;
+    if (user == null) throw const AuthException(AuthFailure.rejected);
+    await ref
+        .read(authRepositoryProvider)
+        .changePassword(
+          token: user.token,
+          currentPassword: currentPassword,
+          newPassword: newPassword,
+        );
   }
 
   UserRole? _lastRole(User user) => UserRole.tryParse(

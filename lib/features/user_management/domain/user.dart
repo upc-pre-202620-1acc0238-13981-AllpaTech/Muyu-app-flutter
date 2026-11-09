@@ -22,6 +22,7 @@ class User {
     required this.lastName,
     required this.role,
     required this.token,
+    this.phone = '',
   });
 
   final String email;
@@ -31,8 +32,18 @@ class User {
   /// Role stored by the API ("farmer" or "merchant").
   final String role;
   final String token;
+  final String phone;
 
   String get displayName => [firstName, lastName].where((p) => p.isNotEmpty).join(' ');
+
+  User copyWith({String? email, String? phone}) => User(
+    email: email ?? this.email,
+    firstName: firstName,
+    lastName: lastName,
+    role: role,
+    token: token,
+    phone: phone ?? this.phone,
+  );
 
   Map<String, dynamic> toJson() => {
     'email': email,
@@ -40,6 +51,7 @@ class User {
     'lastName': lastName,
     'role': role,
     'token': token,
+    'phone': phone,
   };
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -48,5 +60,6 @@ class User {
     lastName: json['lastName'] as String? ?? '',
     role: json['role'] as String? ?? '',
     token: json['token'] as String? ?? '',
+    phone: json['phone'] as String? ?? '',
   );
 }
