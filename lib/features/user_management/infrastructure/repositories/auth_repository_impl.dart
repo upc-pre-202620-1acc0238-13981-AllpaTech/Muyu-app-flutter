@@ -60,6 +60,7 @@ class AuthRepositoryImpl implements AuthRepository {
           ? UserRole.merchant.value
           : UserRole.farmer.value,
       token: json['accessToken'] as String? ?? '',
+      phone: (user['phone'] as String? ?? '').trim(),
     );
   }
 
