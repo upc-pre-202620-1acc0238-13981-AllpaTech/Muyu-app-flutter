@@ -404,6 +404,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get profileEditContact => 'Editar contacto';
 
   @override
+  String get profileChangePhoto => 'Cambiar foto';
+
+  @override
   String get profileSaveContact => 'Guardar';
 
   @override
@@ -823,10 +826,47 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get reportUnavailable =>
-      'Todava no se pueden enviar reportes desde la app. Llama a soporte tcnico y te ayudaremos.';
+      'Todavía no se pueden enviar reportes desde la app. Llama a soporte técnico y te ayudaremos.';
+
+  @override
+  String get reportNoConnection => 'Sin conexión';
+
+  @override
+  String get reportOfflineBody =>
+      'Si no tienes señal, el reporte se enviará automáticamente cuando vuelva la conexión.';
+
+  @override
+  String get reportTypeLabel => 'Tipo de incidencia';
+
+  @override
+  String get reportTypeTechnical => 'Problema técnico';
+
+  @override
+  String get reportTypePayment => 'Problema de pago';
+
+  @override
+  String get reportTypePlot => 'Parcela o cosecha';
+
+  @override
+  String get reportTypeOther => 'Otro';
 
   @override
   String get reportDescriptionLabel => 'Descripción';
+
+  @override
+  String get reportDescriptionHint => 'Describe qué ocurrió y cuándo';
+
+  @override
+  String get reportAttachPhoto => 'Adjuntar foto (opcional)';
+
+  @override
+  String get reportPhotoAttached => 'Foto adjunta';
+
+  @override
+  String get reportSend => 'Enviar reporte';
+
+  @override
+  String get reportSendRequest => 'Enviar solicitud';
 
   @override
   String get ratingTitle => 'Calificar al comprador';

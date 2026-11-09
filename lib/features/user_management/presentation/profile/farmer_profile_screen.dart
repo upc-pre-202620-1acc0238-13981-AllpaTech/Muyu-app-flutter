@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../../core/designsystem/components/farmer_avatar.dart';
 import '../../../../core/designsystem/components/farmer_bottom_bar.dart';
 import '../../../../core/storage/user_preferences.dart';
 import '../../../../core/theme/muyu_colors.dart';
@@ -17,6 +16,7 @@ import '../password/change_password_screen.dart';
 import '../pin/change_pin_screen.dart';
 import '../rating/rate_buyer_screen.dart';
 import 'bank_account_screen.dart';
+import 'editable_profile_avatar.dart';
 
 enum _AlertChannel { call, push, whatsapp }
 
@@ -446,10 +446,32 @@ class _Header extends StatelessWidget {
       child: SafeArea(
         bottom: false,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(27, 16, 27, 24),
+          padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
           child: Row(
             children: [
-              FarmerAvatar(name: name, size: 72),
+              Column(
+                children: [
+                  EditableProfileAvatar(name: name, size: 64),
+                  const SizedBox(height: 8),
+                  Container(
+                    height: 23,
+                    padding: const EdgeInsets.fromLTRB(11, 0, 10, 0),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: _verifiedBg,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      l10n.profileVerified,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: _darkGreen,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -464,26 +486,10 @@ class _Header extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 8),
                     Text(
                       subtitle,
                       style: TextStyle(fontSize: 13, color: Colors.white.withValues(alpha: 0.9)),
-                    ),
-                    const SizedBox(height: 6),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: _verifiedBg,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        l10n.profileVerified,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                          color: _darkGreen,
-                        ),
-                      ),
                     ),
                   ],
                 ),
