@@ -18,6 +18,10 @@ class FarmerPlot {
     required this.ownerName,
     required this.publishedAt,
     this.fundedByEmail,
+    this.paymentMethod,
+    this.paymentStatus,
+    this.paymentReference,
+    this.fundedAt,
   });
 
   static const String statusAvailable = 'available';
@@ -42,10 +46,48 @@ class FarmerPlot {
   final String ownerName;
   final String publishedAt;
   final String? fundedByEmail;
+  final String? paymentMethod;
+  final String? paymentStatus;
+  final String? paymentReference;
+  final String? fundedAt;
 
   bool get isFunded => status == 'funded' || status == 'approved';
 
-  bool isOwnedBy(String email) => ownerEmail.toLowerCase() == email.toLowerCase();
+  bool get isPaymentVerification => status == 'payment_verification';
+
+  FarmerPlot copyWith({
+    String? status,
+    String? stage,
+    String? fundedByEmail,
+    String? paymentMethod,
+    String? paymentStatus,
+    String? paymentReference,
+    String? fundedAt,
+  }) => FarmerPlot(
+    id: id,
+    name: name,
+    crop: crop,
+    area: area,
+    harvestDate: harvestDate,
+    place: place,
+    stage: stage ?? this.stage,
+    progress: progress,
+    status: status ?? this.status,
+    amount: amount,
+    cycle: cycle,
+    milestones: milestones,
+    ownerEmail: ownerEmail,
+    ownerName: ownerName,
+    publishedAt: publishedAt,
+    fundedByEmail: fundedByEmail ?? this.fundedByEmail,
+    paymentMethod: paymentMethod ?? this.paymentMethod,
+    paymentStatus: paymentStatus ?? this.paymentStatus,
+    paymentReference: paymentReference ?? this.paymentReference,
+    fundedAt: fundedAt ?? this.fundedAt,
+  );
+
+  bool isOwnedBy(String email) =>
+      ownerEmail.toLowerCase() == email.toLowerCase();
 
   bool matches(String query) {
     final q = query.trim().toLowerCase();
@@ -70,6 +112,10 @@ class FarmerPlot {
     ownerName: json['ownerName'] as String? ?? '',
     publishedAt: json['publishedAt'] as String? ?? '',
     fundedByEmail: json['fundedByEmail'] as String?,
+    paymentMethod: json['paymentMethod'] as String?,
+    paymentStatus: json['paymentStatus'] as String?,
+    paymentReference: json['paymentReference'] as String?,
+    fundedAt: json['fundedAt'] as String?,
   );
 
   /// The full record, including the empty fields Kotlin expects on a new plot.
@@ -90,6 +136,10 @@ class FarmerPlot {
     'ownerEmail': ownerEmail,
     'ownerName': ownerName,
     'fundedByEmail': fundedByEmail,
+    'paymentMethod': paymentMethod,
+    'paymentStatus': paymentStatus,
+    'paymentReference': paymentReference,
+    'fundedAt': fundedAt,
     'latitude': null,
     'longitude': null,
     'accuracyMeters': null,

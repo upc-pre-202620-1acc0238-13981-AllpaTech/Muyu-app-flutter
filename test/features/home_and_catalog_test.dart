@@ -134,6 +134,33 @@ void main() {
     expect(container.read(sessionProvider).status, SessionStatus.signedOut);
   });
 
+  testWidgets('the merchant can submit a bank transfer for verification', (tester) async {
+    var currentPlots = plots;
+    await show(tester, const MerchantCatalogScreen(), (request) async {
+      if (request.method == 'PUT') {
+        final updated = jsonDecode(request.body) as Map<String, dynamic>;
+        currentPlots = jsonEncode([updated]);
+        return http.Response('', 204);
+      }
+      return http.Response(currentPlots, 200);
+    });
+
+    await tester.tap(find.text('Esperanza'));
+    await tester.pumpAndSettle();
+    expect(find.text('Fund plot'), findsOneWidget);
+
+    await tester.tap(find.text('Bank transfer'));
+    await tester.pump();
+    await tester.tap(find.byType(CheckboxListTile));
+    await tester.pump();
+    final confirm = find.text('Confirm and pay S/ 8 500');
+    await tester.ensureVisible(confirm);
+    await tester.tap(confirm);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Payment under verification'), findsOneWidget);
+  });
+
   testWidgets('rating without a contract shows no demo data', (tester) async {
     await show(tester, const RateBuyerScreen(), (_) async => http.Response('[]', 200));
 
