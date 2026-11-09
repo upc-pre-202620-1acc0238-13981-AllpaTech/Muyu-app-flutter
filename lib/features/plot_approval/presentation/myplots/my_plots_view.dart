@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/designsystem/components/muyu_controls.dart';
 import '../../../../core/theme/muyu_colors.dart';
 import '../../../../core/theme/muyu_theme.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -10,35 +11,61 @@ import '../publish/publish_plot_screen.dart';
 
 enum _PlotFilter { all, funded, available }
 
-/// The farmer's plots with search, filters and the Publish action. It has no
-/// Scaffold of its own so it can sit inside the farmer's tab shell.
+/// Opens the publish flow and confirms when the plot was saved.
+Future<void> openPublishPlot(BuildContext context) async {
+  final published = await Navigator.of(context)
+      .push<bool>(MaterialPageRoute(builder: (_) => const PublishPlotScreen()));
+  if (published == true && context.mounted) {
+    final l10n = AppLocalizations.of(context);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.publishSuccess)));
+  }
+}
+
+/// The farmer's plots with filters. It has no Scaffold of its own so it can
+/// sit inside the farmer's tab shell.
 class MyPlotsView extends ConsumerStatefulWidget {
-  const MyPlotsView({super.key, this.bottomInset = 24});
+  const MyPlotsView({super.key, this.bottomInset = 24, this.searchController});
 
   /// Space kept free below the list, for example for a bottom bar.
   final double bottomInset;
+
+  /// Search field owned by the parent, as on Home where it sits in the header.
+  /// When null, this view shows its own field.
+  final TextEditingController? searchController;
 
   @override
   ConsumerState<MyPlotsView> createState() => _MyPlotsViewState();
 }
 
 class _MyPlotsViewState extends ConsumerState<MyPlotsView> {
-  final _search = TextEditingController();
+  final _ownSearch = TextEditingController();
   _PlotFilter _filter = _PlotFilter.all;
+
+  TextEditingController get _search => widget.searchController ?? _ownSearch;
+
+  void _onSearchChanged() => setState(() {});
+
+  @override
+  void initState() {
+    super.initState();
+    _search.addListener(_onSearchChanged);
+  }
+
+  @override
+  void didUpdateWidget(MyPlotsView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final previous = oldWidget.searchController ?? _ownSearch;
+    if (previous != _search) {
+      previous.removeListener(_onSearchChanged);
+      _search.addListener(_onSearchChanged);
+    }
+  }
 
   @override
   void dispose() {
-    _search.dispose();
+    _search.removeListener(_onSearchChanged);
+    _ownSearch.dispose();
     super.dispose();
-  }
-
-  Future<void> _openPublish() async {
-    final published = await Navigator.of(context)
-        .push<bool>(MaterialPageRoute(builder: (_) => const PublishPlotScreen()));
-    if (published == true && mounted) {
-      final l10n = AppLocalizations.of(context);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.publishSuccess)));
-    }
   }
 
   bool _passesFilter(FarmerPlot plot) => switch (_filter) {
@@ -55,55 +82,26 @@ class _MyPlotsViewState extends ConsumerState<MyPlotsView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
-          child: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _search,
-                  onChanged: (_) => setState(() {}),
-                  decoration: InputDecoration(
-                    hintText: l10n.plotsSearchHint,
-                    prefixIcon: const Icon(Icons.search, color: MuyuColors.forest),
-                    filled: true,
-                    fillColor: MuyuColors.field,
-                    isDense: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(24),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              FilledButton.icon(
-                onPressed: _openPublish,
-                style: FilledButton.styleFrom(
-                  backgroundColor: MuyuColors.action,
-                  minimumSize: const Size(48, 48),
-                ),
-                icon: const Icon(Icons.add),
-                label: Text(l10n.plotsPublish),
-              ),
-            ],
+        if (widget.searchController == null)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+            child: MuyuSearchField(controller: _ownSearch, hint: l10n.plotsSearchHint),
           ),
-        ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 4),
+          padding: const EdgeInsets.fromLTRB(24, 16, 24, MuyuSpacing.s8),
           child: Wrap(
-            spacing: 8,
+            spacing: MuyuSpacing.s8,
+            runSpacing: MuyuSpacing.s8,
             children: [
               for (final (filter, label) in [
                 (_PlotFilter.all, l10n.plotsFilterAll),
                 (_PlotFilter.funded, l10n.plotsFilterFunded),
                 (_PlotFilter.available, l10n.plotsFilterAvailable),
               ])
-                ChoiceChip(
-                  label: Text(label),
+                MuyuFilterChip(
+                  label: label,
                   selected: _filter == filter,
-                  selectedColor: MuyuColors.skip,
-                  onSelected: (_) => setState(() => _filter = filter),
+                  onTap: () => setState(() => _filter = filter),
                 ),
             ],
           ),
@@ -146,6 +144,7 @@ class _PlotList extends StatelessWidget {
       color: MuyuColors.action,
       child: plots.isEmpty
           ? ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.fromLTRB(30, 40, 30, bottomInset),
               children: [
                 Image.asset(
@@ -157,14 +156,15 @@ class _PlotList extends StatelessWidget {
                 Text(
                   ownedCount == 0 ? l10n.farmerHomeEmpty : l10n.plotsNoMatch,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 18, color: MuyuColors.forest),
+                  style: MuyuTextStyles.body.copyWith(color: MuyuColors.forest),
                 ),
               ],
             )
           : ListView.separated(
-              padding: EdgeInsets.fromLTRB(20, 8, 20, bottomInset),
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.fromLTRB(24, MuyuSpacing.s8, 24, bottomInset),
               itemCount: plots.length,
-              separatorBuilder: (_, _) => const SizedBox(height: 12),
+              separatorBuilder: (_, _) => const SizedBox(height: 16),
               itemBuilder: (_, index) => _PlotCard(plot: plots[index]),
             ),
     );
@@ -179,11 +179,12 @@ class _PlotCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return Card(
-      color: Colors.white,
-      elevation: 0,
-      margin: EdgeInsets.zero,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: MuyuColors.forest),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -192,38 +193,25 @@ class _PlotCard extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Text(
-                    plot.name,
-                    style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
-                  ),
-                ),
-                const SizedBox(width: 8),
+                Expanded(child: Text(plot.name, style: MuyuTextStyles.bodySemiBold)),
+                const SizedBox(width: MuyuSpacing.s8),
                 _StatusChip(funded: plot.isFunded),
               ],
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: MuyuSpacing.s4),
             Text(
               [plot.crop, plot.area].where((part) => part.isNotEmpty).join(' · '),
-              style: const TextStyle(fontSize: 15, color: MuyuColors.forest),
+              style: MuyuTextStyles.body,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: MuyuSpacing.s8),
             _InfoLine(icon: Icons.place_outlined, text: plot.place),
             if (plot.harvestDate.isNotEmpty)
               _InfoLine(
                 icon: Icons.calendar_today_outlined,
                 text: l10n.plotHarvest(plot.harvestDate),
               ),
-            const SizedBox(height: 8),
-            Text(
-              plot.amount,
-              style: const TextStyle(
-                fontFamily: MuyuFonts.urbanist,
-                fontWeight: FontWeight.w800,
-                fontSize: 18,
-                color: MuyuColors.forest,
-              ),
-            ),
+            const SizedBox(height: MuyuSpacing.s8),
+            Text(plot.amount, style: MuyuTextStyles.bodyBold.copyWith(color: MuyuColors.forest)),
           ],
         ),
       ),
@@ -244,9 +232,9 @@ class _InfoLine extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 16, color: MuyuColors.navSelected),
+          Icon(icon, size: 18, color: MuyuColors.action),
           const SizedBox(width: 6),
-          Expanded(child: Text(text, style: const TextStyle(fontSize: 14))),
+          Expanded(child: Text(text, style: MuyuTextStyles.body)),
         ],
       ),
     );
@@ -263,16 +251,14 @@ class _StatusChip extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: funded ? MuyuColors.financedBackground : MuyuColors.statCard,
-        borderRadius: BorderRadius.circular(12),
+        color: funded ? MuyuColors.financedBackground : MuyuColors.approvedBg,
+        borderRadius: BorderRadius.circular(100),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
         child: Text(
           funded ? l10n.plotsFilterFunded : l10n.plotsFilterAvailable,
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
+          style: MuyuTextStyles.bodyBold.copyWith(
             color: funded ? MuyuColors.financedText : MuyuColors.forest,
           ),
         ),
@@ -300,7 +286,7 @@ class _LoadError extends StatelessWidget {
             Text(
               l10n.plotsLoadError,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 16, color: MuyuColors.forest),
+              style: MuyuTextStyles.body.copyWith(color: MuyuColors.forest),
             ),
             const SizedBox(height: 12),
             OutlinedButton(onPressed: onRetry, child: Text(l10n.plotsRetry)),

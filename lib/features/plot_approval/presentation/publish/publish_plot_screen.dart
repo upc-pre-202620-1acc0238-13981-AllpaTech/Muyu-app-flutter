@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/designsystem/components/auth_components.dart';
+import '../../../../core/designsystem/components/green_title_header.dart';
 import '../../../../core/theme/muyu_colors.dart';
 import '../../../../core/theme/muyu_theme.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -139,47 +140,48 @@ class _PublishPlotScreenState extends ConsumerState<PublishPlotScreen> {
         if (!didPop) _back();
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(l10n.publishTitle),
-          leading: IconButton(
-            tooltip: l10n.back,
-            icon: const Icon(Icons.arrow_back),
-            onPressed: _back,
-          ),
-        ),
-        body: SafeArea(
-          top: false,
-          child: Form(
-            key: _formKey,
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
-              children: [
-                Semantics(
-                  header: true,
-                  child: Text(
-                    '${l10n.publishStep(_step + 1, _stepCount)} · ${section[_step]}',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 14,
-                      color: MuyuColors.action,
-                    ),
+        backgroundColor: MuyuColors.background,
+        body: Column(
+          children: [
+            GreenTitleHeader(title: l10n.publishTitle, onBack: _back),
+            Expanded(
+              child: SafeArea(
+                top: false,
+                child: Form(
+                  key: _formKey,
+                  child: ListView(
+                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+                    children: [
+                      Semantics(
+                        header: true,
+                        child: Text(
+                          '${l10n.publishStep(_step + 1, _stepCount)} · ${section[_step]}',
+                          style: const TextStyle(
+                            fontFamily: MuyuFonts.urbanist,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 14,
+                            color: MuyuColors.action,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      LinearProgressIndicator(
+                        value: (_step + 1) / _stepCount,
+                        color: MuyuColors.action,
+                        backgroundColor: MuyuColors.skip,
+                      ),
+                      const SizedBox(height: 18),
+                      ...switch (_step) {
+                        0 => _infoStep(l10n),
+                        1 => _locationStep(l10n),
+                        _ => _financingStep(l10n),
+                      },
+                    ],
                   ),
                 ),
-                const SizedBox(height: 6),
-                LinearProgressIndicator(
-                  value: (_step + 1) / _stepCount,
-                  color: MuyuColors.action,
-                  backgroundColor: MuyuColors.skip,
-                ),
-                const SizedBox(height: 18),
-                ...switch (_step) {
-                  0 => _infoStep(l10n),
-                  1 => _locationStep(l10n),
-                  _ => _financingStep(l10n),
-                },
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -252,14 +254,14 @@ class _PublishPlotScreenState extends ConsumerState<PublishPlotScreen> {
         onChanged: (months) => setState(() => _cycleMonths = months ?? _cycleMonths),
       ),
       const SizedBox(height: 14),
-      Text(l10n.publishMilestones, style: const TextStyle(fontWeight: FontWeight.w600)),
+      Text(l10n.publishMilestones, style: MuyuTextStyles.bodySemiBold),
       const SizedBox(height: 14),
       Text(
         l10n.publishPlan,
         style: const TextStyle(
-          fontFamily: MuyuFonts.fredoka,
-          fontWeight: FontWeight.w600,
-          fontSize: 18,
+          fontFamily: MuyuFonts.urbanist,
+          fontWeight: FontWeight.w700,
+          fontSize: 20,
           color: MuyuColors.forest,
         ),
       ),
