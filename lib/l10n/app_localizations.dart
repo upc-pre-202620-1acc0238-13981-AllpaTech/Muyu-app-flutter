@@ -1896,6 +1896,348 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{role} · {place}'**
   String profileRolePlace(String role, String place);
+
+  /// No description provided for @paymentsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment history'**
+  String get paymentsTitle;
+
+  /// No description provided for @paymentsTotalReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'TOTAL RECEIVED'**
+  String get paymentsTotalReceived;
+
+  /// No description provided for @paymentsTotalReleased.
+  ///
+  /// In en, this message translates to:
+  /// **'TOTAL RELEASED'**
+  String get paymentsTotalReleased;
+
+  /// No description provided for @paymentsCompletedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} completed payments'**
+  String paymentsCompletedCount(int count);
+
+  /// No description provided for @paymentsEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No payments yet'**
+  String get paymentsEmptyTitle;
+
+  /// No description provided for @paymentsEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Payments appear here when evidence for a financed milestone is approved.'**
+  String get paymentsEmptyBody;
+
+  /// No description provided for @paymentsFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get paymentsFilterAll;
+
+  /// No description provided for @paymentsFilterCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get paymentsFilterCompleted;
+
+  /// No description provided for @paymentsFilterPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get paymentsFilterPending;
+
+  /// No description provided for @paymentDetailsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment details'**
+  String get paymentDetailsTitle;
+
+  /// No description provided for @paymentTransactionDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'TRANSACTION DETAILS'**
+  String get paymentTransactionDetails;
+
+  /// No description provided for @paymentLabelMilestone.
+  ///
+  /// In en, this message translates to:
+  /// **'Milestone'**
+  String get paymentLabelMilestone;
+
+  /// No description provided for @paymentLabelPlot.
+  ///
+  /// In en, this message translates to:
+  /// **'Plot'**
+  String get paymentLabelPlot;
+
+  /// No description provided for @paymentLabelDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Release date'**
+  String get paymentLabelDate;
+
+  /// No description provided for @paymentLabelAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Destination account'**
+  String get paymentLabelAccount;
+
+  /// No description provided for @paymentLabelTxid.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction ID'**
+  String get paymentLabelTxid;
+
+  /// No description provided for @paymentLabelAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get paymentLabelAmount;
+
+  /// No description provided for @paymentPendingDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Awaiting approval'**
+  String get paymentPendingDate;
+
+  /// No description provided for @paymentEscrowExplanation.
+  ///
+  /// In en, this message translates to:
+  /// **'Funds are released only after the merchant approves the milestone evidence.'**
+  String get paymentEscrowExplanation;
+
+  /// No description provided for @paymentMilestonePlanting.
+  ///
+  /// In en, this message translates to:
+  /// **'Planting'**
+  String get paymentMilestonePlanting;
+
+  /// No description provided for @paymentMilestoneIrrigation.
+  ///
+  /// In en, this message translates to:
+  /// **'Irrigation'**
+  String get paymentMilestoneIrrigation;
+
+  /// No description provided for @paymentMilestoneFertilization.
+  ///
+  /// In en, this message translates to:
+  /// **'Fertilization'**
+  String get paymentMilestoneFertilization;
+
+  /// No description provided for @paymentMilestoneHarvest.
+  ///
+  /// In en, this message translates to:
+  /// **'Harvest'**
+  String get paymentMilestoneHarvest;
+
+  /// No description provided for @weatherTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Weather alert'**
+  String get weatherTitle;
+
+  /// No description provided for @weatherLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking the weather for your plot…'**
+  String get weatherLoading;
+
+  /// No description provided for @weatherUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Weather is unavailable for this plot right now.'**
+  String get weatherUnavailable;
+
+  /// No description provided for @weatherStable.
+  ///
+  /// In en, this message translates to:
+  /// **'Stable conditions'**
+  String get weatherStable;
+
+  /// No description provided for @weatherHeavyRain.
+  ///
+  /// In en, this message translates to:
+  /// **'Heavy rain expected'**
+  String get weatherHeavyRain;
+
+  /// No description provided for @weatherFrost.
+  ///
+  /// In en, this message translates to:
+  /// **'Frost risk'**
+  String get weatherFrost;
+
+  /// No description provided for @weatherRisk.
+  ///
+  /// In en, this message translates to:
+  /// **'Risk level'**
+  String get weatherRisk;
+
+  /// No description provided for @weatherRiskHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get weatherRiskHigh;
+
+  /// No description provided for @weatherRiskMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get weatherRiskMedium;
+
+  /// No description provided for @weatherRiskLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get weatherRiskLow;
+
+  /// No description provided for @weatherRecommendations.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended measures'**
+  String get weatherRecommendations;
+
+  /// No description provided for @weatherMeasureDrainage.
+  ///
+  /// In en, this message translates to:
+  /// **'Check drainage and field access'**
+  String get weatherMeasureDrainage;
+
+  /// No description provided for @weatherMeasureCover.
+  ///
+  /// In en, this message translates to:
+  /// **'Protect sensitive crops'**
+  String get weatherMeasureCover;
+
+  /// No description provided for @weatherMeasureIrrigation.
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust irrigation to the forecast'**
+  String get weatherMeasureIrrigation;
+
+  /// No description provided for @weatherMeasureMonitor.
+  ///
+  /// In en, this message translates to:
+  /// **'Monitor crop moisture and stress'**
+  String get weatherMeasureMonitor;
+
+  /// No description provided for @weatherMeasuresPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending attention'**
+  String get weatherMeasuresPending;
+
+  /// No description provided for @weatherMeasuresDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Measures recorded'**
+  String get weatherMeasuresDone;
+
+  /// No description provided for @weatherMeasuresHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select the actions you took to protect your crop.'**
+  String get weatherMeasuresHint;
+
+  /// No description provided for @weatherMeasuresConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Save measures taken'**
+  String get weatherMeasuresConfirm;
+
+  /// No description provided for @weatherMeasuresRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Select at least one measure.'**
+  String get weatherMeasuresRequired;
+
+  /// No description provided for @merchantAlertsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts'**
+  String get merchantAlertsTitle;
+
+  /// No description provided for @merchantAlertsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts for financed plots will appear here.'**
+  String get merchantAlertsEmpty;
+
+  /// No description provided for @merchantAlertPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Milestone evidence awaiting review'**
+  String get merchantAlertPayment;
+
+  /// No description provided for @merchantAlertWeather.
+  ///
+  /// In en, this message translates to:
+  /// **'Weather risk near the financed plot'**
+  String get merchantAlertWeather;
+
+  /// No description provided for @resetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recover password'**
+  String get resetTitle;
+
+  /// No description provided for @resetHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s get you back into your account'**
+  String get resetHeading;
+
+  /// No description provided for @resetBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email and we will show you the next recovery step.'**
+  String get resetBody;
+
+  /// No description provided for @resetEmailPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Account email'**
+  String get resetEmailPrompt;
+
+  /// No description provided for @resetNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get resetNext;
+
+  /// No description provided for @resetInvalidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email address.'**
+  String get resetInvalidEmail;
+
+  /// No description provided for @resetSentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your email'**
+  String get resetSentTitle;
+
+  /// No description provided for @resetSentBody.
+  ///
+  /// In en, this message translates to:
+  /// **'If an account exists for {email}, you will receive recovery instructions.'**
+  String resetSentBody(String email);
+
+  /// No description provided for @resetDemoNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery preview: the server does not yet send reset emails.'**
+  String get resetDemoNotice;
+
+  /// No description provided for @resetBackLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to sign in'**
+  String get resetBackLogin;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

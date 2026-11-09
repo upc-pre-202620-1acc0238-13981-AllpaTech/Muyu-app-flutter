@@ -958,4 +958,181 @@ class AppLocalizationsEn extends AppLocalizations {
   String profileRolePlace(String role, String place) {
     return '$role · $place';
   }
+
+  @override
+  String get paymentsTitle => 'Payment history';
+
+  @override
+  String get paymentsTotalReceived => 'TOTAL RECEIVED';
+
+  @override
+  String get paymentsTotalReleased => 'TOTAL RELEASED';
+
+  @override
+  String paymentsCompletedCount(int count) {
+    return '$count completed payments';
+  }
+
+  @override
+  String get paymentsEmptyTitle => 'No payments yet';
+
+  @override
+  String get paymentsEmptyBody =>
+      'Payments appear here when evidence for a financed milestone is approved.';
+
+  @override
+  String get paymentsFilterAll => 'All';
+
+  @override
+  String get paymentsFilterCompleted => 'Completed';
+
+  @override
+  String get paymentsFilterPending => 'Pending';
+
+  @override
+  String get paymentDetailsTitle => 'Payment details';
+
+  @override
+  String get paymentTransactionDetails => 'TRANSACTION DETAILS';
+
+  @override
+  String get paymentLabelMilestone => 'Milestone';
+
+  @override
+  String get paymentLabelPlot => 'Plot';
+
+  @override
+  String get paymentLabelDate => 'Release date';
+
+  @override
+  String get paymentLabelAccount => 'Destination account';
+
+  @override
+  String get paymentLabelTxid => 'Transaction ID';
+
+  @override
+  String get paymentLabelAmount => 'Amount';
+
+  @override
+  String get paymentPendingDate => 'Awaiting approval';
+
+  @override
+  String get paymentEscrowExplanation =>
+      'Funds are released only after the merchant approves the milestone evidence.';
+
+  @override
+  String get paymentMilestonePlanting => 'Planting';
+
+  @override
+  String get paymentMilestoneIrrigation => 'Irrigation';
+
+  @override
+  String get paymentMilestoneFertilization => 'Fertilization';
+
+  @override
+  String get paymentMilestoneHarvest => 'Harvest';
+
+  @override
+  String get weatherTitle => 'Weather alert';
+
+  @override
+  String get weatherLoading => 'Checking the weather for your plot…';
+
+  @override
+  String get weatherUnavailable => 'Weather is unavailable for this plot right now.';
+
+  @override
+  String get weatherStable => 'Stable conditions';
+
+  @override
+  String get weatherHeavyRain => 'Heavy rain expected';
+
+  @override
+  String get weatherFrost => 'Frost risk';
+
+  @override
+  String get weatherRisk => 'Risk level';
+
+  @override
+  String get weatherRiskHigh => 'High';
+
+  @override
+  String get weatherRiskMedium => 'Medium';
+
+  @override
+  String get weatherRiskLow => 'Low';
+
+  @override
+  String get weatherRecommendations => 'Recommended measures';
+
+  @override
+  String get weatherMeasureDrainage => 'Check drainage and field access';
+
+  @override
+  String get weatherMeasureCover => 'Protect sensitive crops';
+
+  @override
+  String get weatherMeasureIrrigation => 'Adjust irrigation to the forecast';
+
+  @override
+  String get weatherMeasureMonitor => 'Monitor crop moisture and stress';
+
+  @override
+  String get weatherMeasuresPending => 'Pending attention';
+
+  @override
+  String get weatherMeasuresDone => 'Measures recorded';
+
+  @override
+  String get weatherMeasuresHint => 'Select the actions you took to protect your crop.';
+
+  @override
+  String get weatherMeasuresConfirm => 'Save measures taken';
+
+  @override
+  String get weatherMeasuresRequired => 'Select at least one measure.';
+
+  @override
+  String get merchantAlertsTitle => 'Alerts';
+
+  @override
+  String get merchantAlertsEmpty => 'Alerts for financed plots will appear here.';
+
+  @override
+  String get merchantAlertPayment => 'Milestone evidence awaiting review';
+
+  @override
+  String get merchantAlertWeather => 'Weather risk near the financed plot';
+
+  @override
+  String get resetTitle => 'Recover password';
+
+  @override
+  String get resetHeading => 'Let\'s get you back into your account';
+
+  @override
+  String get resetBody => 'Enter your email and we will show you the next recovery step.';
+
+  @override
+  String get resetEmailPrompt => 'Account email';
+
+  @override
+  String get resetNext => 'Continue';
+
+  @override
+  String get resetInvalidEmail => 'Enter a valid email address.';
+
+  @override
+  String get resetSentTitle => 'Check your email';
+
+  @override
+  String resetSentBody(String email) {
+    return 'If an account exists for $email, you will receive recovery instructions.';
+  }
+
+  @override
+  String get resetDemoNotice => 'Recovery preview: the server does not yet send reset emails.';
+
+  @override
+  String get resetBackLogin => 'Back to sign in';
 }
