@@ -21,9 +21,9 @@ class SplashScreen extends StatelessWidget {
             Text(
               l10n.splashTagline,
               style: const TextStyle(
-                fontFamily: MuyuFonts.fredoka,
-                fontWeight: FontWeight.w600,
-                fontSize: 22,
+                fontFamily: MuyuFonts.urbanist,
+                fontWeight: FontWeight.w700,
+                fontSize: 24,
                 color: MuyuColors.forest,
               ),
             ),

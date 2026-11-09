@@ -40,12 +40,17 @@ flutter:
           weight: 300
         - asset: assets/fonts/urbanist_regular.ttf
           weight: 400
+        # Same mapping as Type.kt in the Kotlin app.
+        - asset: assets/fonts/urbanist_semibold.ttf
+          weight: 500
         - asset: assets/fonts/urbanist_semibold.ttf
           weight: 600
         - asset: assets/fonts/urbanist_bold.ttf
           weight: 700
         - asset: assets/fonts/urbanist_extrabold.ttf
           weight: 800
+        - asset: assets/fonts/urbanist_extrabold.ttf
+          weight: 900
     - family: Fredoka
       fonts:
         - asset: assets/fonts/fredoka_semibold.ttf
