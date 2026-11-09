@@ -153,7 +153,11 @@ class _FarmerHomeTabState extends ConsumerState<_FarmerHomeTab> {
           ),
         ),
         Expanded(
-          child: MyPlotsView(bottomInset: farmerScrollBottomInset, searchController: _search),
+          child: MyPlotsView(
+            bottomInset: farmerScrollBottomInset,
+            searchController: _search,
+            homeStyle: true,
+          ),
         ),
       ],
     );

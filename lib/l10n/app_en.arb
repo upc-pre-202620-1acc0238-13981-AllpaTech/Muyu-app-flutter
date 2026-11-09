@@ -79,6 +79,8 @@
   "plotsFilterAll": "All",
   "plotsFilterFunded": "Funded",
   "plotsFilterAvailable": "Available",
+  "plotsFilterApproved": "Approved",
+  "plotsFilterPending": "Pending",
   "plotsNoMatch": "No plots match your search or filter.",
   "plotsLoadError": "Unable to load plots. Please try again.",
   "plotsRetry": "Try again",
@@ -86,6 +88,13 @@
   "@plotHarvest": {
     "placeholders": {
       "date": { "type": "String" }
+    }
+  },
+  "plotCurrentStage": "Current stage:",
+  "plotProgressComplete": "{progress}% complete",
+  "@plotProgressComplete": {
+    "placeholders": {
+      "progress": { "type": "int" }
     }
   },
 

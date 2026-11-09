@@ -239,6 +239,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get plotsFilterAvailable => 'Disponibles';
 
   @override
+  String get plotsFilterApproved => 'Aprobadas';
+
+  @override
+  String get plotsFilterPending => 'Pendientes';
+
+  @override
   String get plotsNoMatch => 'Ninguna parcela coincide con tu búsqueda o filtro.';
 
   @override
@@ -250,6 +256,14 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String plotHarvest(String date) {
     return 'Cosecha: $date';
+  }
+
+  @override
+  String get plotCurrentStage => 'Etapa actual:';
+
+  @override
+  String plotProgressComplete(int progress) {
+    return '$progress% completado';
   }
 
   @override

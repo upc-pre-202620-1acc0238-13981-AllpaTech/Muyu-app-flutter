@@ -17,6 +17,7 @@ class FarmerPlot {
     required this.ownerEmail,
     required this.ownerName,
     required this.publishedAt,
+    this.imageUri,
     this.fundedByEmail,
   });
 
@@ -41,6 +42,7 @@ class FarmerPlot {
   final String ownerEmail;
   final String ownerName;
   final String publishedAt;
+  final String? imageUri;
   final String? fundedByEmail;
 
   bool get isFunded => status == 'funded' || status == 'approved';
@@ -96,6 +98,7 @@ class FarmerPlot {
     ownerEmail: json['ownerEmail'] as String? ?? '',
     ownerName: json['ownerName'] as String? ?? '',
     publishedAt: json['publishedAt'] as String? ?? '',
+    imageUri: json['imageUri'] as String?,
     fundedByEmail: json['fundedByEmail'] as String?,
   );
 
@@ -113,7 +116,7 @@ class FarmerPlot {
     'amount': amount,
     'cycle': cycle,
     'milestones': milestones,
-    'imageUri': null,
+    'imageUri': imageUri,
     'ownerEmail': ownerEmail,
     'ownerName': ownerName,
     'fundedByEmail': fundedByEmail,

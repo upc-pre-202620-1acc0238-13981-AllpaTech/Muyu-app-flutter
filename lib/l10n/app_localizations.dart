@@ -541,6 +541,18 @@ abstract class AppLocalizations {
   /// **'Available'**
   String get plotsFilterAvailable;
 
+  /// No description provided for @plotsFilterApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
+  String get plotsFilterApproved;
+
+  /// No description provided for @plotsFilterPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get plotsFilterPending;
+
   /// No description provided for @plotsNoMatch.
   ///
   /// In en, this message translates to:
@@ -564,6 +576,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Harvest: {date}'**
   String plotHarvest(String date);
+
+  /// No description provided for @plotCurrentStage.
+  ///
+  /// In en, this message translates to:
+  /// **'Current stage:'**
+  String get plotCurrentStage;
+
+  /// No description provided for @plotProgressComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'{progress}% complete'**
+  String plotProgressComplete(int progress);
 
   /// No description provided for @publishTitle.
   ///
