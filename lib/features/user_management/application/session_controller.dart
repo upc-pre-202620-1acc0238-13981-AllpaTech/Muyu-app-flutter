@@ -44,7 +44,7 @@ class SessionController extends Notifier<SessionState> {
       state = const SessionState.signedOut();
       return;
     }
-    final user = User.fromJson(jsonDecode(raw) as Map<String, dynamic>);
+    final user = _withStoredAvatar(User.fromJson(jsonDecode(raw) as Map<String, dynamic>));
     state = SessionState.signedIn(user, role: _lastRole(user));
   }
 
@@ -53,7 +53,7 @@ class SessionController extends Notifier<SessionState> {
   /// Always leaves [SessionState.role] empty so the router sends the user to
   /// role selection, the same sequence as before the merchant catalog existed.
   Future<void> login(String email, String password) async {
-    final user = await ref.read(authRepositoryProvider).login(email, password);
+    final user = _withStoredAvatar(await ref.read(authRepositoryProvider).login(email, password));
     await ref.read(sharedPreferencesProvider).setString(_sessionKey, jsonEncode(user.toJson()));
     state = SessionState.signedIn(user);
   }
@@ -91,6 +91,18 @@ class SessionController extends Notifier<SessionState> {
     state = SessionState.signedIn(updated, role: state.role);
   }
 
+  /// Keeps the photo on this device, keyed by email, like Kotlin `updateAvatar`.
+  Future<void> updateAvatar(String uri) async {
+    final user = state.user;
+    if (user == null) return;
+    final updated = user.copyWith(avatarUri: uri);
+    await ref.read(sharedPreferencesProvider).setString(_sessionKey, jsonEncode(updated.toJson()));
+    await ref
+        .read(userPreferencesProvider)
+        .saveString(user.email, UserPreferences.keyAvatarUri, uri);
+    state = SessionState.signedIn(updated, role: state.role);
+  }
+
   Future<void> changePassword(String currentPassword, String newPassword) async {
     final user = state.user;
     if (user == null) throw const AuthException(AuthFailure.rejected);
@@ -101,6 +113,13 @@ class SessionController extends Notifier<SessionState> {
           currentPassword: currentPassword,
           newPassword: newPassword,
         );
+  }
+
+  User _withStoredAvatar(User user) {
+    final uri =
+        ref.read(userPreferencesProvider).loadString(user.email, UserPreferences.keyAvatarUri) ??
+        '';
+    return uri.isEmpty ? user : user.copyWith(avatarUri: uri);
   }
 
   UserRole? _lastRole(User user) => UserRole.tryParse(

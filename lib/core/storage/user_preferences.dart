@@ -24,6 +24,7 @@ class UserPreferences {
   static const String keyPlinAccount = 'plin_account';
   static const String keyContactPhone = 'contact_phone';
   static const String keyContactEmail = 'contact_email';
+  static const String keyAvatarUri = 'avatar_uri';
   static const String keySyncWifiOnly = 'sync_wifi_only';
 
   final SharedPreferences _prefs;

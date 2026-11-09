@@ -23,6 +23,7 @@ class User {
     required this.role,
     required this.token,
     this.phone = '',
+    this.avatarUri = '',
   });
 
   final String email;
@@ -34,15 +35,19 @@ class User {
   final String token;
   final String phone;
 
+  /// Local file path of the profile photo, kept on this device like Kotlin `avatarUri`.
+  final String avatarUri;
+
   String get displayName => [firstName, lastName].where((p) => p.isNotEmpty).join(' ');
 
-  User copyWith({String? email, String? phone}) => User(
+  User copyWith({String? email, String? phone, String? avatarUri}) => User(
     email: email ?? this.email,
     firstName: firstName,
     lastName: lastName,
     role: role,
     token: token,
     phone: phone ?? this.phone,
+    avatarUri: avatarUri ?? this.avatarUri,
   );
 
   Map<String, dynamic> toJson() => {
@@ -52,6 +57,7 @@ class User {
     'role': role,
     'token': token,
     'phone': phone,
+    'avatarUri': avatarUri,
   };
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -61,5 +67,6 @@ class User {
     role: json['role'] as String? ?? '',
     token: json['token'] as String? ?? '',
     phone: json['phone'] as String? ?? '',
+    avatarUri: json['avatarUri'] as String? ?? '',
   );
 }

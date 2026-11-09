@@ -14,6 +14,7 @@ import '../legal/legal_document_screen.dart';
 import '../password/change_password_screen.dart';
 import 'add_bank_card_screen.dart';
 import 'edit_digital_wallet_screen.dart';
+import 'editable_profile_avatar.dart';
 
 enum _AlertChannel { call, push, whatsapp }
 
@@ -317,14 +318,7 @@ class _ProfileHeader extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  Container(
-                    width: 64,
-                    height: 64,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFD9D9D9),
-                      shape: BoxShape.circle,
-                    ),
-                  ),
+                  EditableProfileAvatar(name: name, size: 64),
                   const SizedBox(height: 8),
                   Container(
                     height: 23,

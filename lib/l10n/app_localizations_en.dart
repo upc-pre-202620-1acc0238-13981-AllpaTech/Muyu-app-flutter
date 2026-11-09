@@ -403,6 +403,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileEditContact => 'Edit contact';
 
   @override
+  String get profileChangePhoto => 'Change photo';
+
+  @override
   String get profileSaveContact => 'Save';
 
   @override

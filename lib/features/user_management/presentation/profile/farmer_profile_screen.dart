@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../../core/designsystem/components/farmer_avatar.dart';
 import '../../../../core/designsystem/components/farmer_bottom_bar.dart';
 import '../../../../core/storage/user_preferences.dart';
 import '../../../../core/theme/muyu_colors.dart';
@@ -17,6 +16,7 @@ import '../password/change_password_screen.dart';
 import '../pin/change_pin_screen.dart';
 import '../rating/rate_buyer_screen.dart';
 import 'bank_account_screen.dart';
+import 'editable_profile_avatar.dart';
 
 enum _AlertChannel { call, push, whatsapp }
 
@@ -449,7 +449,7 @@ class _Header extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(27, 16, 27, 24),
           child: Row(
             children: [
-              FarmerAvatar(name: name, size: 72),
+              EditableProfileAvatar(name: name, size: 72),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(

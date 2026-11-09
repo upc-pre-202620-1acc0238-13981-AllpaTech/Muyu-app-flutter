@@ -859,6 +859,12 @@ abstract class AppLocalizations {
   /// **'Edit contact'**
   String get profileEditContact;
 
+  /// No description provided for @profileChangePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Change photo'**
+  String get profileChangePhoto;
+
   /// No description provided for @profileSaveContact.
   ///
   /// In en, this message translates to:
