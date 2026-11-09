@@ -13,6 +13,7 @@ import '../../../plot_approval/domain/farmer_plot_repository.dart';
 import '../../../plot_approval/domain/plot.dart';
 import '../../../user_management/application/session_controller.dart';
 import '../../../user_management/presentation/profile/merchant_profile_screen.dart';
+import '../../../escrow_custody/presentation/payments/payment_history_view.dart';
 import 'plot_offer_card.dart';
 import '../plotdetail/merchant_plot_detail_screen.dart';
 
@@ -107,6 +108,14 @@ class _MerchantCatalogScreenState extends ConsumerState<MerchantCatalogScreen> {
               ],
             ),
             MerchantTab.profile => const SizedBox.expand(child: MerchantProfileScreen()),
+            MerchantTab.payments => Column(
+              children: [
+                _MerchantSectionHeader(title: _tab.label(l10n)),
+                const Expanded(
+                  child: PaymentHistoryView(bottomInset: merchantScrollBottomInset),
+                ),
+              ],
+            ),
             _ => Column(
               children: [
                 _MerchantSectionHeader(title: _tab.label(l10n)),
