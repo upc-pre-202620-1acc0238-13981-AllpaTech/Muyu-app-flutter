@@ -19,6 +19,10 @@ class FarmerPlot {
     required this.publishedAt,
     this.imageUri,
     this.fundedByEmail,
+    this.latitude,
+    this.longitude,
+    this.milestoneStates = const [],
+    this.weatherMeasures = const [],
   });
 
   static const String statusAvailable = 'available';
@@ -44,6 +48,10 @@ class FarmerPlot {
   final String publishedAt;
   final String? imageUri;
   final String? fundedByEmail;
+  final double? latitude;
+  final double? longitude;
+  final List<MilestoneState> milestoneStates;
+  final List<WeatherMeasure> weatherMeasures;
 
   bool get isFunded => status == 'funded' || status == 'approved';
 
@@ -63,6 +71,7 @@ class FarmerPlot {
     String? place,
     String? amount,
     String? cycle,
+    List<WeatherMeasure>? weatherMeasures,
   }) => FarmerPlot(
     id: id,
     name: name ?? this.name,
@@ -80,6 +89,11 @@ class FarmerPlot {
     ownerName: ownerName,
     publishedAt: publishedAt,
     fundedByEmail: fundedByEmail,
+    imageUri: imageUri,
+    latitude: latitude,
+    longitude: longitude,
+    milestoneStates: milestoneStates,
+    weatherMeasures: weatherMeasures ?? this.weatherMeasures,
   );
 
   factory FarmerPlot.fromJson(Map<String, dynamic> json) => FarmerPlot(
@@ -100,6 +114,16 @@ class FarmerPlot {
     publishedAt: json['publishedAt'] as String? ?? '',
     imageUri: json['imageUri'] as String?,
     fundedByEmail: json['fundedByEmail'] as String?,
+    latitude: (json['latitude'] as num?)?.toDouble(),
+    longitude: (json['longitude'] as num?)?.toDouble(),
+    milestoneStates: (json['milestoneStates'] as List<dynamic>? ?? const [])
+        .whereType<Map<String, dynamic>>()
+        .map(MilestoneState.fromJson)
+        .toList(),
+    weatherMeasures: (json['weatherMeasures'] as List<dynamic>? ?? const [])
+        .whereType<Map<String, dynamic>>()
+        .map(WeatherMeasure.fromJson)
+        .toList(),
   );
 
   /// The full record, including the empty fields Kotlin expects on a new plot.
@@ -120,18 +144,18 @@ class FarmerPlot {
     'ownerEmail': ownerEmail,
     'ownerName': ownerName,
     'fundedByEmail': fundedByEmail,
-    'latitude': null,
-    'longitude': null,
+    'latitude': latitude,
+    'longitude': longitude,
     'accuracyMeters': null,
     'publishedAt': publishedAt,
-    'milestoneStates': const <Object>[],
+    'milestoneStates': milestoneStates.map((item) => item.toJson()).toList(),
     'visitOutcome': '',
     'visitDate': '',
     'agreedPrice': '',
     'harvestReceivedAt': '',
     'harvestReceivedBy': '',
     'harvestIncidents': const <Object>[],
-    'weatherMeasures': const <Object>[],
+    'weatherMeasures': weatherMeasures.map((item) => item.toJson()).toList(),
   };
 }
 
@@ -155,3 +179,5 @@ class NewFarmerPlot {
   final String amount;
   final String cycle;
 }
+import 'plot_activity.dart';
+
