@@ -15,6 +15,7 @@ class Plot {
     this.progress = 0,
     this.cycle = '',
     this.milestones = '',
+    this.imageUri,
     this.imageAsset,
     this.ownerImageAsset,
   });
@@ -33,6 +34,7 @@ class Plot {
   final int progress;
   final String cycle;
   final String milestones;
+  final String? imageUri;
   final String? imageAsset;
   final String? ownerImageAsset;
 }

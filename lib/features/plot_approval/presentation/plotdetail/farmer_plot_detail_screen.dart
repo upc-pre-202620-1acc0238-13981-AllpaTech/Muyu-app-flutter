@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/designsystem/components/green_title_header.dart';
+import '../../../../core/designsystem/components/plot_photo.dart';
 import '../../../../core/theme/muyu_colors.dart';
 import '../../../../core/theme/muyu_theme.dart';
 import '../../application/farmer_plots_controller.dart';
@@ -130,6 +131,13 @@ class _FarmerPlotDetailScreenState extends ConsumerState<FarmerPlotDetailScreen>
             child: ListView(
               padding: const EdgeInsets.all(20),
               children: [
+                PlotPhoto(
+                  source: plot.imageUri,
+                  description: plot.name,
+                  height: 210,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                const SizedBox(height: 12),
                 _Hero(plot: plot),
                 const SizedBox(height: 16),
                 _Card(
@@ -314,16 +322,50 @@ class _Hero extends StatelessWidget {
   final FarmerPlot plot;
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(20),
-    decoration: BoxDecoration(color: MuyuColors.navBar, borderRadius: BorderRadius.circular(22)),
+    padding: const EdgeInsets.all(18),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(18),
+      border: Border.all(color: MuyuColors.forest),
+    ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(plot.name, style: MuyuTextStyles.headerTitle),
+        Row(
+          children: [
+            Expanded(child: Text(plot.name, style: MuyuTextStyles.bodyBold)),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                color: plot.isFunded ? MuyuColors.financedBackground : MuyuColors.approvedBg,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                plot.status,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: plot.isFunded ? MuyuColors.financedText : MuyuColors.forest,
+                ),
+              ),
+            ),
+          ],
+        ),
         const SizedBox(height: 8),
-        Text('${plot.crop} · ${plot.area}', style: const TextStyle(color: Colors.white)),
+        Text(
+          '${plot.crop} · ${plot.area} · ${plot.place}',
+          style: const TextStyle(color: MuyuColors.textSecondary),
+        ),
         const SizedBox(height: 12),
-        LinearProgressIndicator(value: plot.progress.clamp(0, 100) / 100),
+        LinearProgressIndicator(
+          value: plot.progress.clamp(0, 100) / 100,
+          minHeight: 8,
+          borderRadius: BorderRadius.circular(8),
+          color: MuyuColors.action,
+          backgroundColor: MuyuColors.skip,
+        ),
+        const SizedBox(height: 6),
+        Text('${plot.progress}% · ${plot.stage}', style: const TextStyle(fontSize: 12)),
       ],
     ),
   );

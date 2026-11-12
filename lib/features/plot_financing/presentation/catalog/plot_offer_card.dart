@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/designsystem/components/farmer_avatar.dart';
+import '../../../../core/designsystem/components/plot_photo.dart';
 import '../../../../core/theme/muyu_colors.dart';
 import '../../../../core/theme/muyu_theme.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -26,7 +27,11 @@ class PlotOfferCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _PlotPhoto(imageAsset: plot.imageAsset, description: plot.name),
+            PlotPhoto(
+              source: plot.imageUri ?? plot.imageAsset,
+              description: plot.name,
+              height: 168,
+            ),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
               child: Column(
@@ -118,28 +123,6 @@ class PlotOfferCard extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _PlotPhoto extends StatelessWidget {
-  const _PlotPhoto({required this.imageAsset, required this.description});
-
-  final String? imageAsset;
-  final String description;
-
-  @override
-  Widget build(BuildContext context) {
-    final asset = imageAsset;
-    return SizedBox(
-      height: 168,
-      width: double.infinity,
-      child: asset == null || asset.isEmpty
-          ? const ColoredBox(
-              color: Color(0xFFEAF9E9),
-              child: Center(child: Icon(Icons.image, size: 48, color: MuyuColors.action)),
-            )
-          : Image.asset(asset, fit: BoxFit.cover, semanticLabel: description),
     );
   }
 }

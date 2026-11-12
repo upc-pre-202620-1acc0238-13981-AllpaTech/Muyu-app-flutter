@@ -32,5 +32,6 @@ class CatalogPlotRepository implements PlotRepository {
     progress: plot.progress,
     cycle: plot.cycle,
     milestones: plot.milestones,
+    imageUri: plot.imageUri,
   );
 }
