@@ -1,3 +1,4 @@
+import 'harvest_delivery.dart';
 import 'plot_activity.dart';
 
 /// A plot as the backend stores it, with the fields of Kotlin's `PlotRecord`,
@@ -150,12 +151,49 @@ class FarmerPlot {
     );
   }
 
+  /// When the merchant confirmed receiving the harvest, empty until then.
+  String get harvestReceivedAt => rawJson['harvestReceivedAt'] as String? ?? '';
+  String get harvestReceivedBy => rawJson['harvestReceivedBy'] as String? ?? '';
+
+  /// Delivery problems the merchant reported (Kotlin `HarvestIncident`).
+  List<HarvestIncident> get harvestIncidents =>
+      (rawJson['harvestIncidents'] as List<dynamic>? ?? const [])
+          .whereType<Map<String, dynamic>>()
+          .map(HarvestIncident.fromJson)
+          .toList();
+
+  /// Kotlin `Plot.harvestDeliveryState`: the delivery opens once the harvest
+  /// milestone is approved and closes when the merchant confirms receipt.
+  HarvestDeliveryState get harvestDeliveryState {
+    if (harvestReceivedAt.isNotEmpty) return HarvestDeliveryState.received;
+    final harvestApproved = milestone('harvest')?.isApproved ?? false;
+    if (status != 'funded' || !harvestApproved) return HarvestDeliveryState.notReady;
+    return harvestIncidents.isEmpty
+        ? HarvestDeliveryState.pending
+        : HarvestDeliveryState.withIncident;
+  }
+
+  /// The plot after the merchant confirms the harvest, as Kotlin `confirmHarvestReceived`.
+  FarmerPlot harvestReceived({required String by, required String at}) => _with(
+    stage: 'Harvest received',
+    rawJson: {...rawJson, 'harvestReceivedAt': at, 'harvestReceivedBy': by},
+  );
+
+  /// The plot with one more delivery incident, as Kotlin `reportHarvestIncident`.
+  FarmerPlot withHarvestIncident(HarvestIncident incident) => _with(
+    rawJson: {
+      ...rawJson,
+      'harvestIncidents': [for (final item in harvestIncidents) item.toJson(), incident.toJson()],
+    },
+  );
+
   FarmerPlot _with({
     String? stage,
     int? progress,
     String? status,
     String? fundedByEmail,
     List<MilestoneState>? milestoneStates,
+    Map<String, dynamic>? rawJson,
   }) => FarmerPlot(
     id: id,
     name: name,
@@ -178,7 +216,7 @@ class FarmerPlot {
     longitude: longitude,
     milestoneStates: milestoneStates ?? this.milestoneStates,
     weatherMeasures: weatherMeasures,
-    rawJson: rawJson,
+    rawJson: rawJson ?? this.rawJson,
   );
 
   factory FarmerPlot.fromJson(Map<String, dynamic> json) => FarmerPlot(
