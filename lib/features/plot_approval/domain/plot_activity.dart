@@ -59,6 +59,10 @@ class MilestoneState {
   static const String statusApproved = 'approved';
   static const String statusNeedsCorrection = 'needs_correction';
 
+  /// Recorded on the phone without signal; Kotlin uses the same status.
+  static const String statusQueued = 'queued';
+  bool get isQueued => status == statusQueued;
+
   /// The evidence photo as Kotlin stores it: a `data:image/...;base64,` URL.
   String get photoUri => raw['photoUri'] as String? ?? '';
   String get inputUsed => raw['inputUsed'] as String? ?? '';
