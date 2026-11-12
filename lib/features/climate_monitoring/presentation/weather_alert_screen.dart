@@ -38,9 +38,8 @@ class _WeatherAlertScreenState extends ConsumerState<WeatherAlertScreen> {
       if (mounted) setState(() => _saved = true);
     } on Exception {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context).plotsLoadError)),
-        );
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).plotsLoadError)));
       }
     } finally {
       if (mounted) setState(() => _saving = false);
@@ -62,7 +61,11 @@ class _WeatherAlertScreenState extends ConsumerState<WeatherAlertScreen> {
         loading: () => Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: [const CircularProgressIndicator(), const SizedBox(height: 12), Text(l10n.weatherLoading)],
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(height: 12),
+              Text(l10n.weatherLoading),
+            ],
           ),
         ),
         error: (_, _) => Center(
@@ -145,11 +148,20 @@ class _WeatherContent extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Icon(alert.isRain ? Icons.thunderstorm : alert.isFrost ? Icons.ac_unit : Icons.wb_sunny, size: 64),
+              Icon(
+                alert.isRain
+                    ? Icons.thunderstorm
+                    : alert.isFrost
+                    ? Icons.ac_unit
+                    : Icons.wb_sunny,
+                size: 64,
+              ),
               Text(title, style: MuyuTextStyles.bodyBold.copyWith(fontSize: 24)),
               Text('${alert.temperature.round()} °C'),
               Text('${l10n.weatherRisk}: ${_riskLabel(l10n, alert.risk)}'),
-              Text('${alert.rainProbability}% lluvia · ${alert.minimumTemperature.round()}° / ${alert.maximumTemperature.round()}°'),
+              Text(
+                '${alert.rainProbability}% lluvia · ${alert.minimumTemperature.round()}° / ${alert.maximumTemperature.round()}°',
+              ),
             ],
           ),
         ),
@@ -163,7 +175,10 @@ class _WeatherContent extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(done ? l10n.weatherMeasuresDone : l10n.weatherMeasuresPending, style: MuyuTextStyles.bodyBold),
+                Text(
+                  done ? l10n.weatherMeasuresDone : l10n.weatherMeasuresPending,
+                  style: MuyuTextStyles.bodyBold,
+                ),
                 const SizedBox(height: 6),
                 Text(l10n.weatherMeasuresHint),
                 for (final measure in alert.measures)
@@ -177,12 +192,18 @@ class _WeatherContent extends StatelessWidget {
                     activeColor: MuyuColors.forest,
                   ),
                 if (validationError)
-                  Text(l10n.weatherMeasuresRequired, style: const TextStyle(color: MuyuColors.dangerMessage)),
+                  Text(
+                    l10n.weatherMeasuresRequired,
+                    style: const TextStyle(color: MuyuColors.dangerMessage),
+                  ),
                 if (!done)
                   FilledButton(
                     onPressed: saving ? null : onSave,
                     child: saving
-                        ? const SizedBox.square(dimension: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                        ? const SizedBox.square(
+                            dimension: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
                         : Text(l10n.weatherMeasuresConfirm),
                   ),
               ],

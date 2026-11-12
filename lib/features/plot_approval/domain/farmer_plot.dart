@@ -105,6 +105,33 @@ class FarmerPlot {
     rawJson: rawJson,
   );
 
+  /// The plot after a merchant funds it, as Kotlin `BackendStateStore.fundPlot`
+  /// writes it: funded, at the planting stage, with its milestone plan.
+  FarmerPlot fundedBy(String merchantEmail) => FarmerPlot(
+    id: id,
+    name: name,
+    crop: crop,
+    area: area,
+    harvestDate: harvestDate,
+    place: place,
+    stage: 'Planting',
+    progress: 10,
+    status: 'funded',
+    amount: amount,
+    cycle: cycle,
+    milestones: milestones,
+    ownerEmail: ownerEmail,
+    ownerName: ownerName,
+    publishedAt: publishedAt,
+    fundedByEmail: merchantEmail,
+    imageUri: imageUri,
+    latitude: latitude,
+    longitude: longitude,
+    milestoneStates: milestoneStates.isEmpty ? MilestoneState.seed() : milestoneStates,
+    weatherMeasures: weatherMeasures,
+    rawJson: rawJson,
+  );
+
   factory FarmerPlot.fromJson(Map<String, dynamic> json) => FarmerPlot(
     id: (json['id'] as num?)?.toInt() ?? 0,
     name: json['name'] as String? ?? '',
@@ -169,6 +196,7 @@ class FarmerPlot {
     'weatherMeasures': weatherMeasures.map((item) => item.toJson()).toList(),
   };
 }
+
 /// What the farmer fills in on the publish flow.
 class NewFarmerPlot {
   const NewFarmerPlot({

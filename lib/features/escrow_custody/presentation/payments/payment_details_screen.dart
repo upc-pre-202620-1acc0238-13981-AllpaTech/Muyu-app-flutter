@@ -38,9 +38,7 @@ class PaymentDetailsScreen extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 34,
-                  backgroundColor: completed
-                      ? MuyuColors.approvedBg
-                      : MuyuColors.pendingBackground,
+                  backgroundColor: completed ? MuyuColors.approvedBg : MuyuColors.pendingBackground,
                   child: Icon(
                     completed ? Icons.check_circle : Icons.schedule,
                     size: 42,
@@ -77,9 +75,7 @@ class PaymentDetailsScreen extends StatelessWidget {
                   _DetailRow(
                     label: l10n.paymentLabelDate,
                     value: completed && date != null
-                        ? DateFormat.yMMMMd(
-                            Localizations.localeOf(context).toString(),
-                          ).format(date)
+                        ? DateFormat.yMMMMd(Localizations.localeOf(context).toString()).format(date)
                         : l10n.paymentPendingDate,
                   ),
                   _DetailRow(
@@ -124,10 +120,16 @@ class _DetailRow extends StatelessWidget {
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(child: Text(label, style: const TextStyle(color: MuyuColors.textSecondary))),
+        Expanded(
+          child: Text(label, style: const TextStyle(color: MuyuColors.textSecondary)),
+        ),
         const SizedBox(width: 12),
         Expanded(
-          child: Text(value, textAlign: TextAlign.end, style: const TextStyle(fontWeight: FontWeight.w700)),
+          child: Text(
+            value,
+            textAlign: TextAlign.end,
+            style: const TextStyle(fontWeight: FontWeight.w700),
+          ),
         ),
       ],
     ),

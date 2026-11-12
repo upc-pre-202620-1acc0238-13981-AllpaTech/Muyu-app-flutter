@@ -7,8 +7,11 @@ import '../../../../core/theme/muyu_theme.dart';
 import '../../../plot_approval/domain/plot.dart';
 
 class MerchantPlotDetailScreen extends StatelessWidget {
-  const MerchantPlotDetailScreen({super.key, required this.plot});
+  const MerchantPlotDetailScreen({super.key, required this.plot, this.onFund});
   final Plot plot;
+
+  /// Opens the funding flow. Null hides the button, e.g. for a funded plot.
+  final VoidCallback? onFund;
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +88,13 @@ class MerchantPlotDetailScreen extends StatelessWidget {
                         : 'Funds are held in escrow and released after approved milestones.',
                   ),
                 ),
+                if (onFund != null) ...[
+                  const SizedBox(height: 20),
+                  FilledButton(
+                    onPressed: onFund,
+                    child: Text(es ? 'Financiar parcela' : 'Fund this plot'),
+                  ),
+                ],
               ],
             ),
           ),

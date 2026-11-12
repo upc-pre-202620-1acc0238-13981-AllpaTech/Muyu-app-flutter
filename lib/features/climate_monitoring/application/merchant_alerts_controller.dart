@@ -33,9 +33,9 @@ final merchantAlertsProvider = FutureProvider<List<MerchantAlertItem>>((ref) asy
       .toList();
   final alerts = <MerchantAlertItem>[];
   for (final plot in funded) {
-    for (final payment in paymentsFromPlot(plot).where(
-      (item) => item.status == PaymentStatus.pending,
-    )) {
+    for (final payment in paymentsFromPlot(
+      plot,
+    ).where((item) => item.status == PaymentStatus.pending)) {
       alerts.add(
         MerchantAlertItem(
           id: 'payment:${payment.id}',

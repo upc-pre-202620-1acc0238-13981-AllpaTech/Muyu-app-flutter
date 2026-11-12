@@ -48,11 +48,15 @@ class _PaymentHistoryViewState extends ConsumerState<PaymentHistoryView> {
         ),
         data: (all) {
           final completed = all.where((item) => item.status == PaymentStatus.completed).toList();
-          final visible = all.where((item) => switch (_filter) {
-            _PaymentFilter.all => true,
-            _PaymentFilter.completed => item.status == PaymentStatus.completed,
-            _PaymentFilter.pending => item.status == PaymentStatus.pending,
-          }).toList();
+          final visible = all
+              .where(
+                (item) => switch (_filter) {
+                  _PaymentFilter.all => true,
+                  _PaymentFilter.completed => item.status == PaymentStatus.completed,
+                  _PaymentFilter.pending => item.status == PaymentStatus.pending,
+                },
+              )
+              .toList();
           return ListView(
             physics: const AlwaysScrollableScrollPhysics(),
             padding: EdgeInsets.fromLTRB(24, 20, 24, widget.bottomInset),
@@ -117,14 +121,14 @@ class _SummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
     padding: const EdgeInsets.all(22),
-    decoration: BoxDecoration(
-      color: MuyuColors.forest,
-      borderRadius: BorderRadius.circular(24),
-    ),
+    decoration: BoxDecoration(color: MuyuColors.forest, borderRadius: BorderRadius.circular(24)),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.w700)),
+        Text(
+          label,
+          style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.w700),
+        ),
         const SizedBox(height: 8),
         Text(amount, style: MuyuTextStyles.headerTitle.copyWith(fontSize: 34)),
         Text(count, style: const TextStyle(color: Colors.white)),
@@ -166,7 +170,8 @@ class _PaymentCard extends StatelessWidget {
                     Text(milestoneLabel(l10n, payment.milestoneIndex)),
                     Text(
                       completed && date != null
-                          ? DateFormat.yMMMd(Localizations.localeOf(context).toString()).format(date)
+                          ? DateFormat.yMMMd(Localizations.localeOf(context).toString())
+                                .format(date)
                           : l10n.paymentPendingDate,
                       style: const TextStyle(color: MuyuColors.textSecondary, fontSize: 13),
                     ),
@@ -208,7 +213,10 @@ class _ScrollableMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ListView(
     physics: const AlwaysScrollableScrollPhysics(),
-    children: [SizedBox(height: MediaQuery.sizeOf(context).height * .3), Center(child: child)],
+    children: [
+      SizedBox(height: MediaQuery.sizeOf(context).height * .3),
+      Center(child: child),
+    ],
   );
 }
 

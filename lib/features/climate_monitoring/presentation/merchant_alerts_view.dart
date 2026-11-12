@@ -40,10 +40,7 @@ class MerchantAlertsView extends ConsumerWidget {
                   Text(l10n.merchantAlertsEmpty, textAlign: TextAlign.center),
                 ]
               : [
-                  for (final item in items) ...[
-                    _AlertCard(item: item),
-                    const SizedBox(height: 12),
-                  ],
+                  for (final item in items) ...[_AlertCard(item: item), const SizedBox(height: 12)],
                 ],
         ),
       ),
@@ -115,6 +112,9 @@ class _Message extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ListView(
     physics: const AlwaysScrollableScrollPhysics(),
-    children: [SizedBox(height: MediaQuery.sizeOf(context).height * .3), Center(child: child)],
+    children: [
+      SizedBox(height: MediaQuery.sizeOf(context).height * .3),
+      Center(child: child),
+    ],
   );
 }

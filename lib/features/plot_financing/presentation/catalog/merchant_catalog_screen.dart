@@ -15,6 +15,8 @@ import '../../../user_management/application/session_controller.dart';
 import '../../../user_management/presentation/profile/merchant_profile_screen.dart';
 import '../../../escrow_custody/presentation/payments/payment_history_view.dart';
 import '../../../climate_monitoring/presentation/merchant_alerts_view.dart';
+import '../funding/fund_plot_screen.dart';
+import '../funding/merchant_financing_lists.dart';
 import 'plot_offer_card.dart';
 import '../plotdetail/merchant_plot_detail_screen.dart';
 
@@ -62,6 +64,20 @@ class _MerchantCatalogScreenState extends ConsumerState<MerchantCatalogScreen> {
     }).toList();
   }
 
+  Future<void> _openPlot(Plot plot) async {
+    final navigator = Navigator.of(context);
+    await navigator.push<void>(
+      MaterialPageRoute(
+        builder: (detailContext) => MerchantPlotDetailScreen(
+          plot: plot,
+          onFund: () => Navigator.of(detailContext)
+              .pushReplacement(MaterialPageRoute<void>(builder: (_) => FundPlotScreen(plot: plot))),
+        ),
+      ),
+    );
+    if (mounted) await _refreshCatalog();
+  }
+
   Future<void> _refreshCatalog() async {
     try {
       ref.invalidate(_availablePlotsProvider);
@@ -101,34 +117,28 @@ class _MerchantCatalogScreenState extends ConsumerState<MerchantCatalogScreen> {
                     filter: _filter,
                     onFilterSelected: (value) => setState(() => _filter = value),
                     onRefresh: _refreshCatalog,
-                    onPlotSelected: (plot) => Navigator.of(context).push<void>(
-                      MaterialPageRoute(builder: (_) => MerchantPlotDetailScreen(plot: plot)),
-                    ),
+                    onPlotSelected: _openPlot,
                   ),
                 ),
+              ],
+            ),
+            MerchantTab.myPlots => Column(
+              children: [
+                _MerchantSectionHeader(title: _tab.label(l10n)),
+                const Expanded(child: MerchantFundedPlotsView()),
               ],
             ),
             MerchantTab.profile => const SizedBox.expand(child: MerchantProfileScreen()),
             MerchantTab.payments => Column(
               children: [
                 _MerchantSectionHeader(title: _tab.label(l10n)),
-                const Expanded(
-                  child: PaymentHistoryView(bottomInset: merchantScrollBottomInset),
-                ),
+                const Expanded(child: PaymentHistoryView(bottomInset: merchantScrollBottomInset)),
               ],
             ),
             MerchantTab.alerts => Column(
               children: [
                 _MerchantSectionHeader(title: l10n.merchantAlertsTitle),
-                const Expanded(
-                  child: MerchantAlertsView(bottomInset: merchantScrollBottomInset),
-                ),
-              ],
-            ),
-            _ => Column(
-              children: [
-                _MerchantSectionHeader(title: _tab.label(l10n)),
-                Expanded(child: _MerchantComingSoon(message: l10n.merchantTabSoon)),
+                const Expanded(child: MerchantAlertsView(bottomInset: merchantScrollBottomInset)),
               ],
             ),
           },
@@ -437,26 +447,6 @@ class _FilterChip extends StatelessWidget {
               color: selected ? Colors.white : MuyuColors.nearText,
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _MerchantComingSoon extends StatelessWidget {
-  const _MerchantComingSoon({required this.message});
-
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 24, 24, merchantScrollBottomInset),
-      child: Center(
-        child: Text(
-          message,
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 18, color: MuyuColors.forest),
         ),
       ),
     );

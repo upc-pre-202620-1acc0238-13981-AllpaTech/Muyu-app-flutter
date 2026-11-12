@@ -13,10 +13,12 @@ final paymentHistoryProvider = FutureProvider<List<PaymentRecord>>((ref) async {
 
   final plots = await ref.watch(farmerPlotRepositoryProvider).getAll(user.token);
   final email = user.email.toLowerCase();
-  final visiblePlots = plots.where((plot) => switch (role) {
-    UserRole.farmer => plot.ownerEmail.toLowerCase() == email,
-    UserRole.merchant => plot.fundedByEmail?.toLowerCase() == email,
-  });
+  final visiblePlots = plots.where(
+    (plot) => switch (role) {
+      UserRole.farmer => plot.ownerEmail.toLowerCase() == email,
+      UserRole.merchant => plot.fundedByEmail?.toLowerCase() == email,
+    },
+  );
 
   final payments = visiblePlots.expand(paymentsFromPlot).toList();
   payments.sort((a, b) {

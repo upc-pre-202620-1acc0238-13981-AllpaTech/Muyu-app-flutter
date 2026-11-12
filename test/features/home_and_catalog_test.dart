@@ -166,6 +166,37 @@ void main() {
     expect(find.textContaining('Funds are held in escrow'), findsOneWidget);
   });
 
+  testWidgets('the merchant funds a plot from its details', (tester) async {
+    Map<String, dynamic>? saved;
+    await show(tester, const MerchantCatalogScreen(), (request) async {
+      if (request.method == 'PUT') {
+        saved = jsonDecode(request.body) as Map<String, dynamic>;
+        return http.Response('', 204);
+      }
+      return http.Response(plots, 200);
+    });
+
+    await tester.tap(find.text('Esperanza'));
+    await tester.pumpAndSettle();
+    final fund = find.text('Fund this plot');
+    await tester.ensureVisible(fund);
+    await tester.tap(fund);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Bank transfer'));
+    await tester.pump();
+    await tester.tap(find.byType(CheckboxListTile));
+    await tester.pump();
+    final confirm = find.text('Confirm and pay S/ 8 500');
+    await tester.ensureVisible(confirm);
+    await tester.tap(confirm);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Financing confirmed'), findsOneWidget);
+    expect(saved!['status'], 'funded');
+    expect(saved!['stage'], 'Planting');
+  });
+
   testWidgets('rating without a contract shows no demo data', (tester) async {
     await show(tester, const RateBuyerScreen(), (_) async => http.Response('[]', 200));
 

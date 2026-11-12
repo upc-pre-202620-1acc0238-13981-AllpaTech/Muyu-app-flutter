@@ -132,9 +132,9 @@ class _FarmerPlotDetailScreenState extends ConsumerState<FarmerPlotDetailScreen>
                   ),
                 const SizedBox(height: 20),
                 FilledButton.icon(
-                  onPressed: () => Navigator.of(context).push<void>(
-                    MaterialPageRoute(builder: (_) => WeatherAlertScreen(plot: plot)),
-                  ),
+                  onPressed: () => Navigator.of(
+                    context,
+                  ).push<void>(MaterialPageRoute(builder: (_) => WeatherAlertScreen(plot: plot))),
                   icon: const Icon(Icons.cloud_outlined),
                   label: Text(es ? 'Ver alerta climática' : 'View weather alert'),
                 ),

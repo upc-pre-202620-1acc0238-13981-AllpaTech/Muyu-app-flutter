@@ -49,9 +49,7 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
               FarmerTab.payments => Column(
                 children: [
                   _FarmerSectionHeader(title: _tab.label(l10n)),
-                  const Expanded(
-                    child: PaymentHistoryView(bottomInset: farmerScrollBottomInset),
-                  ),
+                  const Expanded(child: PaymentHistoryView(bottomInset: farmerScrollBottomInset)),
                 ],
               ),
               _ => Column(

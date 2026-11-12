@@ -113,9 +113,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 child: TextButton(
                                   onPressed: () => Navigator.of(context).push<void>(
                                     MaterialPageRoute(
-                                      builder: (_) => ResetPasswordScreen(
-                                        initialEmail: _email.text.trim(),
-                                      ),
+                                      builder: (_) =>
+                                          ResetPasswordScreen(initialEmail: _email.text.trim()),
                                     ),
                                   ),
                                   child: Text(

@@ -31,9 +31,6 @@ void main() {
       measures: [WeatherMeasureKind.cover],
     );
 
-    expect(
-      weatherAlertKey(plot, alert, DateTime(2026, 11, 9)),
-      '12_2026-11-09_high',
-    );
+    expect(weatherAlertKey(plot, alert, DateTime(2026, 11, 9)), '12_2026-11-09_high');
   });
 }

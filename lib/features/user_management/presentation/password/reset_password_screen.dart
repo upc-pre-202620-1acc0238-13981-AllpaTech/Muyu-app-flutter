@@ -54,9 +54,17 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 child: ListView(
                   children: _complete
                       ? [
-                          const Icon(Icons.mark_email_read_outlined, size: 70, color: MuyuColors.lime),
+                          const Icon(
+                            Icons.mark_email_read_outlined,
+                            size: 70,
+                            color: MuyuColors.lime,
+                          ),
                           const SizedBox(height: 16),
-                          Text(l10n.resetSentTitle, textAlign: TextAlign.center, style: MuyuTextStyles.headerTitle),
+                          Text(
+                            l10n.resetSentTitle,
+                            textAlign: TextAlign.center,
+                            style: MuyuTextStyles.headerTitle,
+                          ),
                           const SizedBox(height: 12),
                           Text(
                             l10n.resetSentBody(_email.text.trim()),
@@ -76,7 +84,11 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           ),
                         ]
                       : [
-                          Text(l10n.resetHeading, textAlign: TextAlign.center, style: MuyuTextStyles.headerTitle),
+                          Text(
+                            l10n.resetHeading,
+                            textAlign: TextAlign.center,
+                            style: MuyuTextStyles.headerTitle,
+                          ),
                           const SizedBox(height: 12),
                           Text(
                             l10n.resetBody,
