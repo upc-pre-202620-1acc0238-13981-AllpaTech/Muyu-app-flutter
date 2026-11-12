@@ -8,6 +8,8 @@ import '../../application/farmer_plots_controller.dart';
 import '../../domain/farmer_plot.dart';
 import '../../domain/farmer_plot_repository.dart';
 import '../../../climate_monitoring/presentation/weather_alert_screen.dart';
+import '../../../labor_execution/presentation/milestone_widgets.dart';
+import '../../../labor_execution/presentation/record_evidence_screen.dart';
 
 class FarmerPlotDetailScreen extends ConsumerStatefulWidget {
   const FarmerPlotDetailScreen({super.key, required this.plot});
@@ -85,9 +87,25 @@ class _FarmerPlotDetailScreenState extends ConsumerState<FarmerPlotDetailScreen>
     }
   }
 
+  Future<void> recordEvidence(String milestoneKey) async {
+    final updated = await Navigator.of(context).push<FarmerPlot>(
+      MaterialPageRoute(
+        builder: (_) => RecordEvidenceScreen(plot: plot, milestoneKey: milestoneKey),
+      ),
+    );
+    if (updated == null || !mounted) return;
+    setState(() => plot = updated);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(es ? 'Evidencia enviada al comerciante.' : 'Evidence sent to the merchant.'),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final editable = !plot.isFunded;
+    final current = plot.currentMilestone;
     return Scaffold(
       backgroundColor: MuyuColors.background,
       body: Column(
@@ -122,6 +140,18 @@ class _FarmerPlotDetailScreenState extends ConsumerState<FarmerPlotDetailScreen>
                     es ? 'Hitos' : 'Milestones': plot.milestones,
                   },
                 ),
+                if (plot.isFunded && plot.milestoneStates.isNotEmpty) ...[
+                  const SizedBox(height: 16),
+                  MilestonePlanCard(
+                    milestones: plot.milestoneStates,
+                    actionLabel: (milestone) => milestone.key == current?.key
+                        ? (milestone.needsCorrection
+                              ? (es ? 'Corregir evidencia' : 'Correct evidence')
+                              : (es ? 'Registrar evidencia' : 'Record evidence'))
+                        : null,
+                    onAction: busy ? null : (milestone) => recordEvidence(milestone.key),
+                  ),
+                ],
                 if (failed)
                   Padding(
                     padding: const EdgeInsets.only(top: 12),

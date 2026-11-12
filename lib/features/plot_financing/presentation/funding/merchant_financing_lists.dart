@@ -7,6 +7,7 @@ import '../../../../core/theme/muyu_theme.dart';
 import '../../../plot_approval/domain/farmer_plot.dart';
 import '../../../user_management/application/session_controller.dart';
 import '../../application/merchant_financing_controller.dart';
+import '../evidence/merchant_evidence_screens.dart';
 
 class MerchantFundedPlotsView extends ConsumerWidget {
   const MerchantFundedPlotsView({super.key});
@@ -78,29 +79,43 @@ class _FinancingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final es = Localizations.localeOf(context).languageCode == 'es';
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: MuyuColors.forest),
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(child: Text(plot.name, style: MuyuTextStyles.bodyBold)),
-              _Status(es: es),
+    final toReview = plot.milestoneStates.where((m) => m.isSubmitted).length;
+    return InkWell(
+      borderRadius: BorderRadius.circular(18),
+      onTap: () =>
+          Navigator.of(context)
+              .push<void>(MaterialPageRoute(builder: (_) => MerchantFundedPlotScreen(plot: plot))),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: MuyuColors.forest),
+          borderRadius: BorderRadius.circular(18),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(child: Text(plot.name, style: MuyuTextStyles.bodyBold)),
+                _Status(es: es),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text('${plot.crop} · ${plot.area} · ${plot.place}'),
+            const SizedBox(height: 10),
+            Text(plot.amount, style: MuyuTextStyles.bodyBold.copyWith(color: MuyuColors.forest)),
+            const SizedBox(height: 6),
+            Text('${es ? 'Etapa' : 'Stage'}: ${plot.stage} · ${plot.progress}%'),
+            if (toReview > 0) ...[
+              const SizedBox(height: 8),
+              Text(
+                es ? '$toReview evidencia(s) por revisar' : '$toReview evidence item(s) to review',
+                style: const TextStyle(color: MuyuColors.financedText, fontWeight: FontWeight.w600),
+              ),
             ],
-          ),
-          const SizedBox(height: 8),
-          Text('${plot.crop} · ${plot.area} · ${plot.place}'),
-          const SizedBox(height: 10),
-          Text(plot.amount, style: MuyuTextStyles.bodyBold.copyWith(color: MuyuColors.forest)),
-          const SizedBox(height: 6),
-          Text('${es ? 'Etapa' : 'Stage'}: ${plot.stage} · ${plot.progress}%'),
-        ],
+          ],
+        ),
       ),
     );
   }

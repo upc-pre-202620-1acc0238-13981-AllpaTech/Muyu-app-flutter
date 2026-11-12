@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Muyu uses the camera to photograph the evidence of each milestone.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Muyu records where each evidence photo was taken so the merchant can verify it.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Muyu uses your photos so you can set a profile picture.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
