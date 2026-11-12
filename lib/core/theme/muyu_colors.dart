@@ -21,6 +21,12 @@ abstract final class MuyuColors {
   static const approvedBg = Color(0xFFB8DF98);
   static const pendingBackground = Color(0xFFFED2BD);
   static const pendingText = Color(0xFF774308);
+  static const homeFundedPanel = Color(0xFF362216);
+  static const homeFundedTrack = Color(0xFF70442A);
+  static const homeApprovedPanel = Color(0xFF626E23);
+  static const homeApprovedTrack = Color(0xFFBFCE6C);
+  static const homePendingPanel = Color(0xFF765B2F);
+  static const homePendingTrack = Color(0xFFA0814F);
   static const offlineBackground = Color(0xFFFFF3E0);
   static const offlineText = Color(0xFF9A5B00);
   static const dangerBackground = Color(0xFFFFD9D9);

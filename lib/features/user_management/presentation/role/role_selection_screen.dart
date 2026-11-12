@@ -25,6 +25,10 @@ class _RoleSelectionScreenState extends ConsumerState<RoleSelectionScreen> {
   Future<void> _next() async {
     final role = _selected;
     if (role == null) return;
+    if (role == UserRole.farmer) {
+      context.go(AppRoutes.farmerOnboarding);
+      return;
+    }
     await ref.read(sessionProvider.notifier).chooseRole(role);
     if (mounted) context.go(AppRoutes.homeFor(role));
   }

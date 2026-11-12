@@ -11,6 +11,7 @@ import '../../../../core/theme/muyu_theme.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../user_management/application/session_controller.dart';
 import '../../../user_management/presentation/profile/farmer_profile_screen.dart';
+import '../../../escrow_custody/presentation/payments/payment_history_view.dart';
 import '../myplots/my_plots_view.dart';
 
 /// Farmer home shell with the five-tab bar from `FarmerHomeScreen` / `MuyuBottomBar`.
@@ -45,6 +46,14 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
                 ),
               ),
               FarmerTab.profile => const SizedBox.expand(child: FarmerProfileScreen()),
+              FarmerTab.payments => Column(
+                children: [
+                  _FarmerSectionHeader(title: _tab.label(l10n)),
+                  const Expanded(
+                    child: PaymentHistoryView(bottomInset: farmerScrollBottomInset),
+                  ),
+                ],
+              ),
               _ => Column(
                 children: [
                   _FarmerSectionHeader(title: _tab.label(l10n)),
@@ -153,7 +162,11 @@ class _FarmerHomeTabState extends ConsumerState<_FarmerHomeTab> {
           ),
         ),
         Expanded(
-          child: MyPlotsView(bottomInset: farmerScrollBottomInset, searchController: _search),
+          child: MyPlotsView(
+            bottomInset: farmerScrollBottomInset,
+            searchController: _search,
+            homeStyle: true,
+          ),
         ),
       ],
     );

@@ -27,5 +27,10 @@ class CatalogPlotRepository implements PlotRepository {
     status: plot.status,
     ownerName: plot.ownerName,
     ownerEmail: plot.ownerEmail,
+    harvestDate: plot.harvestDate,
+    stage: plot.stage,
+    progress: plot.progress,
+    cycle: plot.cycle,
+    milestones: plot.milestones,
   );
 }

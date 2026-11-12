@@ -13,7 +13,10 @@ import '../../../plot_approval/domain/farmer_plot_repository.dart';
 import '../../../plot_approval/domain/plot.dart';
 import '../../../user_management/application/session_controller.dart';
 import '../../../user_management/presentation/profile/merchant_profile_screen.dart';
+import '../../../escrow_custody/presentation/payments/payment_history_view.dart';
+import '../../../climate_monitoring/presentation/merchant_alerts_view.dart';
 import 'plot_offer_card.dart';
+import '../plotdetail/merchant_plot_detail_screen.dart';
 
 enum _CatalogFilter { all, near, recommended }
 
@@ -98,11 +101,30 @@ class _MerchantCatalogScreenState extends ConsumerState<MerchantCatalogScreen> {
                     filter: _filter,
                     onFilterSelected: (value) => setState(() => _filter = value),
                     onRefresh: _refreshCatalog,
+                    onPlotSelected: (plot) => Navigator.of(context).push<void>(
+                      MaterialPageRoute(builder: (_) => MerchantPlotDetailScreen(plot: plot)),
+                    ),
                   ),
                 ),
               ],
             ),
             MerchantTab.profile => const SizedBox.expand(child: MerchantProfileScreen()),
+            MerchantTab.payments => Column(
+              children: [
+                _MerchantSectionHeader(title: _tab.label(l10n)),
+                const Expanded(
+                  child: PaymentHistoryView(bottomInset: merchantScrollBottomInset),
+                ),
+              ],
+            ),
+            MerchantTab.alerts => Column(
+              children: [
+                _MerchantSectionHeader(title: l10n.merchantAlertsTitle),
+                const Expanded(
+                  child: MerchantAlertsView(bottomInset: merchantScrollBottomInset),
+                ),
+              ],
+            ),
             _ => Column(
               children: [
                 _MerchantSectionHeader(title: _tab.label(l10n)),
@@ -305,6 +327,7 @@ class _CatalogBody extends StatelessWidget {
     required this.filter,
     required this.onFilterSelected,
     required this.onRefresh,
+    required this.onPlotSelected,
   });
 
   final List<Plot> plots;
@@ -313,6 +336,7 @@ class _CatalogBody extends StatelessWidget {
   final _CatalogFilter filter;
   final ValueChanged<_CatalogFilter> onFilterSelected;
   final Future<void> Function() onRefresh;
+  final ValueChanged<Plot> onPlotSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -377,7 +401,10 @@ class _CatalogBody extends StatelessWidget {
               ),
             )
           else
-            for (final plot in plots) ...[PlotOfferCard(plot: plot), const SizedBox(height: 16)],
+            for (final plot in plots) ...[
+              PlotOfferCard(plot: plot, onTap: () => onPlotSelected(plot)),
+              const SizedBox(height: 16),
+            ],
         ],
       ),
     );

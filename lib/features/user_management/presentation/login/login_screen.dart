@@ -7,6 +7,7 @@ import '../../../../core/router/app_routes.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../application/session_controller.dart';
 import '../../domain/auth_repository.dart';
+import '../password/reset_password_screen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key, this.initialEmail});
@@ -107,6 +108,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 onSubmitted: (_) => _login(),
                               ),
                               FieldError(error),
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: TextButton(
+                                  onPressed: () => Navigator.of(context).push<void>(
+                                    MaterialPageRoute(
+                                      builder: (_) => ResetPasswordScreen(
+                                        initialEmail: _email.text.trim(),
+                                      ),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    l10n.loginForgotPassword,
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
                               const SizedBox(height: 20),
                               AuthPrimaryButton(
                                 text: l10n.loginButton,

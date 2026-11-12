@@ -10,4 +10,6 @@ class MobilePlotService {
 
   Future<void> putPlot(String token, int id, Map<String, dynamic> plot) =>
       _client.putJson('mobile/plots/$id', plot, token: token);
+
+  Future<void> deletePlot(String token, int id) => _client.delete('mobile/plots/$id', token: token);
 }

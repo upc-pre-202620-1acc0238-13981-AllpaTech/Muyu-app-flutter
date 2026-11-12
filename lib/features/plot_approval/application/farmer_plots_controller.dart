@@ -57,6 +57,36 @@ class FarmerPlotsController extends AsyncNotifier<List<FarmerPlot>> {
     ref.invalidateSelf();
   }
 
+  Future<void> updatePlot(FarmerPlot plot) async {
+    final user = ref.read(sessionProvider).user;
+    if (user == null) throw const PlotException(PlotFailure.sessionExpired);
+    try {
+      await ref.read(farmerPlotRepositoryProvider).save(user.token, plot);
+      state = AsyncData([
+        for (final current in state.value ?? const <FarmerPlot>[])
+          if (current.id == plot.id) plot else current,
+      ]);
+    } on PlotException catch (e) {
+      _endSessionIfExpired(e);
+      rethrow;
+    }
+  }
+
+  Future<void> delete(int id) async {
+    final user = ref.read(sessionProvider).user;
+    if (user == null) throw const PlotException(PlotFailure.sessionExpired);
+    try {
+      await ref.read(farmerPlotRepositoryProvider).delete(user.token, id);
+      state = AsyncData([
+        for (final plot in state.value ?? const <FarmerPlot>[])
+          if (plot.id != id) plot,
+      ]);
+    } on PlotException catch (e) {
+      _endSessionIfExpired(e);
+      rethrow;
+    }
+  }
+
   Future<List<FarmerPlot>> _ownPlots(User user) async {
     try {
       final plots = await ref.read(farmerPlotRepositoryProvider).getAll(user.token);

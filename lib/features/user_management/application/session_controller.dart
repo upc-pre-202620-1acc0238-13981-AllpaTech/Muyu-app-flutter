@@ -53,7 +53,23 @@ class SessionController extends Notifier<SessionState> {
   /// Always leaves [SessionState.role] empty so the router sends the user to
   /// role selection, the same sequence as before the merchant catalog existed.
   Future<void> login(String email, String password) async {
-    final user = _withStoredAvatar(await ref.read(authRepositoryProvider).login(email, password));
+    final authenticatedUser = await ref.read(authRepositoryProvider).login(email, password);
+    final preferences = ref.read(userPreferencesProvider);
+    final storedPhone = preferences.loadString(
+      authenticatedUser.email,
+      UserPreferences.keyContactPhone,
+    );
+    final phone = authenticatedUser.phone.trim().isNotEmpty
+        ? authenticatedUser.phone
+        : (storedPhone ?? '');
+    final user = _withStoredAvatar(authenticatedUser.copyWith(phone: phone));
+    if (authenticatedUser.phone.trim().isNotEmpty) {
+      await preferences.saveString(
+        authenticatedUser.email,
+        UserPreferences.keyContactPhone,
+        authenticatedUser.phone,
+      );
+    }
     await ref.read(sharedPreferencesProvider).setString(_sessionKey, jsonEncode(user.toJson()));
     state = SessionState.signedIn(user);
   }
