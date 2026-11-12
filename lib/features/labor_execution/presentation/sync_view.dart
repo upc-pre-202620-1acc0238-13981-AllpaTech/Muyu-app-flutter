@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/designsystem/components/green_title_header.dart';
+import '../../../core/designsystem/components/plot_photo.dart';
 import '../../../core/theme/muyu_colors.dart';
 import '../../../core/theme/muyu_theme.dart';
 import '../../plot_approval/domain/plot_activity.dart';
-import '../../plot_approval/presentation/myplots/farmer_plot_display.dart';
 import '../application/evidence_queue.dart';
 
 const _lightGreen = Color(0xFFDCF0DD);
@@ -341,7 +341,11 @@ class _SyncItemCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(14),
               ),
               clipBehavior: Clip.antiAlias,
-              child: PlotPhoto(uri: item.milestone['photoUri'] as String?),
+              child: PlotPhoto(
+                source: item.milestone['photoUri'] as String?,
+                description: item.plotName,
+                height: null,
+              ),
             ),
             const SizedBox(width: 14),
             Expanded(

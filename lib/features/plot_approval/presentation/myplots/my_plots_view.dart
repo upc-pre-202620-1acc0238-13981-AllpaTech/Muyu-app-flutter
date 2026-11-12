@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/designsystem/components/plot_photo.dart';
 import '../../../../core/theme/muyu_colors.dart';
 import '../../../../core/theme/muyu_theme.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -9,6 +10,7 @@ import '../../../plot_financing/presentation/harvest/harvest_delivery_screens.da
 import '../../application/farmer_plots_controller.dart';
 import '../../domain/farmer_plot.dart';
 import '../../domain/farmer_plot_repository.dart';
+import '../../domain/plot_status_label.dart';
 import '../plotdetail/farmer_plot_detail_screen.dart';
 import '../publish/publish_plot_screen.dart';
 import 'farmer_plot_display.dart';
@@ -510,7 +512,7 @@ class _HomePlotCard extends StatelessWidget {
     final es = Localizations.localeOf(context).languageCode == 'es';
     final style = _HomeCardStyle.forPlot(plot);
     final progress = plot.progress.clamp(0, 100);
-    final stage = plot.stageTitle(es: es) ?? (plot.stage.trim().isEmpty ? '—' : plot.stage);
+    final stage = plot.stageTitle(es: es) ?? plotStageLabel(plot.stage, es: es);
     final cropArt = _cropArt(plot.cropKey);
     final statusLabel = switch (plot.homeStatus) {
       _HomePlotStatus.funded => es ? 'Financiada' : 'Funded',
@@ -540,7 +542,12 @@ class _HomePlotCard extends StatelessWidget {
                   height: 145,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
-                    child: PlotPhoto(uri: plot.imageUri, fallbackAsset: _cropPhoto(plot.cropKey)),
+                    child: PlotPhoto(
+                      source: plot.imageUri,
+                      description: plot.name,
+                      height: null,
+                      fallbackAsset: _cropPhoto(plot.cropKey),
+                    ),
                   ),
                 ),
                 Positioned(
@@ -795,7 +802,9 @@ class _FarmerPlotCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final funded = plot.isFundedPlot;
     final progress = funded ? plot.progress.clamp(0, 100) : 0;
-    final stage = !funded ? (es ? 'Publicada' : 'Listed') : plot.stageTitle(es: es) ?? plot.stage;
+    final stage = !funded
+        ? (es ? 'Publicada' : 'Listed')
+        : plot.stageTitle(es: es) ?? plotStageLabel(plot.stage, es: es);
     final (chipBackground, chipText, chipLabel) = funded
         ? (_financedBackground, _financedText, es ? 'Financiada' : 'Funded')
         : plot.status == 'available'
@@ -838,7 +847,7 @@ class _FarmerPlotCard extends ConsumerWidget {
                   border: Border.all(color: MuyuColors.forest),
                 ),
                 clipBehavior: Clip.antiAlias,
-                child: PlotPhoto(uri: plot.imageUri),
+                child: PlotPhoto(source: plot.imageUri, description: plot.name, height: null),
               ),
               const SizedBox(width: 12),
               Expanded(
