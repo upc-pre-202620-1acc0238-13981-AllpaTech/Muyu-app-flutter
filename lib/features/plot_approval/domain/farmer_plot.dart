@@ -107,27 +107,76 @@ class FarmerPlot {
 
   /// The plot after a merchant funds it, as Kotlin `BackendStateStore.fundPlot`
   /// writes it: funded, at the planting stage, with its milestone plan.
-  FarmerPlot fundedBy(String merchantEmail) => FarmerPlot(
+  FarmerPlot fundedBy(String merchantEmail) => _with(
+    stage: 'Planting',
+    progress: 10,
+    status: 'funded',
+    fundedByEmail: merchantEmail,
+    milestoneStates: milestoneStates.isEmpty ? MilestoneState.seed() : milestoneStates,
+  );
+
+  /// The milestone the farmer records next: one sent back for correction first,
+  /// then the first pending one, as Kotlin `Plot.currentMilestone`.
+  MilestoneState? get currentMilestone {
+    for (final milestone in milestoneStates) {
+      if (milestone.needsCorrection) return milestone;
+    }
+    for (final milestone in milestoneStates) {
+      if (milestone.status == MilestoneState.statusPending) return milestone;
+    }
+    return null;
+  }
+
+  MilestoneState? milestone(String key) {
+    for (final item in milestoneStates) {
+      if (item.key == key) return item;
+    }
+    return null;
+  }
+
+  /// The plot with [updated] saved, moving stage and progress the way Kotlin
+  /// `BackendStateStore.updateMilestone` does.
+  FarmerPlot withMilestone(MilestoneState updated) {
+    final exists = milestoneStates.any((item) => item.key == updated.key);
+    final states = exists
+        ? [for (final item in milestoneStates) item.key == updated.key ? updated : item]
+        : [...milestoneStates, updated];
+    final index = MilestoneState.planKeys.indexOf(updated.key);
+    final moves = updated.isApproved || updated.isSubmitted;
+    return _with(
+      stage: MilestoneState.stageTitle(updated.key),
+      progress: moves ? ((index + 1) * 25).clamp(0, 100) : progress,
+      milestoneStates: states,
+    );
+  }
+
+  FarmerPlot _with({
+    String? stage,
+    int? progress,
+    String? status,
+    String? fundedByEmail,
+    List<MilestoneState>? milestoneStates,
+  }) => FarmerPlot(
     id: id,
     name: name,
     crop: crop,
     area: area,
     harvestDate: harvestDate,
     place: place,
-    stage: 'Planting',
-    progress: 10,
-    status: 'funded',
+    stage: stage ?? this.stage,
+    progress: progress ?? this.progress,
+    status: status ?? this.status,
     amount: amount,
     cycle: cycle,
     milestones: milestones,
     ownerEmail: ownerEmail,
     ownerName: ownerName,
     publishedAt: publishedAt,
-    fundedByEmail: merchantEmail,
+    fundedByEmail: fundedByEmail ?? this.fundedByEmail,
     imageUri: imageUri,
     latitude: latitude,
     longitude: longitude,
-    milestoneStates: milestoneStates.isEmpty ? MilestoneState.seed() : milestoneStates,
+    milestoneStates: milestoneStates ?? this.milestoneStates,
     weatherMeasures: weatherMeasures,
     rawJson: rawJson,
   );
