@@ -33,5 +33,7 @@ class CatalogPlotRepository implements PlotRepository {
     cycle: plot.cycle,
     milestones: plot.milestones,
     imageUri: plot.imageUri,
+    latitude: plot.latitude,
+    longitude: plot.longitude,
   );
 }

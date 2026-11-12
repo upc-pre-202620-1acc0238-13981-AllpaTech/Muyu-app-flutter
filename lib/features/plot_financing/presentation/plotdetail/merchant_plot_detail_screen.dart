@@ -6,6 +6,7 @@ import '../../../../core/designsystem/components/plot_photo.dart';
 import '../../../../core/theme/muyu_colors.dart';
 import '../../../../core/theme/muyu_theme.dart';
 import '../../../plot_approval/domain/plot.dart';
+import '../../../plot_approval/domain/plot_status_label.dart';
 import '../visit/visit_request_screen.dart';
 
 /// Merchant plot detail aligned with Kotlin: photo, producer, location, crop,
@@ -19,7 +20,6 @@ class MerchantPlotDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final es = Localizations.localeOf(context).languageCode == 'es';
-    final available = plot.status.toLowerCase() == 'available';
     return Scaffold(
       backgroundColor: MuyuColors.background,
       body: Column(
@@ -27,9 +27,7 @@ class MerchantPlotDetailScreen extends StatelessWidget {
           GreenTitleHeader(
             title: es ? 'Detalle de parcela' : 'Plot details',
             onBack: () => Navigator.pop(context),
-            trailing: _StatusChip(
-              label: available ? (es ? 'Disponible' : 'Available') : plot.status,
-            ),
+            trailing: _StatusChip(label: plotStatusLabel(plot.status, es: es)),
           ),
           Expanded(
             child: ListView(
@@ -49,7 +47,11 @@ class MerchantPlotDetailScreen extends StatelessWidget {
                       const SizedBox(height: 12),
                       _FarmerCard(plot: plot, es: es),
                       const SizedBox(height: 12),
-                      _LocationCard(place: plot.place, es: es),
+                      _LocationCard(
+                        place: plot.place,
+                        hasGps: plot.latitude != null && plot.longitude != null,
+                        es: es,
+                      ),
                       const SizedBox(height: 12),
                       _CropCard(plot: plot, es: es),
                       const SizedBox(height: 12),
@@ -103,7 +105,7 @@ class _PlotSummary extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(child: Text(plot.name, style: MuyuTextStyles.bodyBold)),
-            _StatusChip(label: es ? 'Disponible' : 'Available'),
+            _StatusChip(label: plotStatusLabel(plot.status, es: es)),
           ],
         ),
         const SizedBox(height: 8),
@@ -168,9 +170,12 @@ class _FarmerCard extends StatelessWidget {
 }
 
 class _LocationCard extends StatelessWidget {
-  const _LocationCard({required this.place, required this.es});
+  const _LocationCard({required this.place, required this.hasGps, required this.es});
 
   final String place;
+
+  /// The farmer recorded coordinates, so the GPS badge is true.
+  final bool hasGps;
   final bool es;
 
   @override
@@ -189,11 +194,12 @@ class _LocationCard extends StatelessWidget {
             children: [
               const Positioned.fill(child: CustomPaint(painter: _MapPainter())),
               const Center(child: Icon(Icons.location_on, color: MuyuColors.action, size: 36)),
-              Positioned(
-                left: 10,
-                top: 10,
-                child: _Badge(label: es ? 'GPS verificado' : 'GPS verified'),
-              ),
+              if (hasGps)
+                Positioned(
+                  left: 10,
+                  top: 10,
+                  child: _Badge(label: es ? 'GPS verificado' : 'GPS verified'),
+                ),
             ],
           ),
         ),

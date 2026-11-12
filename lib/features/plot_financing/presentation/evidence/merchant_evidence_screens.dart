@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../plot_approval/domain/plot_status_label.dart';
+
 import '../../../../core/designsystem/components/green_title_header.dart';
 import '../../../../core/theme/muyu_colors.dart';
 import '../../../../core/theme/muyu_theme.dart';
@@ -73,7 +75,7 @@ class _MerchantFundedPlotScreenState extends State<MerchantFundedPlotScreen> {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        '${es ? 'Etapa' : 'Stage'}: ${plot.stage} · ${plot.progress}%',
+                        '${es ? 'Etapa' : 'Stage'}: ${plotStageLabel(plot.stage, es: es)} · ${plot.progress}%',
                         style: const TextStyle(color: Colors.white),
                       ),
                     ],

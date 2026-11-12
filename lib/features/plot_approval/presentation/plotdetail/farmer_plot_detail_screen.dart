@@ -8,6 +8,7 @@ import '../../../../core/theme/muyu_theme.dart';
 import '../../application/farmer_plots_controller.dart';
 import '../../domain/farmer_plot.dart';
 import '../../domain/farmer_plot_repository.dart';
+import '../../domain/plot_status_label.dart';
 import '../../../climate_monitoring/presentation/weather_alert_screen.dart';
 import '../../../labor_execution/application/evidence_queue.dart';
 import '../../../labor_execution/application/milestone_evidence_service.dart';
@@ -341,7 +342,10 @@ class _Hero extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
-                plot.status,
+                plotStatusLabel(
+                  plot.status,
+                  es: Localizations.localeOf(context).languageCode == 'es',
+                ),
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
@@ -365,7 +369,10 @@ class _Hero extends StatelessWidget {
           backgroundColor: MuyuColors.skip,
         ),
         const SizedBox(height: 6),
-        Text('${plot.progress}% · ${plot.stage}', style: const TextStyle(fontSize: 12)),
+        Text(
+          '${plot.progress}% · ${plotStageLabel(plot.stage, es: Localizations.localeOf(context).languageCode == 'es')}',
+          style: const TextStyle(fontSize: 12),
+        ),
       ],
     ),
   );

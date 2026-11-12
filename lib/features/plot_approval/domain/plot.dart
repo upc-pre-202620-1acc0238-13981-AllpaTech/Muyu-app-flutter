@@ -18,6 +18,8 @@ class Plot {
     this.imageUri,
     this.imageAsset,
     this.ownerImageAsset,
+    this.latitude,
+    this.longitude,
   });
 
   final int id;
@@ -37,4 +39,6 @@ class Plot {
   final String? imageUri;
   final String? imageAsset;
   final String? ownerImageAsset;
+  final double? latitude;
+  final double? longitude;
 }
