@@ -963,7 +963,7 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get ratingPreviewNotice => 'Solo demostración. Esta calificación no se envía al servidor.';
+  String get ratingPreviewNotice => 'Tu calificación todavía no se guarda en el servidor.';
 
   @override
   String get ratingSubmittedTitle => 'Calificación enviada';

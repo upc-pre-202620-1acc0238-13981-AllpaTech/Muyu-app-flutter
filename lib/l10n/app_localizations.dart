@@ -1918,7 +1918,7 @@ abstract class AppLocalizations {
   /// No description provided for @ratingPreviewNotice.
   ///
   /// In en, this message translates to:
-  /// **'Preview only. This rating is not sent to the server.'**
+  /// **'Your rating is not saved on the server yet.'**
   String get ratingPreviewNotice;
 
   /// No description provided for @ratingSubmittedTitle.

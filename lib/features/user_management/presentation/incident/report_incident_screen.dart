@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../core/designsystem/components/green_title_header.dart';
 import '../../../../core/theme/muyu_colors.dart';
 import '../../../../core/theme/muyu_theme.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../application/support_controller.dart';
 import 'incident_style.dart';
-import 'report_incident_photo_screen.dart';
 
 enum _IncidentType { technical, payment, plot, other }
 
-/// Farmer incident form from Kotlin `ReportIncidentScreen`.
-class ReportIncidentScreen extends StatefulWidget {
+/// Farmer incident form from Kotlin `ReportIncidentScreen`. The report is sent
+/// to the backend (`mobile/incidents`), which stores its type and description.
+class ReportIncidentScreen extends ConsumerStatefulWidget {
   const ReportIncidentScreen({super.key});
 
   @override
-  State<ReportIncidentScreen> createState() => _ReportIncidentScreenState();
+  ConsumerState<ReportIncidentScreen> createState() => _ReportIncidentScreenState();
 }
 
-class _ReportIncidentScreenState extends State<ReportIncidentScreen> {
+class _ReportIncidentScreenState extends ConsumerState<ReportIncidentScreen> {
   final _description = TextEditingController();
   final _descriptionFocus = FocusNode();
   var _type = _IncidentType.technical;
-  String? _photoPath;
+  bool _sending = false;
+  SupportFailure? _failure;
 
   @override
   void initState() {
@@ -43,16 +47,41 @@ class _ReportIncidentScreenState extends State<ReportIncidentScreen> {
     _IncidentType.other => l10n.reportTypeOther,
   };
 
-  Future<void> _attachPhoto() async {
-    final path = await Navigator.of(context).push<String>(
-      MaterialPageRoute(builder: (_) => ReportIncidentPhotoScreen(initialPath: _photoPath)),
-    );
-    if (path != null && mounted) setState(() => _photoPath = path);
+  Future<void> _send() async {
+    final es = Localizations.localeOf(context).languageCode == 'es';
+    setState(() {
+      _sending = true;
+      _failure = null;
+    });
+    try {
+      final report = await ref
+          .read(supportServiceProvider)
+          .reportIncident(type: _type.name, description: _description.text);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            es
+                ? 'Reporte #${report.id} enviado. El equipo de soporte lo revisará.'
+                : 'Report #${report.id} sent. The support team will review it.',
+          ),
+        ),
+      );
+      Navigator.of(context).pop();
+    } on SupportException catch (error) {
+      if (mounted) {
+        setState(() {
+          _sending = false;
+          _failure = error.failure;
+        });
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final es = Localizations.localeOf(context).languageCode == 'es';
     final canSend = _description.text.trim().isNotEmpty;
     final focused = _descriptionFocus.hasFocus;
 
@@ -67,33 +96,38 @@ class _ReportIncidentScreenState extends State<ReportIncidentScreen> {
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
                 children: [
-                  DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: IncidentStyle.offlineBg,
-                      borderRadius: BorderRadius.circular(IncidentStyle.radius),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(14),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            l10n.reportNoConnection,
-                            style: IncidentStyle.label.copyWith(color: IncidentStyle.offlineTitle),
+                  if (_failure != null) ...[
+                    DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: IncidentStyle.offlineBg,
+                        borderRadius: BorderRadius.circular(IncidentStyle.radius),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(14),
+                        child: Text(
+                          switch (_failure!) {
+                            SupportFailure.network =>
+                              es
+                                  ? 'Sin conexión. Tu reporte no se envió; inténtalo cuando tengas señal.'
+                                  : 'No connection. Your report was not sent; try again when you have signal.',
+                            SupportFailure.sessionExpired =>
+                              es
+                                  ? 'Tu sesión expiró. Vuelve a iniciar sesión.'
+                                  : 'Your session expired. Sign in again.',
+                            SupportFailure.rejected =>
+                              es
+                                  ? 'El servidor no aceptó el reporte. Revisa la descripción.'
+                                  : 'The server did not accept the report. Check the description.',
+                          },
+                          style: IncidentStyle.body.copyWith(
+                            fontSize: 14,
+                            color: IncidentStyle.offlineBody,
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            l10n.reportOfflineBody,
-                            style: IncidentStyle.body.copyWith(
-                              fontSize: 14,
-                              color: IncidentStyle.offlineBody,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 18),
+                    const SizedBox(height: 18),
+                  ],
                   Text(l10n.reportTypeLabel, style: IncidentStyle.label),
                   const SizedBox(height: 8),
                   _TypeField(
@@ -101,7 +135,9 @@ class _ReportIncidentScreenState extends State<ReportIncidentScreen> {
                     options: [
                       for (final type in _IncidentType.values) (type, _typeLabel(l10n, type)),
                     ],
-                    onSelected: (value) => setState(() => _type = value),
+                    onSelected: (value) {
+                      if (!_sending) setState(() => _type = value);
+                    },
                   ),
                   const SizedBox(height: 18),
                   Text(l10n.reportDescriptionLabel, style: IncidentStyle.label),
@@ -121,6 +157,8 @@ class _ReportIncidentScreenState extends State<ReportIncidentScreen> {
                         child: TextField(
                           controller: _description,
                           focusNode: _descriptionFocus,
+                          enabled: !_sending,
+                          maxLength: 2000,
                           maxLines: null,
                           expands: true,
                           textAlignVertical: TextAlignVertical.top,
@@ -130,6 +168,7 @@ class _ReportIncidentScreenState extends State<ReportIncidentScreen> {
                           decoration: InputDecoration(
                             isCollapsed: true,
                             border: InputBorder.none,
+                            counterText: '',
                             hintText: l10n.reportDescriptionHint,
                             hintStyle: IncidentStyle.body.copyWith(color: const Color(0x99000000)),
                           ),
@@ -139,17 +178,13 @@ class _ReportIncidentScreenState extends State<ReportIncidentScreen> {
                   ),
                   const SizedBox(height: 16),
                   IncidentButton(
-                    label: _photoPath == null ? l10n.reportAttachPhoto : l10n.reportPhotoAttached,
-                    filled: false,
-                    onPressed: _attachPhoto,
-                  ),
-                  const SizedBox(height: 12),
-                  IncidentButton(
-                    label: l10n.reportSend,
+                    label: _sending ? (es ? 'Enviando…' : 'Sending…') : l10n.reportSend,
                     filled: true,
-                    enabled: canSend,
-                    onPressed: () => Navigator.of(context).pop(),
+                    enabled: canSend && !_sending,
+                    onPressed: _send,
                   ),
+                  const SizedBox(height: 24),
+                  const _MyReports(),
                 ],
               ),
             ),
@@ -228,6 +263,59 @@ class _TypeField extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+/// Incidents the user already sent, so they can see their report reached support.
+class _MyReports extends ConsumerWidget {
+  const _MyReports();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final reports = ref.watch(myIncidentsProvider).value ?? const <IncidentReport>[];
+    if (reports.isEmpty) return const SizedBox.shrink();
+    final l10n = AppLocalizations.of(context);
+    final es = Localizations.localeOf(context).languageCode == 'es';
+    final locale = Localizations.localeOf(context).toString();
+    String typeLabel(String type) => switch (type) {
+      'technical' => l10n.reportTypeTechnical,
+      'payment' => l10n.reportTypePayment,
+      'plot' => l10n.reportTypePlot,
+      _ => l10n.reportTypeOther,
+    };
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(es ? 'Mis reportes' : 'My reports', style: IncidentStyle.label),
+        const SizedBox(height: 8),
+        for (final report in reports)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(IncidentStyle.radius),
+                border: Border.all(color: IncidentStyle.fieldBorder),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(14),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '#${report.id} · ${typeLabel(report.type)}'
+                      '${report.createdAt == null ? '' : ' · ${DateFormat.yMMMd(locale).format(report.createdAt!)}'}',
+                      style: IncidentStyle.label.copyWith(fontSize: 14),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(report.description, style: IncidentStyle.body.copyWith(fontSize: 14)),
+                  ],
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

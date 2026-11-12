@@ -313,7 +313,7 @@
   "ratingCommentHint": "Escribe un comentario sobre tu experiencia...",
   "ratingSubmit": "Enviar calificación",
   "ratingStarDescription": "{score} de 5 estrellas",
-  "ratingPreviewNotice": "Solo demostración. Esta calificación no se envía al servidor.",
+  "ratingPreviewNotice": "Tu calificación todavía no se guarda en el servidor.",
   "ratingSubmittedTitle": "Calificación enviada",
   "ratingLaterStage": "Etapa final · {date} · Ciclo terminado",
   "ratingThanks": "Gracias por tu calificación",

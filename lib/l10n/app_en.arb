@@ -366,7 +366,7 @@
   "@ratingStarDescription": {
     "placeholders": { "score": { "type": "int" } }
   },
-  "ratingPreviewNotice": "Preview only. This rating is not sent to the server.",
+  "ratingPreviewNotice": "Your rating is not saved on the server yet.",
   "ratingSubmittedTitle": "Rating submitted",
   "ratingLaterStage": "Later stage · {date} · Cycle ended",
   "@ratingLaterStage": {

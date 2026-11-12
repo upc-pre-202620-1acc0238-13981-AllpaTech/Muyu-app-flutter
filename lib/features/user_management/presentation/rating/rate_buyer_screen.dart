@@ -5,6 +5,7 @@ import '../../../../core/designsystem/components/green_title_header.dart';
 import '../../../../core/theme/muyu_colors.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../application/session_controller.dart';
+import '../../application/support_controller.dart';
 
 /// A finished contract the farmer can rate.
 class RatingContract {
@@ -24,7 +25,8 @@ class RatingContract {
 class RateBuyerScreen extends ConsumerStatefulWidget {
   const RateBuyerScreen({super.key, this.contract});
 
-  /// Null until the backend provides finished contracts.
+  /// The contract to rate. When null, the screen loads the farmer's finished
+  /// contracts from the backend and lets them pick one.
   final RatingContract? contract;
 
   @override
@@ -35,6 +37,7 @@ class _RateBuyerScreenState extends ConsumerState<RateBuyerScreen> {
   final _comment = TextEditingController();
   var _rating = 0;
   var _submitted = false;
+  RatingContract? _picked;
 
   @override
   void dispose() {
@@ -45,8 +48,25 @@ class _RateBuyerScreenState extends ConsumerState<RateBuyerScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final contract = widget.contract;
-    if (contract == null) return const _NoContractToRate();
+    var contract = widget.contract ?? _picked;
+    if (contract == null) {
+      final contracts = ref.watch(finishedContractsProvider);
+      final list = contracts.value;
+      if (list == null) {
+        return _RatingMessage(
+          loading: contracts.isLoading,
+          onRetry: () => ref.invalidate(finishedContractsProvider),
+        );
+      }
+      if (list.isEmpty) return const _NoContractToRate();
+      if (list.length > 1) {
+        return _ContractPicker(
+          contracts: list,
+          onPick: (picked) => setState(() => _picked = picked),
+        );
+      }
+      contract = list.single;
+    }
     if (_submitted) {
       return _RatingSubmitted(
         contract: contract,
@@ -324,6 +344,89 @@ class _Stars extends StatelessWidget {
             ),
           ),
       ],
+    );
+  }
+}
+
+/// Loading or error state while the finished contracts arrive.
+class _RatingMessage extends StatelessWidget {
+  const _RatingMessage({required this.loading, required this.onRetry});
+
+  final bool loading;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final es = Localizations.localeOf(context).languageCode == 'es';
+    return Scaffold(
+      backgroundColor: MuyuColors.background,
+      body: Column(
+        children: [
+          GreenTitleHeader(title: l10n.ratingTitle, onBack: () => Navigator.of(context).pop()),
+          Expanded(
+            child: Center(
+              child: loading
+                  ? const CircularProgressIndicator()
+                  : Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          es
+                              ? 'No se pudieron cargar tus contratos.'
+                              : 'Your contracts could not be loaded.',
+                        ),
+                        TextButton(onPressed: onRetry, child: Text(es ? 'Reintentar' : 'Retry')),
+                      ],
+                    ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// The farmer picks which finished contract to rate.
+class _ContractPicker extends StatelessWidget {
+  const _ContractPicker({required this.contracts, required this.onPick});
+
+  final List<RatingContract> contracts;
+  final ValueChanged<RatingContract> onPick;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final es = Localizations.localeOf(context).languageCode == 'es';
+    return Scaffold(
+      backgroundColor: MuyuColors.background,
+      body: Column(
+        children: [
+          GreenTitleHeader(title: l10n.ratingTitle, onBack: () => Navigator.of(context).pop()),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.all(24),
+              children: [
+                Text(
+                  es ? '¿Qué contrato quieres calificar?' : 'Which contract do you want to rate?',
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(height: 12),
+                for (final contract in contracts)
+                  Card(
+                    color: Colors.white,
+                    child: ListTile(
+                      title: Text(contract.plotName),
+                      subtitle: Text('${contract.buyerName} · ${contract.endedOn}'),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => onPick(contract),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
