@@ -191,10 +191,11 @@ void main() {
     expect(find.text('Real company'), findsOneWidget);
   });
 
-  testWidgets('the incident screen no longer pretends to send a report', (tester) async {
+  testWidgets('the incident screen opens the farmer report form', (tester) async {
     await show(tester, const ReportIncidentScreen(), (_) async => http.Response('[]', 200));
 
-    expect(find.text('Send report'), findsNothing);
-    expect(find.text('Call technical support'), findsOneWidget);
+    expect(find.text('Issue type'), findsOneWidget);
+    expect(find.text('Send report'), findsOneWidget);
+    expect(find.text('Call technical support'), findsNothing);
   });
 }

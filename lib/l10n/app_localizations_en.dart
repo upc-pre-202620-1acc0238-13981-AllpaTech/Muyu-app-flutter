@@ -459,6 +459,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileEditContact => 'Edit contact';
 
   @override
+  String get profileChangePhoto => 'Change photo';
+
+  @override
   String get profileSaveContact => 'Save';
 
   @override
@@ -879,7 +882,44 @@ class AppLocalizationsEn extends AppLocalizations {
       'Reports cannot be sent from the app yet. Call technical support and we will help you.';
 
   @override
+  String get reportNoConnection => 'No Connection';
+
+  @override
+  String get reportOfflineBody =>
+      'If you have no signal, the report will be sent automatically when the connection returns.';
+
+  @override
+  String get reportTypeLabel => 'Issue type';
+
+  @override
+  String get reportTypeTechnical => 'Technical issue';
+
+  @override
+  String get reportTypePayment => 'Payment issue';
+
+  @override
+  String get reportTypePlot => 'Plot or harvest';
+
+  @override
+  String get reportTypeOther => 'Other';
+
+  @override
   String get reportDescriptionLabel => 'Description';
+
+  @override
+  String get reportDescriptionHint => 'Describe what happened and when';
+
+  @override
+  String get reportAttachPhoto => 'Attach photo (optional)';
+
+  @override
+  String get reportPhotoAttached => 'Photo attached';
+
+  @override
+  String get reportSend => 'Send report';
+
+  @override
+  String get reportSendRequest => 'Send request';
 
   @override
   String get ratingTitle => 'Rate the buyer';

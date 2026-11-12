@@ -22,7 +22,7 @@ class FarmerAvatar extends StatelessWidget {
         color: MuyuColors.action,
         child: photo == null || photo.isEmpty
             ? Text(
-                _initials(name),
+                initialsOf(name),
                 style: TextStyle(
                   fontFamily: MuyuFonts.urbanist,
                   fontWeight: FontWeight.w700,
@@ -37,7 +37,8 @@ class FarmerAvatar extends StatelessWidget {
   }
 }
 
-String _initials(String name) {
+String initialsOf(String name) {
   final parts = name.trim().split(RegExp(r'\s+')).where((part) => part.isNotEmpty).take(2);
+  if (parts.isEmpty) return '?';
   return parts.map((part) => part[0].toUpperCase()).join();
 }
