@@ -25,7 +25,7 @@ class GreenTitleHeader extends StatelessWidget {
           child: SizedBox(
             height: 56,
             child: Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
+              padding: const EdgeInsets.only(left: 32, right: 20),
               child: Row(
                 children: [
                   Expanded(
@@ -39,7 +39,7 @@ class GreenTitleHeader extends StatelessWidget {
                             size: 18,
                             semanticLabel: l10n.back,
                           ),
-                          const SizedBox(width: 16),
+                          const SizedBox(width: 20),
                           Expanded(
                             child: Text(
                               title,

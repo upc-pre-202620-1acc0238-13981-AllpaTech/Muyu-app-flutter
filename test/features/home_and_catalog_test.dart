@@ -18,7 +18,7 @@ import 'package:muyu_app/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const farmer = 'ana@gmail.com';
-const emptyMessage = 'You have not published any plots yet.';
+const emptyMessage = 'No plots yet';
 
 final plots = jsonEncode([
   {
@@ -110,8 +110,8 @@ void main() {
     await show(tester, const FarmerHomeScreen(), (_) async => http.Response('[]', 200));
 
     expect(find.text(emptyMessage), findsOneWidget);
-    expect(find.text('Available'), findsOneWidget);
-    expect(find.text('Pending'), findsNothing);
+    expect(find.text('Go to My Plots'), findsOneWidget);
+    expect(find.text('Pending'), findsOneWidget);
   });
 
   testWidgets('Home with a real plot fits the Figma phone size', (tester) async {
