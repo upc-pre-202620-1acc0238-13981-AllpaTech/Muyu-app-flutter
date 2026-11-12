@@ -5,6 +5,7 @@ import '../../../../core/designsystem/components/green_title_header.dart';
 import '../../../../core/theme/muyu_colors.dart';
 import '../../../../core/theme/muyu_theme.dart';
 import '../../../plot_approval/domain/plot.dart';
+import '../visit/visit_request_screen.dart';
 
 class MerchantPlotDetailScreen extends StatelessWidget {
   const MerchantPlotDetailScreen({super.key, required this.plot, this.onFund});
@@ -88,6 +89,8 @@ class MerchantPlotDetailScreen extends StatelessWidget {
                         : 'Funds are held in escrow and released after approved milestones.',
                   ),
                 ),
+                const SizedBox(height: 16),
+                MerchantVisitPanel(plot: plot),
                 if (onFund != null) ...[
                   const SizedBox(height: 20),
                   FilledButton(
