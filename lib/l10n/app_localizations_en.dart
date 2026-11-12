@@ -960,7 +960,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get ratingPreviewNotice => 'Preview only. This rating is not sent to the server.';
+  String get ratingPreviewNotice => 'Your rating is not saved on the server yet.';
 
   @override
   String get ratingSubmittedTitle => 'Rating submitted';
