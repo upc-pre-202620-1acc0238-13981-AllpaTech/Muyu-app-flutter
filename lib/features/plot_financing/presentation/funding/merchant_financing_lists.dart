@@ -5,6 +5,7 @@ import '../../../../core/designsystem/components/merchant_bottom_bar.dart';
 import '../../../../core/theme/muyu_colors.dart';
 import '../../../../core/theme/muyu_theme.dart';
 import '../../../plot_approval/domain/farmer_plot.dart';
+import '../../../plot_approval/domain/plot_status_label.dart';
 import '../../../user_management/application/session_controller.dart';
 import '../../application/merchant_financing_controller.dart';
 import '../evidence/merchant_evidence_screens.dart';
@@ -106,7 +107,9 @@ class _FinancingCard extends StatelessWidget {
             const SizedBox(height: 10),
             Text(plot.amount, style: MuyuTextStyles.bodyBold.copyWith(color: MuyuColors.forest)),
             const SizedBox(height: 6),
-            Text('${es ? 'Etapa' : 'Stage'}: ${plot.stage} · ${plot.progress}%'),
+            Text(
+              '${es ? 'Etapa' : 'Stage'}: ${plotStageLabel(plot.stage, es: es)} · ${plot.progress}%',
+            ),
             if (toReview > 0) ...[
               const SizedBox(height: 8),
               Text(

@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
-import 'package:muyu_app/core/designsystem/components/muyu_controls.dart';
 import 'package:muyu_app/core/i18n/app_language.dart';
 import 'package:muyu_app/core/network/api_client.dart';
 import 'package:muyu_app/core/storage/user_preferences.dart';
@@ -232,7 +231,7 @@ void main() {
       await tester.runAsync(() => c.read(farmerPlotsProvider.future));
       await tester.pumpAndSettle();
 
-      expect(find.text('You have not published any plots yet.'), findsOneWidget);
+      expect(find.text('No plots match your search or filter.'), findsOneWidget);
     });
 
     testWidgets('search and filters narrow the list', (tester) async {
@@ -249,7 +248,8 @@ void main() {
       expect(find.text('Plot 1'), findsOneWidget);
       expect(find.text('Plot 2'), findsOneWidget);
 
-      await tester.tap(find.widgetWithText(MuyuFilterChip, 'Funded'));
+      // The filter chip comes before the card chip that also says Funded.
+      await tester.tap(find.text('Funded').first);
       await tester.pumpAndSettle();
       expect(find.text('Plot 1'), findsNothing);
       expect(find.text('Plot 2'), findsOneWidget);
@@ -267,7 +267,8 @@ void main() {
       await tester.runAsync(() => c.read(farmerPlotsProvider.future));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Plot 1'));
+      expect(find.text('Unfunded · 0/4 milestones'), findsOneWidget);
+      await tester.tap(find.text('View plot'));
       await tester.pumpAndSettle();
 
       expect(find.text('Plot details'), findsOneWidget);

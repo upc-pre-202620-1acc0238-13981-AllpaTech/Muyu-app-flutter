@@ -174,19 +174,22 @@ void main() {
 
     await tester.pumpWidget(app());
     await tester.pump();
-    expect(find.text('Todo está al día'), findsOneWidget);
-    expect(find.text('Evidencias sincronizadas (0)'), findsOneWidget);
+    expect(find.text('0 evidencias pendientes'), findsOneWidget);
+    expect(find.text('Todo está sincronizado'), findsOneWidget);
+    expect(find.text('0 evidencias sincronizadas'), findsOneWidget);
 
     await tester.runAsync(() => recordIrrigation(container));
     await tester.pump();
-    expect(find.text('1 evidencia(s) sin enviar'), findsOneWidget);
-    expect(find.text('Ubicación GPS registrada'), findsOneWidget);
+    expect(find.text('1 evidencias pendientes'), findsOneWidget);
+    expect(find.text('Ubicación registrada'), findsOneWidget);
+    expect(find.text('Esperando señal'), findsOneWidget);
 
+    // Signal is back: the farmer retries from the same button.
     backend.online = true;
-    await tester.tap(find.text('Sincronizar ahora'));
+    await tester.tap(find.text('Sin conexión · inténtalo más tarde'));
     await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 200)));
     await tester.pump();
-    expect(find.text('Todo está al día'), findsOneWidget);
-    expect(find.text('Evidencias sincronizadas (1)'), findsOneWidget);
+    expect(find.text('0 evidencias pendientes'), findsOneWidget);
+    expect(find.text('1 evidencias sincronizadas'), findsOneWidget);
   });
 }
