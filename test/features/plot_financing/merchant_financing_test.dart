@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:muyu_app/core/network/api_client.dart';
 import 'package:muyu_app/core/storage/user_preferences.dart';
+import 'package:muyu_app/features/plot_approval/domain/farmer_plot.dart';
 import 'package:muyu_app/features/plot_financing/application/merchant_financing_controller.dart';
 import 'package:muyu_app/features/plot_financing/domain/payment_method.dart';
 import 'package:muyu_app/features/user_management/application/session_controller.dart';
@@ -59,7 +60,7 @@ Future<ProviderContainer> containerWith(
 }
 
 void main() {
-  test('card payment funds the plot and persists the escrow state', () async {
+  Future<Map<String, dynamic>> fundWith(PaymentMethod method) async {
     http.Request? update;
     final container = await containerWith((request) async {
       if (request.method == 'PUT') {
@@ -70,40 +71,56 @@ void main() {
     });
     await container.read(merchantFinancingProvider.future);
 
-    final result = await container
-        .read(merchantFinancingProvider.notifier)
-        .fundPlot(8, PaymentMethod.card);
+    final result = await container.read(merchantFinancingProvider.notifier).fundPlot(8, method);
 
-    expect(result.pendingVerification, isFalse);
+    expect(result.paymentMethod, method);
     expect(update!.url.path, '/mobile/plots/8');
     expect(update!.headers['Authorization'], 'Bearer jwt');
-    final body = jsonDecode(update!.body) as Map<String, dynamic>;
+    return jsonDecode(update!.body) as Map<String, dynamic>;
+  }
+
+  test('card payment funds the plot the way Kotlin does', () async {
+    final body = await fundWith(PaymentMethod.card);
+
     expect(body['status'], 'funded');
-    expect(body['stage'], 'Funds in Escrow');
-    expect(body['paymentStatus'], 'held_in_escrow');
+    expect(body['stage'], 'Planting');
+    expect(body['progress'], 10);
     expect(body['fundedByEmail'], merchantEmail);
-    expect(body['paymentReference'], startsWith('MUYU-8-'));
+    final milestones = (body['milestoneStates'] as List).cast<Map<String, dynamic>>();
+    expect(milestones.map((m) => m['key']), ['planting', 'irrigation', 'fertilization', 'harvest']);
+    expect(milestones.every((m) => m['status'] == 'pending' && m['photoUri'] == ''), isTrue);
   });
 
-  test('bank transfer is persisted as payment under verification', () async {
-    http.Request? update;
-    final container = await containerWith((request) async {
-      if (request.method == 'PUT') {
-        update = request;
-        return http.Response('', 204);
-      }
-      return http.Response(jsonEncode([plotJson()]), 200);
+  test('a bank transfer also funds the plot right away, as in Kotlin', () async {
+    final body = await fundWith(PaymentMethod.bankTransfer);
+
+    expect(body['status'], 'funded');
+    expect(body.containsKey('paymentStatus'), isFalse);
+  });
+
+  test('saving a plot keeps the evidence Kotlin recorded on a milestone', () {
+    final plot = FarmerPlot.fromJson({
+      ...plotJson(),
+      'status': 'funded',
+      'milestoneStates': [
+        {
+          'key': 'planting',
+          'status': 'submitted',
+          'photoUri': 'content://evidence/1.jpg',
+          'inputUsed': 'Seed',
+          'latitude': -13.5,
+          'longitude': -71.9,
+          'submittedAtMillis': 1762700000000,
+        },
+      ],
     });
-    await container.read(merchantFinancingProvider.future);
 
-    final result = await container
-        .read(merchantFinancingProvider.notifier)
-        .fundPlot(8, PaymentMethod.bankTransfer);
+    final milestone = (plot.toJson()['milestoneStates'] as List).single as Map<String, dynamic>;
 
-    expect(result.pendingVerification, isTrue);
-    final body = jsonDecode(update!.body) as Map<String, dynamic>;
-    expect(body['status'], 'payment_verification');
-    expect(body['stage'], 'Payment verification');
-    expect(body['paymentStatus'], 'pending_verification');
+    expect(milestone['photoUri'], 'content://evidence/1.jpg');
+    expect(milestone['inputUsed'], 'Seed');
+    expect(milestone['latitude'], -13.5);
+    expect(milestone['submittedAtMillis'], 1762700000000);
+    expect(milestone['status'], 'submitted');
   });
 }

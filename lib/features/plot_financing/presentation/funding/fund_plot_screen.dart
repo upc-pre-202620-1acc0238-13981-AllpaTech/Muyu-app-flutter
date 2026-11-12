@@ -77,11 +77,6 @@ class _FundPlotScreenState extends ConsumerState<FundPlotScreen> {
                           color: MuyuColors.action,
                         ),
                         title: Text(option.label(es)),
-                        subtitle: Text(
-                          option.requiresVerification
-                              ? (es ? 'El pago será verificado' : 'Payment will be verified')
-                              : (es ? 'Confirmación inmediata' : 'Immediate confirmation'),
-                        ),
                       ),
                   ],
                 ),
@@ -139,7 +134,6 @@ class FinancingSuccessScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final es = Localizations.localeOf(context).languageCode == 'es';
-    final pending = result.pendingVerification;
     return Scaffold(
       backgroundColor: MuyuColors.background,
       body: SafeArea(
@@ -148,28 +142,18 @@ class FinancingSuccessScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                pending ? Icons.hourglass_top_rounded : Icons.lock_outline_rounded,
-                size: 90,
-                color: pending ? MuyuColors.pendingText : MuyuColors.forest,
-              ),
+              const Icon(Icons.lock_outline_rounded, size: 90, color: MuyuColors.forest),
               const SizedBox(height: 24),
               Text(
-                pending
-                    ? (es ? 'Pago en verificación' : 'Payment under verification')
-                    : (es ? 'Financiamiento confirmado' : 'Financing confirmed'),
+                es ? 'Financiamiento confirmado' : 'Financing confirmed',
                 textAlign: TextAlign.center,
                 style: MuyuTextStyles.screenTitle,
               ),
               const SizedBox(height: 12),
               Text(
-                pending
-                    ? (es
-                          ? 'Validaremos el pago de ${plot.name} antes de mover los fondos a custodia.'
-                          : 'We will verify the payment for ${plot.name} before moving funds to escrow.')
-                    : (es
-                          ? '${plot.name} ya está financiada y los fondos están en custodia.'
-                          : '${plot.name} is funded and the funds are held in escrow.'),
+                es
+                    ? '${plot.name} ya está financiada con ${result.paymentMethod.label(es).toLowerCase()} y los fondos están en custodia.'
+                    : '${plot.name} is funded by ${result.paymentMethod.label(es).toLowerCase()} and the funds are held in escrow.',
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 28),

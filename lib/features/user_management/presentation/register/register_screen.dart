@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../core/designsystem/components/auth_components.dart';
 import '../../../../core/router/app_routes.dart';
+import '../../../../core/storage/user_preferences.dart';
 import '../../../../core/theme/muyu_colors.dart';
 import '../../../../core/theme/muyu_theme.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -100,6 +101,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             birthdate: DateFormat('dd MMM yyyy', 'en_US').format(_birthdate!),
             password: _password.text,
           );
+      await ref
+          .read(userPreferencesProvider)
+          .saveString(email, UserPreferences.keyContactPhone, phone);
       if (!mounted) return;
       final l10n = AppLocalizations.of(context);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.registerSuccess)));

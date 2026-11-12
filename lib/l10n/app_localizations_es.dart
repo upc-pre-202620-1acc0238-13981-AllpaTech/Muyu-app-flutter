@@ -182,6 +182,48 @@ class AppLocalizationsEs extends AppLocalizations {
   String get roleNext => 'Siguiente';
 
   @override
+  String get onboardingPlotTitle => 'Publica tu parcela';
+
+  @override
+  String get onboardingPlotBody =>
+      'Registra tus parcelas y cultivos para obtener financiamiento de comerciantes verificados.';
+
+  @override
+  String get onboardingPlotImage => 'Un nuevo cultivo creciendo en una parcela';
+
+  @override
+  String get onboardingEscrowTitle => 'Financiamiento en custodia';
+
+  @override
+  String get onboardingEscrowBody =>
+      'Los fondos se mantienen en custodia y se liberan cuando se aprueba cada hito.';
+
+  @override
+  String get onboardingEscrowImage => 'Un candado que representa fondos protegidos';
+
+  @override
+  String get onboardingWeatherTitle => 'Alertas climáticas gratis';
+
+  @override
+  String get onboardingWeatherBody =>
+      'Recibe alertas de heladas, lluvias intensas y sequías para proteger tu cultivo.';
+
+  @override
+  String get onboardingWeatherImage => 'Sol y nube que representan alertas climáticas';
+
+  @override
+  String get onboardingSkip => 'Omitir';
+
+  @override
+  String get onboardingNext => 'Siguiente';
+
+  @override
+  String get onboardingStart => 'Comenzar';
+
+  @override
+  String get onboardingBack => 'Volver a la selección de rol';
+
+  @override
   String get plotsPublish => 'Publicar';
 
   @override
@@ -197,6 +239,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get plotsFilterAvailable => 'Disponibles';
 
   @override
+  String get plotsFilterApproved => 'Aprobadas';
+
+  @override
+  String get plotsFilterPending => 'Pendientes';
+
+  @override
   String get plotsNoMatch => 'Ninguna parcela coincide con tu búsqueda o filtro.';
 
   @override
@@ -208,6 +256,14 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String plotHarvest(String date) {
     return 'Cosecha: $date';
+  }
+
+  @override
+  String get plotCurrentStage => 'Etapa actual:';
+
+  @override
+  String plotProgressComplete(int progress) {
+    return '$progress% completado';
   }
 
   @override
@@ -945,6 +1001,187 @@ class AppLocalizationsEs extends AppLocalizations {
   String profileRolePlace(String role, String place) {
     return '$role · $place';
   }
+
+  @override
+  String get paymentsTitle => 'Historial de pagos';
+
+  @override
+  String get paymentsTotalReceived => 'TOTAL RECIBIDO';
+
+  @override
+  String get paymentsTotalReleased => 'TOTAL LIBERADO';
+
+  @override
+  String paymentsCompletedCount(int count) {
+    return '$count pagos completados';
+  }
+
+  @override
+  String get paymentsEmptyTitle => 'Aún no tienes pagos';
+
+  @override
+  String get paymentsEmptyBody =>
+      'Los pagos aparecen aquí cuando se aprueba la evidencia de un hito financiado.';
+
+  @override
+  String get paymentsFilterAll => 'Todos';
+
+  @override
+  String get paymentsFilterCompleted => 'Completado';
+
+  @override
+  String get paymentsFilterPending => 'Pendiente';
+
+  @override
+  String get paymentDetailsTitle => 'Detalles del pago';
+
+  @override
+  String get paymentTransactionDetails => 'DETALLES DE LA TRANSACCIÓN';
+
+  @override
+  String get paymentLabelMilestone => 'Hito';
+
+  @override
+  String get paymentLabelPlot => 'Parcela';
+
+  @override
+  String get paymentLabelDate => 'Fecha de liberación';
+
+  @override
+  String get paymentLabelAccount => 'Cuenta de destino';
+
+  @override
+  String get paymentLabelTxid => 'ID de transacción';
+
+  @override
+  String get paymentLabelAmount => 'Monto';
+
+  @override
+  String get paymentPendingDate => 'En espera de aprobación';
+
+  @override
+  String get paymentEscrowExplanation =>
+      'Los fondos se liberan solo cuando el comerciante aprueba la evidencia del hito.';
+
+  @override
+  String get paymentMilestonePlanting => 'Siembra';
+
+  @override
+  String get paymentMilestoneIrrigation => 'Riego';
+
+  @override
+  String get paymentMilestoneFertilization => 'Fertilización';
+
+  @override
+  String get paymentMilestoneHarvest => 'Cosecha';
+
+  @override
+  String get weatherTitle => 'Alerta climática';
+
+  @override
+  String get weatherLoading => 'Consultando el clima de tu parcela…';
+
+  @override
+  String get weatherUnavailable => 'El clima no está disponible para esta parcela en este momento.';
+
+  @override
+  String get weatherStable => 'Condiciones estables';
+
+  @override
+  String get weatherHeavyRain => 'Lluvia fuerte prevista';
+
+  @override
+  String get weatherFrost => 'Riesgo de helada';
+
+  @override
+  String get weatherRisk => 'Nivel de riesgo';
+
+  @override
+  String get weatherRiskHigh => 'Alta';
+
+  @override
+  String get weatherRiskMedium => 'Media';
+
+  @override
+  String get weatherRiskLow => 'Baja';
+
+  @override
+  String get weatherRecommendations => 'Medidas recomendadas';
+
+  @override
+  String get weatherMeasureDrainage => 'Revisa el drenaje y acceso al campo';
+
+  @override
+  String get weatherMeasureCover => 'Protege los cultivos sensibles';
+
+  @override
+  String get weatherMeasureIrrigation => 'Ajusta el riego según el pronóstico';
+
+  @override
+  String get weatherMeasureMonitor => 'Monitorea humedad y estrés del cultivo';
+
+  @override
+  String get weatherMeasuresPending => 'Pendiente de atención';
+
+  @override
+  String get weatherMeasuresDone => 'Medidas registradas';
+
+  @override
+  String get weatherMeasuresHint => 'Selecciona las acciones que tomaste para proteger el cultivo.';
+
+  @override
+  String get weatherMeasuresConfirm => 'Guardar medidas tomadas';
+
+  @override
+  String get weatherMeasuresRequired => 'Selecciona al menos una medida.';
+
+  @override
+  String get merchantAlertsTitle => 'Alertas';
+
+  @override
+  String get merchantAlertsEmpty => 'Aquí aparecerán las alertas de las parcelas financiadas.';
+
+  @override
+  String get merchantAlertPayment => 'Evidencia de hito pendiente de revisión';
+
+  @override
+  String get merchantAlertWeather => 'Riesgo climático cerca de la parcela financiada';
+
+  @override
+  String get resetTitle => 'Recuperar contraseña';
+
+  @override
+  String get resetHeading => 'Recuperemos el acceso a tu cuenta';
+
+  @override
+  String get resetBody => 'Ingresa tu correo y te mostraremos el siguiente paso de recuperación.';
+
+  @override
+  String get resetEmailPrompt => 'Correo de la cuenta';
+
+  @override
+  String get resetNext => 'Continuar';
+
+  @override
+  String get resetInvalidEmail => 'Ingresa un correo válido.';
+
+  @override
+  String get resetSentTitle => 'Revisa tu correo';
+
+  @override
+  String resetSentBody(String email) {
+    return 'Si existe una cuenta para $email, recibirás instrucciones de recuperación.';
+  }
+
+  @override
+  String get resetDemoNotice =>
+      'Vista previa: el servidor todavía no envía correos de recuperación.';
+
+  @override
+  String get resetBackLogin => 'Volver a iniciar sesión';
+
+  @override
+  String get loginForgotPassword => '¿Olvidaste tu contraseña?';
 }
 
 /// The translations for Spanish Castilian, as used in Latin America and the Caribbean (`es_419`).

@@ -13,11 +13,21 @@ AuthRepositoryImpl repositoryFor(Future<http.Response> Function(http.Request) ha
       AuthService(ApiClient(baseUrl: 'https://api.test/api/v1/', client: MockClient(handler))),
     );
 
-http.Response loginResponse(String role, {String displayName = 'Ana Maria Rojas'}) => http.Response(
+http.Response loginResponse(
+  String role, {
+  String displayName = 'Ana Maria Rojas',
+  String phone = '987123456',
+}) => http.Response(
   jsonEncode({
     'accessToken': 'jwt',
     'expiresAtUtc': '2026-11-10T00:00:00Z',
-    'user': {'id': 'u1', 'email': 'ana@example.com', 'displayName': displayName, 'role': role},
+    'user': {
+      'id': 'u1',
+      'email': 'ana@example.com',
+      'displayName': displayName,
+      'role': role,
+      'phone': phone,
+    },
   }),
   200,
 );
@@ -38,6 +48,7 @@ void main() {
     expect(user.firstName, 'Ana');
     expect(user.lastName, 'Maria Rojas');
     expect(user.role, 'farmer');
+    expect(user.phone, '987123456');
   });
 
   test('COMERCIANTE maps to merchant and a single name has no last name', () async {

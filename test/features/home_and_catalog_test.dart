@@ -8,6 +8,7 @@ import 'package:http/testing.dart';
 import 'package:muyu_app/core/i18n/app_language.dart';
 import 'package:muyu_app/core/network/api_client.dart';
 import 'package:muyu_app/core/storage/user_preferences.dart';
+import 'package:muyu_app/core/theme/muyu_theme.dart';
 import 'package:muyu_app/features/plot_approval/presentation/home/farmer_home_screen.dart';
 import 'package:muyu_app/features/plot_financing/presentation/catalog/merchant_catalog_screen.dart';
 import 'package:muyu_app/features/user_management/application/session_controller.dart';
@@ -70,17 +71,19 @@ Future<void> settle(WidgetTester tester) async {
 Future<ProviderContainer> show(
   WidgetTester tester,
   Widget screen,
-  Future<http.Response> Function(http.Request) handler,
-) async {
+  Future<http.Response> Function(http.Request) handler, {
+  Size size = const Size(1000, 1000),
+}) async {
   // Wide enough for the placeholder font flutter_test renders text with.
   tester.view.devicePixelRatio = 1;
-  tester.view.physicalSize = const Size(1000, 1000);
+  tester.view.physicalSize = size;
   addTearDown(tester.view.reset);
   final container = (await tester.runAsync(() => containerWith(handler)))!;
   await tester.pumpWidget(
     UncontrolledProviderScope(
       container: container,
       child: MaterialApp(
+        theme: buildMuyuTheme(),
         locale: AppLanguage.english.locale,
         supportedLocales: AppLocalizations.supportedLocales,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -97,6 +100,9 @@ void main() {
     await show(tester, const FarmerHomeScreen(), (_) async => http.Response(plots, 200));
 
     expect(find.text('Esperanza'), findsOneWidget);
+    expect(find.text('Current stage:  —'), findsOneWidget);
+    expect(find.text('0% complete'), findsOneWidget);
+    expect(find.text('Pending'), findsWidgets);
     expect(find.text(emptyMessage), findsNothing);
   });
 
@@ -104,6 +110,20 @@ void main() {
     await show(tester, const FarmerHomeScreen(), (_) async => http.Response('[]', 200));
 
     expect(find.text(emptyMessage), findsOneWidget);
+    expect(find.text('Available'), findsOneWidget);
+    expect(find.text('Pending'), findsNothing);
+  });
+
+  testWidgets('Home with a real plot fits the Figma phone size', (tester) async {
+    await show(
+      tester,
+      const FarmerHomeScreen(),
+      (_) async => http.Response(plots, 200),
+      size: const Size(402, 874),
+    );
+
+    expect(find.text('Esperanza'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('the catalog reports a backend failure and can retry', (tester) async {
@@ -134,20 +154,34 @@ void main() {
     expect(container.read(sessionProvider).status, SessionStatus.signedOut);
   });
 
-  testWidgets('the merchant can submit a bank transfer for verification', (tester) async {
-    var currentPlots = plots;
+  testWidgets('tapping a catalog card opens the merchant plot details', (tester) async {
+    await show(tester, const MerchantCatalogScreen(), (_) async => http.Response(plots, 200));
+
+    await tester.tap(find.text('Esperanza'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Plot details'), findsOneWidget);
+    expect(find.text('Farmer'), findsOneWidget);
+    expect(find.text('Ana Rojas'), findsOneWidget);
+    expect(find.textContaining('Funds are held in escrow'), findsOneWidget);
+  });
+
+  testWidgets('the merchant funds a plot from its details', (tester) async {
+    Map<String, dynamic>? saved;
     await show(tester, const MerchantCatalogScreen(), (request) async {
       if (request.method == 'PUT') {
-        final updated = jsonDecode(request.body) as Map<String, dynamic>;
-        currentPlots = jsonEncode([updated]);
+        saved = jsonDecode(request.body) as Map<String, dynamic>;
         return http.Response('', 204);
       }
-      return http.Response(currentPlots, 200);
+      return http.Response(plots, 200);
     });
 
     await tester.tap(find.text('Esperanza'));
     await tester.pumpAndSettle();
-    expect(find.text('Fund plot'), findsOneWidget);
+    final fund = find.text('Fund this plot');
+    await tester.ensureVisible(fund);
+    await tester.tap(fund);
+    await tester.pumpAndSettle();
 
     await tester.tap(find.text('Bank transfer'));
     await tester.pump();
@@ -158,7 +192,9 @@ void main() {
     await tester.tap(confirm);
     await tester.pumpAndSettle();
 
-    expect(find.text('Payment under verification'), findsOneWidget);
+    expect(find.text('Financing confirmed'), findsOneWidget);
+    expect(saved!['status'], 'funded');
+    expect(saved!['stage'], 'Planting');
   });
 
   testWidgets('rating without a contract shows no demo data', (tester) async {

@@ -25,18 +25,7 @@ class MerchantFinancingController extends AsyncNotifier<List<FarmerPlot>> {
       throw const PlotException(PlotFailure.rejected);
     }
 
-    final plot = matches.first;
-    final pending = method.requiresVerification;
-    final now = DateTime.now().toUtc();
-    final updated = plot.copyWith(
-      status: pending ? 'payment_verification' : 'funded',
-      stage: pending ? 'Payment verification' : 'Funds in Escrow',
-      fundedByEmail: user.email,
-      paymentMethod: method.name,
-      paymentStatus: pending ? 'pending_verification' : 'held_in_escrow',
-      paymentReference: 'MUYU-${plot.id}-${now.millisecondsSinceEpoch}',
-      fundedAt: now.toIso8601String(),
-    );
+    final updated = matches.first.fundedBy(user.email);
 
     try {
       await ref.read(farmerPlotRepositoryProvider).save(user.token, updated);
@@ -44,10 +33,7 @@ class MerchantFinancingController extends AsyncNotifier<List<FarmerPlot>> {
         for (final item in current)
           if (item.id == updated.id) updated else item,
       ]);
-      return FinancingResult(
-        paymentMethod: method,
-        pendingVerification: pending,
-      );
+      return FinancingResult(paymentMethod: method);
     } on PlotException catch (error) {
       if (error.failure == PlotFailure.sessionExpired) {
         await ref.read(sessionProvider.notifier).logout();

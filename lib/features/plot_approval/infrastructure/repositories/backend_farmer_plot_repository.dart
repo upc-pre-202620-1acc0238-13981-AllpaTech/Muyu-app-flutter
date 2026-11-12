@@ -20,6 +20,9 @@ class BackendFarmerPlotRepository implements FarmerPlotRepository {
   Future<void> save(String token, FarmerPlot plot) =>
       _guard(() => _service.putPlot(token, plot.id, plot.toJson()));
 
+  @override
+  Future<void> delete(String token, int id) => _guard(() => _service.deletePlot(token, id));
+
   Future<T> _guard<T>(Future<T> Function() call) async {
     try {
       return await call();

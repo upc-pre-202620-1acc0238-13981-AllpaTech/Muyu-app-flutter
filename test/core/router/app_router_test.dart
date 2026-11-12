@@ -30,12 +30,14 @@ void main() {
     const session = SessionState.signedIn(user);
     expect(redirectFor(session, AppRoutes.login), AppRoutes.role);
     expect(redirectFor(session, AppRoutes.role), isNull);
+    expect(redirectFor(session, AppRoutes.farmerOnboarding), isNull);
   });
 
   test('signed-in users with a role go to that role home', () {
     const session = SessionState.signedIn(user, role: UserRole.merchant);
     expect(redirectFor(session, AppRoutes.splash), AppRoutes.merchantCatalog);
     expect(redirectFor(session, AppRoutes.login), AppRoutes.merchantCatalog);
+    expect(redirectFor(session, AppRoutes.farmerOnboarding), AppRoutes.merchantCatalog);
     expect(redirectFor(session, AppRoutes.farmerHome), isNull);
   });
 }
