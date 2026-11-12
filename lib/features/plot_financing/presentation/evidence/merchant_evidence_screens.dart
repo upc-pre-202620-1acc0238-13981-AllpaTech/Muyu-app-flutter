@@ -10,6 +10,7 @@ import '../../../plot_approval/domain/farmer_plot.dart';
 import '../../../plot_approval/domain/farmer_plot_repository.dart';
 import '../../../plot_approval/domain/plot_activity.dart';
 import '../../../plot_approval/domain/plot_finance.dart';
+import '../harvest/harvest_delivery_screens.dart';
 
 /// A funded plot as the merchant follows it: progress and the milestones
 /// waiting for review, as Kotlin `MerchantPlotDetailScreen` for funded plots.
@@ -84,6 +85,11 @@ class _MerchantFundedPlotScreenState extends State<MerchantFundedPlotScreen> {
                   actionLabel: (milestone) =>
                       milestone.isSubmitted ? (es ? 'Revisar evidencia' : 'Review evidence') : null,
                   onAction: _review,
+                ),
+                const SizedBox(height: 16),
+                HarvestDeliveryCard(
+                  plot: plot,
+                  onChanged: (updated) => setState(() => plot = updated),
                 ),
               ],
             ),
