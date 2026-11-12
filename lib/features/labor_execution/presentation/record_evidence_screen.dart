@@ -84,7 +84,7 @@ class _RecordEvidenceScreenState extends ConsumerState<RecordEvidenceScreen> {
       _error = null;
     });
     try {
-      final updated = await ref
+      final result = await ref
           .read(milestoneEvidenceServiceProvider)
           .submitEvidence(
             plot: widget.plot,
@@ -95,16 +95,14 @@ class _RecordEvidenceScreenState extends ConsumerState<RecordEvidenceScreen> {
             notes: _notes.text,
             location: _location!,
           );
-      if (mounted) Navigator.of(context).pop(updated);
+      if (mounted) Navigator.of(context).pop(result);
     } on PlotException catch (error) {
       if (!mounted) return;
       setState(() {
         _sending = false;
         _error = switch (error.failure) {
           PlotFailure.network =>
-            _es
-                ? 'Sin conexión. Tu evidencia no se envió; inténtalo cuando tengas señal.'
-                : 'No connection. Your evidence was not sent; try again when you have signal.',
+            _es ? 'Sin conexión. Inténtalo de nuevo.' : 'No connection. Try again.',
           PlotFailure.sessionExpired =>
             _es
                 ? 'Tu sesión expiró. Vuelve a iniciar sesión.'

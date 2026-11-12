@@ -13,6 +13,7 @@ import '../../plot_approval/domain/plot_activity.dart';
 import '../../plot_approval/infrastructure/repositories/backend_farmer_plot_repository.dart';
 import '../../plot_financing/application/merchant_financing_controller.dart';
 import '../../user_management/application/session_controller.dart';
+import 'evidence_queue.dart';
 
 /// Where the farmer was when the evidence was taken.
 class EvidenceLocation {
@@ -85,13 +86,24 @@ Future<String?> _pickPhoto(ImageSource source) async {
   return 'data:image/jpeg;base64,${base64Encode(bytes)}';
 }
 
+/// What happened to evidence the farmer sent.
+class EvidenceSubmission {
+  const EvidenceSubmission({required this.plot, required this.queued});
+
+  /// The plot as the farmer should see it now.
+  final FarmerPlot plot;
+
+  /// True when there was no signal and the evidence waits on the phone.
+  final bool queued;
+}
+
 /// Records farmer evidence and merchant reviews on a plot's milestones,
 /// writing the same fields Kotlin `BackendStateStore` writes.
 class MilestoneEvidenceService {
   MilestoneEvidenceService(this._ref);
   final Ref _ref;
 
-  Future<FarmerPlot> submitEvidence({
+  Future<EvidenceSubmission> submitEvidence({
     required FarmerPlot plot,
     required String milestoneKey,
     required String photoUri,
@@ -119,9 +131,17 @@ class MilestoneEvidenceService {
       },
     );
     final next = plot.withMilestone(updated);
-    await _ref.read(farmerPlotsProvider.notifier).updatePlot(next);
+    try {
+      await _ref.read(farmerPlotsProvider.notifier).updatePlot(next);
+    } on PlotException catch (error) {
+      if (error.failure != PlotFailure.network) rethrow;
+      // No signal in the field: keep it on the phone, as Kotlin does.
+      final queue = _ref.read(evidenceQueueProvider.notifier);
+      await queue.enqueue(plot, updated);
+      return EvidenceSubmission(plot: queue.withQueued(plot), queued: true);
+    }
     _ref.invalidate(paymentHistoryProvider);
-    return next;
+    return EvidenceSubmission(plot: next, queued: false);
   }
 
   Future<FarmerPlot> review({

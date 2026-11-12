@@ -76,6 +76,11 @@ class MilestoneStatusChip extends StatelessWidget {
         MuyuColors.financedBackground,
         MuyuColors.financedText,
       ),
+      MilestoneState.statusQueued => (
+        es ? 'Sin enviar' : 'Not sent',
+        MuyuColors.offlineBackground,
+        MuyuColors.offlineText,
+      ),
       MilestoneState.statusNeedsCorrection => (
         es ? 'Por corregir' : 'Needs correction',
         MuyuColors.dangerBackground,

@@ -8,6 +8,8 @@ import '../../application/farmer_plots_controller.dart';
 import '../../domain/farmer_plot.dart';
 import '../../domain/farmer_plot_repository.dart';
 import '../../../climate_monitoring/presentation/weather_alert_screen.dart';
+import '../../../labor_execution/application/evidence_queue.dart';
+import '../../../labor_execution/application/milestone_evidence_service.dart';
 import '../../../labor_execution/presentation/milestone_widgets.dart';
 import '../../../labor_execution/presentation/record_evidence_screen.dart';
 import '../visits/farmer_visits_card.dart';
@@ -90,24 +92,32 @@ class _FarmerPlotDetailScreenState extends ConsumerState<FarmerPlotDetailScreen>
   }
 
   Future<void> recordEvidence(String milestoneKey) async {
-    final updated = await Navigator.of(context).push<FarmerPlot>(
+    final result = await Navigator.of(context).push<EvidenceSubmission>(
       MaterialPageRoute(
         builder: (_) => RecordEvidenceScreen(plot: plot, milestoneKey: milestoneKey),
       ),
     );
-    if (updated == null || !mounted) return;
-    setState(() => plot = updated);
+    if (result == null || !mounted) return;
+    setState(() => plot = result.plot);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(es ? 'Evidencia enviada al comerciante.' : 'Evidence sent to the merchant.'),
+        content: Text(
+          result.queued
+              ? (es
+                    ? 'Sin señal: la evidencia quedó guardada y se enviará desde Sincronizar.'
+                    : 'No signal: the evidence was saved and will be sent from Sync.')
+              : (es ? 'Evidencia enviada al comerciante.' : 'Evidence sent to the merchant.'),
+        ),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(evidenceQueueProvider);
+    final shown = ref.read(evidenceQueueProvider.notifier).withQueued(plot);
     final editable = !plot.isFunded;
-    final current = plot.currentMilestone;
+    final current = shown.currentMilestone;
     return Scaffold(
       backgroundColor: MuyuColors.background,
       body: Column(
@@ -145,7 +155,7 @@ class _FarmerPlotDetailScreenState extends ConsumerState<FarmerPlotDetailScreen>
                 if (plot.isFunded && plot.milestoneStates.isNotEmpty) ...[
                   const SizedBox(height: 16),
                   MilestonePlanCard(
-                    milestones: plot.milestoneStates,
+                    milestones: shown.milestoneStates,
                     actionLabel: (milestone) => milestone.key == current?.key
                         ? (milestone.needsCorrection
                               ? (es ? 'Corregir evidencia' : 'Correct evidence')
