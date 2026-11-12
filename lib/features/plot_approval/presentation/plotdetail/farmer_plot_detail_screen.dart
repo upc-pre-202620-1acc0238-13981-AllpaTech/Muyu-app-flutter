@@ -11,6 +11,7 @@ import '../../../climate_monitoring/presentation/weather_alert_screen.dart';
 import '../../../labor_execution/presentation/milestone_widgets.dart';
 import '../../../labor_execution/presentation/record_evidence_screen.dart';
 import '../visits/farmer_visits_card.dart';
+import '../../../plot_financing/presentation/harvest/harvest_delivery_screens.dart';
 
 class FarmerPlotDetailScreen extends ConsumerStatefulWidget {
   const FarmerPlotDetailScreen({super.key, required this.plot});
@@ -152,6 +153,8 @@ class _FarmerPlotDetailScreenState extends ConsumerState<FarmerPlotDetailScreen>
                         : null,
                     onAction: busy ? null : (milestone) => recordEvidence(milestone.key),
                   ),
+                  const SizedBox(height: 16),
+                  FarmerHarvestNotice(plot: plot),
                 ],
                 const SizedBox(height: 16),
                 FarmerVisitsCard(plotId: plot.id),
