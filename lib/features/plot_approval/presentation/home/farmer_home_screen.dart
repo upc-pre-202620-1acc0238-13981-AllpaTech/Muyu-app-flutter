@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../labor_execution/presentation/sync_view.dart';
 import '../../../../core/designsystem/components/farmer_bottom_bar.dart';
 import '../../../../core/designsystem/components/language_toggle_button.dart';
 import '../../../../core/designsystem/components/muyu_controls.dart';
@@ -52,10 +53,10 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
                   const Expanded(child: PaymentHistoryView(bottomInset: farmerScrollBottomInset)),
                 ],
               ),
-              _ => Column(
+              FarmerTab.sync => Column(
                 children: [
                   _FarmerSectionHeader(title: _tab.label(l10n)),
-                  Expanded(child: _FarmerComingSoon(message: l10n.merchantTabSoon)),
+                  const Expanded(child: SyncView(bottomInset: farmerScrollBottomInset)),
                 ],
               ),
             },
@@ -217,26 +218,6 @@ class _PublishButton extends StatelessWidget {
       label: Text(
         AppLocalizations.of(context).plotsPublish,
         style: MuyuTextStyles.bodyBold.copyWith(color: Colors.black),
-      ),
-    );
-  }
-}
-
-class _FarmerComingSoon extends StatelessWidget {
-  const _FarmerComingSoon({required this.message});
-
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(30, 30, 30, farmerScrollBottomInset),
-        child: Text(
-          message,
-          textAlign: TextAlign.center,
-          style: MuyuTextStyles.body.copyWith(color: MuyuColors.forest),
-        ),
       ),
     );
   }
