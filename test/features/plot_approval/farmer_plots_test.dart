@@ -271,6 +271,8 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Plot details'), findsOneWidget);
+      // The visits card sits above the actions, so scroll down to them.
+      await tester.scrollUntilVisible(find.text('Delete plot'), 200);
       expect(find.text('Edit plot'), findsOneWidget);
       expect(find.text('Delete plot'), findsOneWidget);
     });
