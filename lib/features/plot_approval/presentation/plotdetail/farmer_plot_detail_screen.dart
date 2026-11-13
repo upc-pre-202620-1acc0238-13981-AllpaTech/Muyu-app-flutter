@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/designsystem/components/green_title_header.dart';
+import '../../../../core/designsystem/components/muyu_controls.dart';
 import '../../../../core/designsystem/components/plot_photo.dart';
 import '../../../../core/theme/muyu_colors.dart';
 import '../../../../core/theme/muyu_theme.dart';
@@ -9,6 +10,7 @@ import '../../application/farmer_plots_controller.dart';
 import '../../domain/farmer_plot.dart';
 import '../../domain/farmer_plot_repository.dart';
 import '../../domain/plot_status_label.dart';
+import '../../../climate_monitoring/application/weather_controller.dart';
 import '../../../climate_monitoring/presentation/weather_alert_screen.dart';
 import '../../../labor_execution/application/evidence_queue.dart';
 import '../../../labor_execution/application/milestone_evidence_service.dart';
@@ -125,100 +127,110 @@ class _FarmerPlotDetailScreenState extends ConsumerState<FarmerPlotDetailScreen>
       body: Column(
         children: [
           GreenTitleHeader(
-            title: es ? 'Detalle de parcela' : 'Plot details',
+            title: plot.isFunded ? (es ? '${plot.name} parcela' : '${plot.name} plot') : plot.name,
             onBack: () => Navigator.pop(context),
           ),
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.zero,
               children: [
                 PlotPhoto(
                   source: plot.imageUri,
                   description: plot.name,
-                  height: 210,
-                  borderRadius: BorderRadius.circular(20),
+                  height: plot.isFunded ? 180 : 239,
                 ),
-                const SizedBox(height: 12),
-                _Hero(plot: plot),
-                const SizedBox(height: 16),
-                _Card(
-                  title: es ? 'Información de la parcela' : 'Plot information',
-                  rows: {
-                    es ? 'Cultivo' : 'Crop': plot.crop,
-                    es ? 'Área' : 'Area': plot.area,
-                    es ? 'Cosecha' : 'Harvest': plot.harvestDate,
-                    es ? 'Ubicación' : 'Location': plot.place,
-                    es ? 'Ciclo' : 'Cycle': plot.cycle,
-                  },
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(19, 16, 19, 28),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _Hero(plot: plot),
+                      const SizedBox(height: 16),
+                      _Card(
+                        title: es ? 'Información de la parcela' : 'Plot information',
+                        rows: {
+                          es ? 'Cultivo' : 'Crop': plot.crop,
+                          es ? 'Área' : 'Area': plot.area,
+                          es ? 'Cosecha' : 'Harvest': plot.harvestDate,
+                          es ? 'Ubicación' : 'Location': plot.place,
+                          es ? 'Ciclo' : 'Cycle': plot.cycle,
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      _Card(
+                        title: es ? 'Estado financiero' : 'Financial status',
+                        rows: {
+                          es ? 'Monto' : 'Amount': plot.amount,
+                          es ? 'Etapa' : 'Stage': plot.stage,
+                          es ? 'Progreso' : 'Progress': '${plot.progress}%',
+                          es ? 'Hitos' : 'Milestones': plot.milestones,
+                        },
+                      ),
+                      if (plot.isFunded && plot.milestoneStates.isNotEmpty) ...[
+                        const SizedBox(height: 16),
+                        MilestonePlanCard(
+                          milestones: shown.milestoneStates,
+                          actionLabel: (milestone) => milestone.key == current?.key
+                              ? (milestone.needsCorrection
+                                    ? (es ? 'Corregir evidencia' : 'Correct evidence')
+                                    : (es ? 'Registrar evidencia' : 'Record evidence'))
+                              : null,
+                          onAction: busy ? null : (milestone) => recordEvidence(milestone.key),
+                        ),
+                        const SizedBox(height: 16),
+                        FarmerHarvestNotice(plot: plot),
+                      ],
+                      const SizedBox(height: 16),
+                      FarmerVisitsCard(plotId: plot.id),
+                      if (failed)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 12),
+                          child: Text(
+                            es ? 'No se pudo completar la operación.' : 'The operation failed.',
+                            style: const TextStyle(color: MuyuColors.errorBorder),
+                          ),
+                        ),
+                      const SizedBox(height: 20),
+                      FilledButton.icon(
+                        onPressed: () => Navigator.of(context).push<void>(
+                          MaterialPageRoute(builder: (_) => WeatherAlertScreen(plot: plot)),
+                        ),
+                        icon: const Icon(Icons.cloud_outlined),
+                        label: Text(es ? 'Ver alerta climática' : 'View weather alert'),
+                        style: FilledButton.styleFrom(
+                          minimumSize: const Size.fromHeight(55),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      if (editable) ...[
+                        FilledButton.icon(
+                          onPressed: busy ? null : edit,
+                          icon: const Icon(Icons.edit_outlined),
+                          label: Text(es ? 'Editar parcela' : 'Edit plot'),
+                        ),
+                        const SizedBox(height: 10),
+                        OutlinedButton.icon(
+                          onPressed: busy ? null : delete,
+                          icon: const Icon(Icons.delete_outline),
+                          label: Text(es ? 'Eliminar parcela' : 'Delete plot'),
+                          style: OutlinedButton.styleFrom(foregroundColor: MuyuColors.errorBorder),
+                        ),
+                      ] else
+                        Text(
+                          es
+                              ? 'Una parcela financiada ya no puede editarse ni eliminarse.'
+                              : 'A funded plot can no longer be edited or deleted.',
+                          textAlign: TextAlign.center,
+                        ),
+                      if (busy)
+                        const Padding(
+                          padding: EdgeInsets.all(16),
+                          child: Center(child: CircularProgressIndicator()),
+                        ),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 16),
-                _Card(
-                  title: es ? 'Estado financiero' : 'Financial status',
-                  rows: {
-                    es ? 'Monto' : 'Amount': plot.amount,
-                    es ? 'Etapa' : 'Stage': plot.stage,
-                    es ? 'Progreso' : 'Progress': '${plot.progress}%',
-                    es ? 'Hitos' : 'Milestones': plot.milestones,
-                  },
-                ),
-                if (plot.isFunded && plot.milestoneStates.isNotEmpty) ...[
-                  const SizedBox(height: 16),
-                  MilestonePlanCard(
-                    milestones: shown.milestoneStates,
-                    actionLabel: (milestone) => milestone.key == current?.key
-                        ? (milestone.needsCorrection
-                              ? (es ? 'Corregir evidencia' : 'Correct evidence')
-                              : (es ? 'Registrar evidencia' : 'Record evidence'))
-                        : null,
-                    onAction: busy ? null : (milestone) => recordEvidence(milestone.key),
-                  ),
-                  const SizedBox(height: 16),
-                  FarmerHarvestNotice(plot: plot),
-                ],
-                const SizedBox(height: 16),
-                FarmerVisitsCard(plotId: plot.id),
-                if (failed)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 12),
-                    child: Text(
-                      es ? 'No se pudo completar la operación.' : 'The operation failed.',
-                      style: const TextStyle(color: MuyuColors.errorBorder),
-                    ),
-                  ),
-                const SizedBox(height: 20),
-                FilledButton.icon(
-                  onPressed: () => Navigator.of(
-                    context,
-                  ).push<void>(MaterialPageRoute(builder: (_) => WeatherAlertScreen(plot: plot))),
-                  icon: const Icon(Icons.cloud_outlined),
-                  label: Text(es ? 'Ver alerta climática' : 'View weather alert'),
-                ),
-                const SizedBox(height: 10),
-                if (editable) ...[
-                  FilledButton.icon(
-                    onPressed: busy ? null : edit,
-                    icon: const Icon(Icons.edit_outlined),
-                    label: Text(es ? 'Editar parcela' : 'Edit plot'),
-                  ),
-                  const SizedBox(height: 10),
-                  OutlinedButton.icon(
-                    onPressed: busy ? null : delete,
-                    icon: const Icon(Icons.delete_outline),
-                    label: Text(es ? 'Eliminar parcela' : 'Delete plot'),
-                    style: OutlinedButton.styleFrom(foregroundColor: MuyuColors.errorBorder),
-                  ),
-                ] else
-                  Text(
-                    es
-                        ? 'Una parcela financiada ya no puede editarse ni eliminarse.'
-                        : 'A funded plot can no longer be edited or deleted.',
-                    textAlign: TextAlign.center,
-                  ),
-                if (busy)
-                  const Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Center(child: CircularProgressIndicator()),
-                  ),
               ],
             ),
           ),
@@ -318,64 +330,112 @@ class _EditFarmerPlotScreenState extends State<EditFarmerPlotScreen> {
   }
 }
 
-class _Hero extends StatelessWidget {
+class _Hero extends ConsumerWidget {
   const _Hero({required this.plot});
   final FarmerPlot plot;
   @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(18),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(18),
-      border: Border.all(color: MuyuColors.forest),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Expanded(child: Text(plot.name, style: MuyuTextStyles.bodyBold)),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              decoration: BoxDecoration(
-                color: plot.isFunded ? MuyuColors.financedBackground : MuyuColors.approvedBg,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                plotStatusLabel(
-                  plot.status,
-                  es: Localizations.localeOf(context).languageCode == 'es',
-                ),
-                style: TextStyle(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final es = Localizations.localeOf(context).languageCode == 'es';
+    final weather = ref.watch(weatherAlertProvider(plot));
+    final temperature = weather.value?.temperature;
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: MuyuColors.forest),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const PeruFlag(),
+              const SizedBox(width: 8),
+              Text(
+                es ? 'PERÚ' : 'PERU',
+                style: const TextStyle(
+                  fontFamily: MuyuFonts.urbanist,
                   fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                  color: plot.isFunded ? MuyuColors.financedText : MuyuColors.forest,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Text(
-          '${plot.crop} · ${plot.area} · ${plot.place}',
-          style: const TextStyle(color: MuyuColors.textSecondary),
-        ),
-        const SizedBox(height: 12),
-        LinearProgressIndicator(
-          value: plot.progress.clamp(0, 100) / 100,
-          minHeight: 8,
-          borderRadius: BorderRadius.circular(8),
-          color: MuyuColors.action,
-          backgroundColor: MuyuColors.skip,
-        ),
-        const SizedBox(height: 6),
-        Text(
-          '${plot.progress}% · ${plotStageLabel(plot.stage, es: Localizations.localeOf(context).languageCode == 'es')}',
-          style: const TextStyle(fontSize: 12),
-        ),
-      ],
-    ),
-  );
+              const Spacer(),
+              InkWell(
+                onTap: () => Navigator.of(context)
+                    .push<void>(MaterialPageRoute(builder: (_) => WeatherAlertScreen(plot: plot))),
+                child: Row(
+                  children: [
+                    const Icon(Icons.wb_cloudy_outlined, size: 30, color: MuyuColors.action),
+                    const SizedBox(width: 6),
+                    Text(
+                      temperature == null ? '—°C' : '${temperature.round()}°C',
+                      style: const TextStyle(
+                        fontFamily: MuyuFonts.urbanist,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  plot.name,
+                  style: const TextStyle(
+                    fontFamily: MuyuFonts.urbanist,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 21,
+                    color: MuyuColors.forest,
+                  ),
+                ),
+              ),
+              Container(
+                height: 23,
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: plot.isFunded ? MuyuColors.financedBackground : MuyuColors.approvedBg,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  plotStatusLabel(plot.status, es: es),
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: plot.isFunded ? MuyuColors.financedText : MuyuColors.forest,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '${plot.crop} · ${plot.area} · ${plot.place}',
+            style: const TextStyle(fontSize: 16, color: Color(0x80000000)),
+          ),
+          const SizedBox(height: 12),
+          LinearProgressIndicator(
+            value: plot.progress.clamp(0, 100) / 100,
+            minHeight: 8,
+            borderRadius: BorderRadius.circular(8),
+            color: MuyuColors.action,
+            backgroundColor: MuyuColors.skip,
+          ),
+          const SizedBox(height: 6),
+          Text(
+            '${plot.progress}% · ${plotStageLabel(plot.stage, es: es)}',
+            style: const TextStyle(fontSize: 12),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _Card extends StatelessWidget {

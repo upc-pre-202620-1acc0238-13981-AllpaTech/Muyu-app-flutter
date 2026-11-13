@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/muyu_colors.dart';
 import '../../../../core/theme/muyu_theme.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../escrow_custody/application/payment_history_controller.dart';
+import '../../../escrow_custody/domain/payment_record.dart';
 import '../../application/farmer_payment_controller.dart';
 import '../../application/merchant_payment_controller.dart';
 import '../../domain/bank_card.dart';
@@ -28,7 +30,13 @@ class BankAccountScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final card = ref.watch(merchantPaymentProvider).card;
     final wallets = ref.watch(farmerPaymentProvider);
-    const balance = 0.0;
+    final balance =
+        ref
+            .watch(paymentHistoryProvider)
+            .value
+            ?.where((item) => item.status == PaymentStatus.completed)
+            .fold<double>(0, (sum, item) => sum + item.amount) ??
+        0.0;
 
     return Scaffold(
       backgroundColor: MuyuColors.background,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/designsystem/components/green_title_header.dart';
 import '../../../../core/theme/muyu_colors.dart';
 import '../../../../core/theme/muyu_theme.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -20,86 +21,97 @@ class PaymentDetailsScreen extends StatelessWidget {
     final date = payment.date;
     return Scaffold(
       backgroundColor: MuyuColors.background,
-      appBar: AppBar(
-        backgroundColor: MuyuColors.navBar,
-        foregroundColor: Colors.white,
-        title: Text(l10n.paymentDetailsTitle),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(24),
+      body: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: MuyuColors.forest,
-              borderRadius: BorderRadius.circular(24),
-            ),
-            child: Column(
+          GreenTitleHeader(title: l10n.paymentDetailsTitle, onBack: () => Navigator.pop(context)),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
               children: [
-                CircleAvatar(
-                  radius: 34,
-                  backgroundColor: completed ? MuyuColors.approvedBg : MuyuColors.pendingBackground,
-                  child: Icon(
-                    completed ? Icons.check_circle : Icons.schedule,
-                    size: 42,
-                    color: MuyuColors.forest,
+                Center(
+                  child: Container(
+                    width: 90,
+                    height: 90,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: completed
+                          ? MuyuColors.paymentCompletedHero
+                          : MuyuColors.pendingBackground,
+                    ),
+                    child: Icon(
+                      completed ? Icons.check : Icons.schedule,
+                      size: 42,
+                      color: completed ? MuyuColors.paymentCompletedText : MuyuColors.pendingText,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 12),
                 Text(
                   PlotFinance.formatAmount(payment.amount),
-                  style: MuyuTextStyles.headerTitle.copyWith(fontSize: 38),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontFamily: MuyuFonts.urbanist,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 32,
+                    color: MuyuColors.forest,
+                  ),
                 ),
                 Text(
                   completed ? l10n.paymentsFilterCompleted : l10n.paymentsFilterPending,
-                  style: const TextStyle(color: Colors.white),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: completed ? MuyuColors.paymentCompletedText : MuyuColors.pendingText,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-          Card(
-            color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(l10n.paymentTransactionDetails, style: MuyuTextStyles.bodyBold),
-                  const Divider(height: 28),
-                  _DetailRow(
-                    label: l10n.paymentLabelMilestone,
-                    value: milestoneLabel(l10n, payment.milestoneIndex),
+                const SizedBox(height: 20),
+                Card(
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(l10n.paymentTransactionDetails, style: MuyuTextStyles.bodyBold),
+                        const Divider(height: 28),
+                        _DetailRow(
+                          label: l10n.paymentLabelMilestone,
+                          value: milestoneLabel(l10n, payment.milestoneIndex),
+                        ),
+                        _DetailRow(label: l10n.paymentLabelPlot, value: payment.plot.name),
+                        _DetailRow(
+                          label: l10n.paymentLabelDate,
+                          value: completed && date != null
+                              ? DateFormat.yMMMMd(Localizations.localeOf(context).toString())
+                                    .format(date)
+                              : l10n.paymentPendingDate,
+                        ),
+                        _DetailRow(
+                          label: l10n.paymentLabelAmount,
+                          value: PlotFinance.formatAmount(payment.amount),
+                        ),
+                        _DetailRow(label: l10n.paymentLabelTxid, value: payment.transactionId),
+                      ],
+                    ),
                   ),
-                  _DetailRow(label: l10n.paymentLabelPlot, value: payment.plot.name),
-                  _DetailRow(
-                    label: l10n.paymentLabelDate,
-                    value: completed && date != null
-                        ? DateFormat.yMMMMd(Localizations.localeOf(context).toString()).format(date)
-                        : l10n.paymentPendingDate,
+                ),
+                const SizedBox(height: 18),
+                Container(
+                  padding: const EdgeInsets.all(18),
+                  decoration: BoxDecoration(
+                    color: MuyuColors.statCard,
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  _DetailRow(
-                    label: l10n.paymentLabelAmount,
-                    value: PlotFinance.formatAmount(payment.amount),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Icon(Icons.shield_outlined, color: MuyuColors.forest),
+                      const SizedBox(width: 12),
+                      Expanded(child: Text(l10n.paymentEscrowExplanation)),
+                    ],
                   ),
-                  _DetailRow(label: l10n.paymentLabelTxid, value: payment.transactionId),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 18),
-          Container(
-            padding: const EdgeInsets.all(18),
-            decoration: BoxDecoration(
-              color: MuyuColors.statCard,
-              borderRadius: BorderRadius.circular(18),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Icon(Icons.shield_outlined, color: MuyuColors.forest),
-                const SizedBox(width: 12),
-                Expanded(child: Text(l10n.paymentEscrowExplanation)),
+                ),
               ],
             ),
           ),
