@@ -1,4 +1,5 @@
 import 'harvest_delivery.dart';
+import 'plot.dart';
 import 'plot_activity.dart';
 
 /// A plot as the backend stores it, with the fields of Kotlin's `PlotRecord`,
@@ -282,6 +283,27 @@ class FarmerPlot {
     'harvestIncidents': rawJson['harvestIncidents'] ?? const <Object>[],
     'weatherMeasures': weatherMeasures.map((item) => item.toJson()).toList(),
   };
+
+  /// Catalog/funding screens that still take the slim [Plot] model.
+  Plot toPlot() => Plot(
+    id: id,
+    name: name,
+    crop: crop,
+    area: area,
+    place: place,
+    amount: amount,
+    status: status,
+    ownerName: ownerName,
+    ownerEmail: ownerEmail,
+    harvestDate: harvestDate,
+    stage: stage,
+    progress: progress,
+    cycle: cycle,
+    milestones: milestones,
+    imageUri: imageUri,
+    latitude: latitude,
+    longitude: longitude,
+  );
 }
 
 /// What the farmer fills in on the publish flow.

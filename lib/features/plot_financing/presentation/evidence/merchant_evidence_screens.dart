@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../plot_approval/domain/plot_status_label.dart';
 
 import '../../../../core/designsystem/components/green_title_header.dart';
+import '../../../../core/designsystem/components/plot_photo.dart';
 import '../../../../core/theme/muyu_colors.dart';
 import '../../../../core/theme/muyu_theme.dart';
 import '../../../labor_execution/application/milestone_evidence_service.dart';
@@ -46,52 +47,62 @@ class _MerchantFundedPlotScreenState extends State<MerchantFundedPlotScreen> {
           GreenTitleHeader(title: plot.name, onBack: () => Navigator.pop(context)),
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.zero,
               children: [
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: MuyuColors.navBar,
-                    borderRadius: BorderRadius.circular(22),
-                  ),
+                PlotPhoto(source: plot.imageUri, description: plot.name, height: 239),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text(
-                        '${plot.crop} · ${plot.area} · ${plot.place}',
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(plot.amount, style: MuyuTextStyles.headerTitle),
-                      const SizedBox(height: 12),
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: LinearProgressIndicator(
-                          value: plot.progress / 100,
-                          minHeight: 8,
-                          backgroundColor: Colors.white24,
-                          color: MuyuColors.lime,
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: MuyuColors.navBar,
+                          borderRadius: BorderRadius.circular(22),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${plot.crop} · ${plot.area} · ${plot.place}',
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(plot.amount, style: MuyuTextStyles.headerTitle),
+                            const SizedBox(height: 12),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: LinearProgressIndicator(
+                                value: plot.progress / 100,
+                                minHeight: 8,
+                                backgroundColor: Colors.white24,
+                                color: MuyuColors.lime,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              '${es ? 'Etapa' : 'Stage'}: ${plotStageLabel(plot.stage, es: es)} · ${plot.progress}%',
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 6),
-                      Text(
-                        '${es ? 'Etapa' : 'Stage'}: ${plotStageLabel(plot.stage, es: es)} · ${plot.progress}%',
-                        style: const TextStyle(color: Colors.white),
+                      const SizedBox(height: 16),
+                      MilestonePlanCard(
+                        milestones: plot.milestoneStates,
+                        actionLabel: (milestone) => milestone.isSubmitted
+                            ? (es ? 'Revisar evidencia' : 'Review evidence')
+                            : null,
+                        onAction: _review,
+                      ),
+                      const SizedBox(height: 16),
+                      HarvestDeliveryCard(
+                        plot: plot,
+                        onChanged: (updated) => setState(() => plot = updated),
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(height: 16),
-                MilestonePlanCard(
-                  milestones: plot.milestoneStates,
-                  actionLabel: (milestone) =>
-                      milestone.isSubmitted ? (es ? 'Revisar evidencia' : 'Review evidence') : null,
-                  onAction: _review,
-                ),
-                const SizedBox(height: 16),
-                HarvestDeliveryCard(
-                  plot: plot,
-                  onChanged: (updated) => setState(() => plot = updated),
                 ),
               ],
             ),

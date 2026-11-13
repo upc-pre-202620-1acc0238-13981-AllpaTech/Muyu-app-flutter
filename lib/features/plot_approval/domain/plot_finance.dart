@@ -7,6 +7,13 @@ abstract final class PlotFinance {
   static double parseAmount(String raw) =>
       double.tryParse(raw.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0;
 
+  /// Formats stored plot amounts (`25000` or `S/ 25 000`) like the Kotlin app.
+  static String displayAmount(String raw) {
+    final parsed = parseAmount(raw);
+    if (parsed <= 0) return raw.trim().isEmpty ? 'S/ 0' : raw.trim();
+    return formatAmount(parsed);
+  }
+
   /// Formats a value like the Kotlin app: `S/ 8 500`.
   static String formatAmount(double value) {
     final digits = value.round().toString();

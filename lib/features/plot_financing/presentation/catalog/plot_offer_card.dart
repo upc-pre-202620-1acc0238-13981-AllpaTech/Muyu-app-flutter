@@ -5,18 +5,23 @@ import '../../../../core/designsystem/components/plot_photo.dart';
 import '../../../../core/theme/muyu_colors.dart';
 import '../../../../core/theme/muyu_theme.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../plot_approval/domain/plot.dart';
+import '../../../plot_approval/domain/farmer_plot.dart';
+import '../../../plot_approval/presentation/myplots/farmer_plot_display.dart';
 
 class PlotOfferCard extends StatelessWidget {
   const PlotOfferCard({super.key, required this.plot, this.onTap});
 
-  final Plot plot;
+  final FarmerPlot plot;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final details = [plot.crop, plot.area, plot.place].where((part) => part.isNotEmpty).join(' · ');
+    final details = [
+      plot.crop,
+      formatPlotArea(plot.area),
+      plot.place,
+    ].where((part) => part.isNotEmpty && part != '—').join(' · ');
 
     return Material(
       color: Colors.white,
@@ -27,11 +32,7 @@ class PlotOfferCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            PlotPhoto(
-              source: plot.imageUri ?? plot.imageAsset,
-              description: plot.name,
-              height: 168,
-            ),
+            PlotPhoto(source: plot.imageUri, description: plot.name, height: 168),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
               child: Column(
@@ -42,6 +43,8 @@ class PlotOfferCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           plot.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             fontFamily: MuyuFonts.urbanist,
                             fontWeight: FontWeight.w600,
@@ -50,6 +53,7 @@ class PlotOfferCard extends StatelessWidget {
                           ),
                         ),
                       ),
+                      const SizedBox(width: 8),
                       Text(
                         plot.amount,
                         style: const TextStyle(
@@ -64,15 +68,19 @@ class PlotOfferCard extends StatelessWidget {
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      FarmerAvatar(name: plot.ownerName, imageAsset: plot.ownerImageAsset),
+                      FarmerAvatar(name: plot.ownerName, size: 22),
                       const SizedBox(width: 8),
-                      Text(
-                        plot.ownerName,
-                        style: const TextStyle(
-                          fontFamily: MuyuFonts.urbanist,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 16,
-                          color: Colors.black,
+                      Expanded(
+                        child: Text(
+                          plot.ownerName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontFamily: MuyuFonts.urbanist,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                     ],

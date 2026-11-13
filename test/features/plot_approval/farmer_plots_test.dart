@@ -100,6 +100,11 @@ void main() {
 
     test('parses formatted amounts', () => expect(PlotFinance.parseAmount('S/ 8 500'), 8500));
 
+    test('displays raw and formatted amounts as S/ grouped values', () {
+      expect(PlotFinance.displayAmount('25000'), 'S/ 25 000');
+      expect(PlotFinance.displayAmount('S/ 25 000'), 'S/ 25 000');
+    });
+
     test('the four milestones add up to the total', () {
       final steps = PlotFinance.disbursement(8500);
       expect(steps, hasLength(4));

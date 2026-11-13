@@ -8,17 +8,17 @@ import '../../../../core/designsystem/components/session_overflow_button.dart';
 import '../../../../core/theme/muyu_colors.dart';
 import '../../../../core/theme/muyu_theme.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../plot_approval/application/get_plots_use_case.dart';
+import '../../../plot_approval/domain/farmer_plot.dart';
 import '../../../plot_approval/domain/farmer_plot_repository.dart';
-import '../../../plot_approval/domain/plot.dart';
 import '../../../user_management/application/session_controller.dart';
 import '../../../user_management/presentation/profile/merchant_profile_screen.dart';
 import '../../../escrow_custody/presentation/payments/payment_history_view.dart';
 import '../../../climate_monitoring/presentation/merchant_alerts_view.dart';
+import '../../application/merchant_financing_controller.dart';
 import '../funding/fund_plot_screen.dart';
 import '../funding/merchant_financing_lists.dart';
-import 'plot_offer_card.dart';
 import '../plotdetail/merchant_plot_detail_screen.dart';
+import 'plot_offer_card.dart';
 
 enum _CatalogFilter { all, near, recommended }
 
@@ -41,9 +41,10 @@ class _MerchantCatalogScreenState extends ConsumerState<MerchantCatalogScreen> {
     super.dispose();
   }
 
-  List<Plot> _filtered(List<Plot> plots) {
+  List<FarmerPlot> _filtered(List<FarmerPlot> plots) {
     final query = _search.text.trim().toLowerCase();
     return plots.where((plot) {
+      if (plot.status != FarmerPlot.statusAvailable) return false;
       final matchesQuery =
           query.isEmpty ||
           plot.name.toLowerCase().contains(query) ||
@@ -64,14 +65,15 @@ class _MerchantCatalogScreenState extends ConsumerState<MerchantCatalogScreen> {
     }).toList();
   }
 
-  Future<void> _openPlot(Plot plot) async {
+  Future<void> _openPlot(FarmerPlot plot) async {
     final navigator = Navigator.of(context);
     await navigator.push<void>(
       MaterialPageRoute(
         builder: (detailContext) => MerchantPlotDetailScreen(
           plot: plot,
-          onFund: () => Navigator.of(detailContext)
-              .pushReplacement(MaterialPageRoute<void>(builder: (_) => FundPlotScreen(plot: plot))),
+          onFund: () => Navigator.of(detailContext).push<void>(
+            MaterialPageRoute<void>(builder: (_) => FundPlotScreen(plot: plot.toPlot())),
+          ),
         ),
       ),
     );
@@ -80,8 +82,7 @@ class _MerchantCatalogScreenState extends ConsumerState<MerchantCatalogScreen> {
 
   Future<void> _refreshCatalog() async {
     try {
-      ref.invalidate(_availablePlotsProvider);
-      await ref.read(_availablePlotsProvider.future);
+      await ref.read(merchantFinancingProvider.notifier).refresh();
     } on PlotException {
       // The catalog body shows the failure with a retry button.
     }
@@ -91,7 +92,7 @@ class _MerchantCatalogScreenState extends ConsumerState<MerchantCatalogScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final user = ref.watch(sessionProvider).user;
-    final catalog = ref.watch(_availablePlotsProvider);
+    final catalog = ref.watch(merchantFinancingProvider);
     final companyName = (user?.displayName.trim().isNotEmpty ?? false)
         ? user!.displayName
         : (user?.email ?? '');
@@ -111,7 +112,7 @@ class _MerchantCatalogScreenState extends ConsumerState<MerchantCatalogScreen> {
                 ),
                 Expanded(
                   child: _CatalogBody(
-                    plots: _filtered(catalog.value ?? const <Plot>[]),
+                    plots: _filtered(catalog.value ?? const <FarmerPlot>[]),
                     loading: catalog.isLoading && !catalog.hasValue && !catalog.hasError,
                     failed: catalog.hasError,
                     filter: _filter,
@@ -122,22 +123,18 @@ class _MerchantCatalogScreenState extends ConsumerState<MerchantCatalogScreen> {
                 ),
               ],
             ),
-            MerchantTab.myPlots => Column(
-              children: [
-                _MerchantSectionHeader(title: _tab.label(l10n)),
-                const Expanded(child: MerchantFundedPlotsView()),
-              ],
-            ),
+            MerchantTab.myPlots => const MerchantFundedPlotsView(),
             MerchantTab.profile => const SizedBox.expand(child: MerchantProfileScreen()),
             MerchantTab.payments => Column(
               children: [
-                _MerchantSectionHeader(title: _tab.label(l10n)),
+                _MerchantSectionHeader(title: l10n.paymentsTitle),
                 const Expanded(child: PaymentHistoryView(bottomInset: merchantScrollBottomInset)),
               ],
             ),
             MerchantTab.alerts => Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _MerchantSectionHeader(title: l10n.merchantAlertsTitle),
+                const _AlertsTabHeader(),
                 const Expanded(child: MerchantAlertsView(bottomInset: merchantScrollBottomInset)),
               ],
             ),
@@ -159,21 +156,6 @@ class _MerchantCatalogScreenState extends ConsumerState<MerchantCatalogScreen> {
   }
 }
 
-final _availablePlotsProvider = FutureProvider<List<Plot>>(
-  (ref) async {
-    final useCase = ref.watch(getPlotsUseCaseProvider);
-    try {
-      final plots = await useCase.execute();
-      return plots.where((plot) => plot.status == 'available').toList();
-    } on PlotException catch (e) {
-      if (e.failure == PlotFailure.sessionExpired) ref.read(sessionProvider.notifier).logout();
-      rethrow;
-    }
-  },
-  // The catalog offers its own retry button.
-  retry: (retryCount, error) => null,
-);
-
 class _CatalogHeader extends StatelessWidget {
   const _CatalogHeader({
     required this.companyName,
@@ -194,98 +176,133 @@ class _CatalogHeader extends StatelessWidget {
       child: SafeArea(
         bottom: false,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 16, 12, 20),
+          padding: const EdgeInsets.fromLTRB(24, 16, 24, 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 8, top: 4),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            l10n.merchantWelcome,
-                            style: const TextStyle(
-                              fontFamily: MuyuFonts.urbanist,
-                              fontWeight: FontWeight.w300,
-                              fontSize: 20,
-                              color: Colors.white,
-                            ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.merchantWelcome,
+                          style: const TextStyle(
+                            fontFamily: MuyuFonts.urbanist,
+                            fontWeight: FontWeight.w300,
+                            fontSize: 20,
+                            color: Colors.white,
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            companyName,
-                            style: const TextStyle(
-                              fontFamily: MuyuFonts.urbanist,
-                              fontWeight: FontWeight.w800,
-                              fontSize: 24,
-                              height: 28 / 24,
-                              color: Colors.white,
-                            ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          companyName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontFamily: MuyuFonts.urbanist,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 24,
+                            height: 28 / 24,
+                            color: Colors.white,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                   const LanguageToggleButton(),
-                  const SessionOverflowButton(iconColor: Colors.white),
                 ],
               ),
               const SizedBox(height: 8),
-              Row(
-                children: [
-                  const PeruFlag(),
-                  const SizedBox(width: 8),
-                  Text(
-                    l10n.farmerCountryPeru,
-                    style: const TextStyle(
-                      fontFamily: MuyuFonts.urbanist,
-                      fontSize: 14,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
+              const Row(children: [PeruFlag(), SizedBox(width: 8), _PeruLabel()]),
               const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.only(right: 12),
-                child: SizedBox(
-                  height: 44,
-                  child: TextField(
-                    controller: search,
-                    onChanged: onSearchChanged,
-                    textInputAction: TextInputAction.search,
-                    style: const TextStyle(
-                      fontFamily: MuyuFonts.urbanist,
-                      fontSize: 16,
-                      color: Colors.black,
-                    ),
-                    decoration: InputDecoration(
-                      isDense: true,
-                      hintText: l10n.merchantSearch,
-                      hintStyle: TextStyle(
-                        fontFamily: MuyuFonts.urbanist,
-                        fontSize: 16,
-                        color: Colors.black.withValues(alpha: 0.45),
+              SizedBox(
+                height: 44,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 16),
+                      Icon(Icons.search, size: 20, color: Colors.black.withValues(alpha: 0.55)),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextField(
+                          controller: search,
+                          onChanged: onSearchChanged,
+                          textInputAction: TextInputAction.search,
+                          style: const TextStyle(
+                            fontFamily: MuyuFonts.urbanist,
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                          decoration: InputDecoration(
+                            isDense: true,
+                            hintText: l10n.merchantSearch,
+                            hintStyle: TextStyle(
+                              fontFamily: MuyuFonts.urbanist,
+                              fontSize: 16,
+                              color: Colors.black.withValues(alpha: 0.45),
+                            ),
+                            border: InputBorder.none,
+                          ),
+                        ),
                       ),
-                      prefixIcon: Icon(Icons.search, color: Colors.black.withValues(alpha: 0.55)),
-                      prefixIconConstraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-                      filled: true,
-                      fillColor: Colors.white,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(100),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
+                      const SizedBox(width: 16),
+                    ],
                   ),
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _PeruLabel extends StatelessWidget {
+  const _PeruLabel();
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      AppLocalizations.of(context).farmerCountryPeru,
+      style: const TextStyle(fontFamily: MuyuFonts.urbanist, fontSize: 14, color: Colors.white),
+    );
+  }
+}
+
+class _AlertsTabHeader extends StatelessWidget {
+  const _AlertsTabHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return ColoredBox(
+      color: MuyuColors.navBar,
+      child: SafeArea(
+        bottom: false,
+        child: SizedBox(
+          height: 56,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 32, right: 20),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                AppLocalizations.of(context).merchantAlertsTitle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontFamily: MuyuFonts.urbanist,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
+              ),
+            ),
           ),
         ),
       ),
@@ -340,13 +357,13 @@ class _CatalogBody extends StatelessWidget {
     required this.onPlotSelected,
   });
 
-  final List<Plot> plots;
+  final List<FarmerPlot> plots;
   final bool loading;
   final bool failed;
   final _CatalogFilter filter;
   final ValueChanged<_CatalogFilter> onFilterSelected;
   final Future<void> Function() onRefresh;
-  final ValueChanged<Plot> onPlotSelected;
+  final ValueChanged<FarmerPlot> onPlotSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -363,20 +380,20 @@ class _CatalogBody extends StatelessWidget {
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.fromLTRB(24, 16, 24, merchantScrollBottomInset),
         children: [
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
+          Row(
             children: [
               _FilterChip(
                 label: l10n.merchantFilterAll,
                 selected: filter == _CatalogFilter.all,
                 onTap: () => onFilterSelected(_CatalogFilter.all),
               ),
+              const SizedBox(width: 8),
               _FilterChip(
                 label: l10n.merchantFilterNear,
                 selected: filter == _CatalogFilter.near,
                 onTap: () => onFilterSelected(_CatalogFilter.near),
               ),
+              const SizedBox(width: 8),
               _FilterChip(
                 label: l10n.merchantFilterRecommended,
                 selected: filter == _CatalogFilter.recommended,
@@ -436,15 +453,20 @@ class _FilterChip extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(100),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontFamily: MuyuFonts.urbanist,
-              fontWeight: FontWeight.w600,
-              fontSize: 14,
-              color: selected ? Colors.white : MuyuColors.nearText,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 32),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Center(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontFamily: MuyuFonts.urbanist,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                  color: selected ? Colors.white : MuyuColors.nearText,
+                ),
+              ),
             ),
           ),
         ),
