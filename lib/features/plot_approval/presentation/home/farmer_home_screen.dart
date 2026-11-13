@@ -34,7 +34,6 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final es = Localizations.localeOf(context).languageCode == 'es';
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light,
       child: Scaffold(
@@ -57,7 +56,7 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
               FarmerTab.payments => Column(
                 children: [
                   GreenTitleHeader(
-                    title: es ? 'Detalles del pago' : 'Payment details',
+                    title: AppLocalizations.of(context).paymentDetailsTitle,
                     onBack: () => _select(FarmerTab.home),
                   ),
                   const Expanded(child: PaymentHistoryView(bottomInset: farmerScrollBottomInset)),
@@ -118,9 +117,7 @@ class _FarmerHomeTabState extends ConsumerState<_FarmerHomeTab> {
     final user = ref.watch(sessionProvider).user;
     final name = user?.displayName.trim() ?? '';
     final plot = _weatherPlot(ref.watch(farmerPlotsProvider).value ?? const []);
-    final temperature = plot == null
-        ? null
-        : ref.watch(weatherAlertProvider(plot)).value?.temperature;
+    final weather = plot == null ? null : ref.watch(weatherAlertProvider(plot));
 
     return Column(
       children: [
@@ -152,7 +149,8 @@ class _FarmerHomeTabState extends ConsumerState<_FarmerHomeTab> {
                       const LanguageToggleButton(),
                       const SizedBox(width: 8),
                       _WeatherPill(
-                        temperature: temperature,
+                        temperature: weather?.value?.temperature,
+                        loading: weather?.isLoading ?? false,
                         label: es ? 'Clima' : 'Weather',
                         onTap: plot == null
                             ? null
@@ -202,9 +200,15 @@ class _FarmerHomeTabState extends ConsumerState<_FarmerHomeTab> {
 
 /// Weather icon and current temperature of the farmer's plot.
 class _WeatherPill extends StatelessWidget {
-  const _WeatherPill({required this.temperature, required this.label, this.onTap});
+  const _WeatherPill({
+    required this.temperature,
+    required this.label,
+    this.loading = false,
+    this.onTap,
+  });
 
   final double? temperature;
+  final bool loading;
   final String label;
   final VoidCallback? onTap;
 
@@ -225,15 +229,22 @@ class _WeatherPill extends StatelessWidget {
             excludeFromSemantics: true,
           ),
           const SizedBox(width: 12),
-          Text(
-            temperature == null ? '—°C' : '${temperature!.toInt()}°C',
-            style: const TextStyle(
-              fontFamily: MuyuFonts.urbanist,
-              fontWeight: FontWeight.w700,
-              fontSize: 20,
-              color: MuyuColors.field,
+          if (loading && temperature == null)
+            const SizedBox(
+              width: 18,
+              height: 18,
+              child: CircularProgressIndicator(strokeWidth: 2, color: MuyuColors.field),
+            )
+          else
+            Text(
+              temperature == null ? '—°C' : '${temperature!.toInt()}°C',
+              style: const TextStyle(
+                fontFamily: MuyuFonts.urbanist,
+                fontWeight: FontWeight.w700,
+                fontSize: 20,
+                color: MuyuColors.field,
+              ),
             ),
-          ),
         ],
       ),
     ),

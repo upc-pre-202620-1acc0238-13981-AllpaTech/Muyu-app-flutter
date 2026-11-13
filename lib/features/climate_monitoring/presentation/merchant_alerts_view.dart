@@ -5,7 +5,9 @@ import '../../../core/theme/muyu_colors.dart';
 import '../../../core/theme/muyu_theme.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../escrow_custody/presentation/payments/payment_details_screen.dart';
+import '../../plot_approval/domain/plot_finance.dart';
 import '../application/merchant_alerts_controller.dart';
+import 'weather_alert_screen.dart';
 
 class MerchantAlertsView extends ConsumerWidget {
   const MerchantAlertsView({super.key, this.bottomInset = 120});
@@ -31,16 +33,24 @@ class MerchantAlertsView extends ConsumerWidget {
         ),
         data: (items) => ListView(
           physics: const AlwaysScrollableScrollPhysics(),
-          padding: EdgeInsets.fromLTRB(24, 20, 24, bottomInset),
+          padding: EdgeInsets.fromLTRB(24, 24, 24, bottomInset),
           children: items.isEmpty
               ? [
-                  const SizedBox(height: 90),
-                  const Icon(Icons.notifications_none, size: 72, color: MuyuColors.forest),
-                  const SizedBox(height: 14),
-                  Text(l10n.merchantAlertsEmpty, textAlign: TextAlign.center),
+                  Text(
+                    l10n.merchantAlertsEmpty,
+                    style: TextStyle(
+                      fontFamily: MuyuFonts.urbanist,
+                      fontWeight: FontWeight.w300,
+                      fontSize: 16,
+                      color: Colors.black.withValues(alpha: 0.5),
+                    ),
+                  ),
                 ]
               : [
-                  for (final item in items) ...[_AlertCard(item: item), const SizedBox(height: 12)],
+                  for (final item in items) ...[
+                    _AlertCard(item: item),
+                    const SizedBox(height: 15),
+                  ],
                 ],
         ),
       ),
@@ -56,48 +66,97 @@ class _AlertCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final payment = item.type == MerchantAlertType.payment;
-    final weather = item.weather;
-    return Card(
+    final title = payment ? l10n.merchantAlertPayment : l10n.weatherTitle;
+    final subtitle = '${item.plot.name} · ${item.plot.crop}';
+    final body = payment && item.payment != null
+        ? l10n.merchantAlertPaymentBody(
+            item.plot.ownerName,
+            _milestoneTitle(l10n, item.payment!.milestoneIndex),
+            PlotFinance.formatAmount(item.payment!.amount),
+          )
+        : l10n.merchantAlertWeatherBody(item.plot.name);
+
+    return Material(
       color: Colors.white,
-      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: const BorderSide(color: MuyuColors.forest),
+      ),
+      clipBehavior: Clip.antiAlias,
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: item.payment == null
-            ? null
-            : () => Navigator.of(context).push<void>(
-                MaterialPageRoute(builder: (_) => PaymentDetailsScreen(payment: item.payment!)),
-              ),
+        onTap: () {
+          if (item.payment != null) {
+            Navigator.of(context).push<void>(
+              MaterialPageRoute(builder: (_) => PaymentDetailsScreen(payment: item.payment!)),
+            );
+            return;
+          }
+          Navigator.of(context)
+              .push<void>(MaterialPageRoute(builder: (_) => WeatherAlertScreen(plot: item.plot)));
+        },
         child: Padding(
-          padding: const EdgeInsets.all(18),
-          child: Row(
+          padding: const EdgeInsets.fromLTRB(12, 9, 12, 21),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CircleAvatar(
-                backgroundColor: payment
-                    ? MuyuColors.pendingBackground
-                    : MuyuColors.financedBackground,
-                child: Icon(payment ? Icons.payments_outlined : Icons.thunderstorm),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      payment ? l10n.merchantAlertPayment : l10n.merchantAlertWeather,
-                      style: MuyuTextStyles.bodyBold,
+              Row(
+                children: [
+                  Container(
+                    width: 39,
+                    height: 37,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFA0C97F),
+                      borderRadius: BorderRadius.circular(100),
                     ),
-                    const SizedBox(height: 4),
-                    Text('${item.plot.name} · ${item.plot.crop}'),
-                    if (weather != null)
-                      Text(
-                        '${weather.temperature.round()} °C · ${weather.rainProbability}% lluvia',
-                        style: const TextStyle(color: MuyuColors.textSecondary),
-                      ),
-                  ],
+                    alignment: Alignment.center,
+                    child: Icon(
+                      payment ? Icons.payments_outlined : Icons.thunderstorm,
+                      size: 18,
+                      color: MuyuColors.forest,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            fontFamily: MuyuFonts.urbanist,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                            color: MuyuColors.onSurface,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          subtitle,
+                          style: const TextStyle(
+                            fontFamily: MuyuFonts.urbanist,
+                            fontSize: 14,
+                            height: 20 / 14,
+                            color: MuyuColors.onSurface,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.only(left: 16, right: 8),
+                child: Text(
+                  body,
+                  style: TextStyle(
+                    fontFamily: MuyuFonts.urbanist,
+                    fontWeight: FontWeight.w300,
+                    fontSize: 16,
+                    color: Colors.black.withValues(alpha: 0.5),
+                  ),
                 ),
               ),
-              if (item.payment != null) const Icon(Icons.chevron_right),
             ],
           ),
         ),
@@ -118,3 +177,10 @@ class _Message extends StatelessWidget {
     ],
   );
 }
+
+String _milestoneTitle(AppLocalizations l10n, int index) => switch (index) {
+  0 => l10n.paymentMilestonePlanting,
+  1 => l10n.paymentMilestoneIrrigation,
+  2 => l10n.paymentMilestoneFertilization,
+  _ => l10n.paymentMilestoneHarvest,
+};

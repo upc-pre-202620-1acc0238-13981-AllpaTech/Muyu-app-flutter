@@ -1013,7 +1013,7 @@ class _WeatherAlertRow extends StatelessWidget {
       color: background,
       borderRadius: BorderRadius.circular(10),
       child: InkWell(
-        onTap: rainRisk ? onTap : null,
+        onTap: onTap,
         borderRadius: BorderRadius.circular(10),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),

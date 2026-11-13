@@ -925,6 +925,588 @@ abstract class AppLocalizations {
   /// **'No plots available yet'**
   String get merchantNoPlots;
 
+  /// No description provided for @merchantNoFunded.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not funded any plots yet'**
+  String get merchantNoFunded;
+
+  /// No description provided for @merchantActiveFundedPlots.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 funded plot} other{{count} funded plots}}'**
+  String merchantActiveFundedPlots(int count);
+
+  /// No description provided for @merchantRainRiskTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate rain risk'**
+  String get merchantRainRiskTitle;
+
+  /// No description provided for @merchantRainRiskBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} plot in Cusco needs monitoring'**
+  String merchantRainRiskBody(int count);
+
+  /// No description provided for @merchantRainRiskBodyPlural.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} plots in Cusco need monitoring'**
+  String merchantRainRiskBodyPlural(int count);
+
+  /// No description provided for @merchantRainRiskTemp.
+  ///
+  /// In en, this message translates to:
+  /// **'18°C'**
+  String get merchantRainRiskTemp;
+
+  /// No description provided for @merchantShowReviewFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Show plots needing review first'**
+  String get merchantShowReviewFirst;
+
+  /// No description provided for @merchantMilestonesFraction.
+  ///
+  /// In en, this message translates to:
+  /// **'Milestones: {approved}/{total}'**
+  String merchantMilestonesFraction(int approved, int total);
+
+  /// No description provided for @merchantInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In progress'**
+  String get merchantInProgress;
+
+  /// No description provided for @merchantStatusFundedChip.
+  ///
+  /// In en, this message translates to:
+  /// **'Funded'**
+  String get merchantStatusFundedChip;
+
+  /// No description provided for @merchantNeedsYourReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs your review'**
+  String get merchantNeedsYourReview;
+
+  /// No description provided for @merchantCurrentMilestone.
+  ///
+  /// In en, this message translates to:
+  /// **'Current milestone:'**
+  String get merchantCurrentMilestone;
+
+  /// No description provided for @merchantNextMilestone.
+  ///
+  /// In en, this message translates to:
+  /// **'Next:'**
+  String get merchantNextMilestone;
+
+  /// No description provided for @merchantPlotDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Plot details'**
+  String get merchantPlotDetails;
+
+  /// No description provided for @merchantAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Available'**
+  String get merchantAvailable;
+
+  /// No description provided for @merchantFinancialStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Financial status'**
+  String get merchantFinancialStatus;
+
+  /// No description provided for @merchantEscrowDeposit.
+  ///
+  /// In en, this message translates to:
+  /// **'Escrow deposit'**
+  String get merchantEscrowDeposit;
+
+  /// No description provided for @merchantFundingDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Funding date'**
+  String get merchantFundingDate;
+
+  /// No description provided for @merchantFundsReleased.
+  ///
+  /// In en, this message translates to:
+  /// **'Funds released'**
+  String get merchantFundsReleased;
+
+  /// No description provided for @merchantEscrowBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Escrow balance'**
+  String get merchantEscrowBalance;
+
+  /// No description provided for @merchantApprovedProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved milestones: {approved}/{total} · {percent} %'**
+  String merchantApprovedProgress(int approved, int total, int percent);
+
+  /// No description provided for @merchantCropDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Crop details'**
+  String get merchantCropDetails;
+
+  /// No description provided for @merchantCropLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Crop'**
+  String get merchantCropLabel;
+
+  /// No description provided for @merchantAreaLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Area'**
+  String get merchantAreaLabel;
+
+  /// No description provided for @merchantHarvestLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated harvest'**
+  String get merchantHarvestLabel;
+
+  /// No description provided for @merchantPaymentPerMilestone.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment per milestone'**
+  String get merchantPaymentPerMilestone;
+
+  /// No description provided for @merchantFarmerFunder.
+  ///
+  /// In en, this message translates to:
+  /// **'Farmer: {farmer} · Funder: {funder} ({company})'**
+  String merchantFarmerFunder(String farmer, String funder, String company);
+
+  /// No description provided for @merchantContactFarmer.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact {name}'**
+  String merchantContactFarmer(String name);
+
+  /// No description provided for @merchantFundPlot.
+  ///
+  /// In en, this message translates to:
+  /// **'Fund this plot'**
+  String get merchantFundPlot;
+
+  /// No description provided for @merchantFundTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Fund plot'**
+  String get merchantFundTitle;
+
+  /// No description provided for @merchantTotalInvestment.
+  ///
+  /// In en, this message translates to:
+  /// **'TOTAL INVESTMENT'**
+  String get merchantTotalInvestment;
+
+  /// No description provided for @merchantListedAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount listed by the farmer'**
+  String get merchantListedAmount;
+
+  /// No description provided for @merchantFixedAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Fixed amount'**
+  String get merchantFixedAmount;
+
+  /// No description provided for @merchantDisbursement.
+  ///
+  /// In en, this message translates to:
+  /// **'DISBURSEMENT PLAN'**
+  String get merchantDisbursement;
+
+  /// No description provided for @merchantEscrowHow.
+  ///
+  /// In en, this message translates to:
+  /// **'HOW ESCROW PROTECTS YOU'**
+  String get merchantEscrowHow;
+
+  /// No description provided for @merchantEscrowSafe.
+  ///
+  /// In en, this message translates to:
+  /// **'Your funds stay safe'**
+  String get merchantEscrowSafe;
+
+  /// No description provided for @merchantEscrowApprove.
+  ///
+  /// In en, this message translates to:
+  /// **'You approve each proof'**
+  String get merchantEscrowApprove;
+
+  /// No description provided for @merchantEscrowHarvest.
+  ///
+  /// In en, this message translates to:
+  /// **'You receive your harvest'**
+  String get merchantEscrowHarvest;
+
+  /// No description provided for @merchantPaymentMethodTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'PAYMENT METHOD'**
+  String get merchantPaymentMethodTitle;
+
+  /// No description provided for @merchantPayCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Card'**
+  String get merchantPayCard;
+
+  /// No description provided for @merchantPayWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet'**
+  String get merchantPayWallet;
+
+  /// No description provided for @merchantPayAgent.
+  ///
+  /// In en, this message translates to:
+  /// **'Agent deposit'**
+  String get merchantPayAgent;
+
+  /// No description provided for @merchantPayBank.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank transfer'**
+  String get merchantPayBank;
+
+  /// No description provided for @merchantFundTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'I have read and accept the terms of the escrow financing agreement'**
+  String get merchantFundTerms;
+
+  /// No description provided for @merchantAcceptFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept the terms first'**
+  String get merchantAcceptFirst;
+
+  /// No description provided for @merchantContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get merchantContinue;
+
+  /// No description provided for @merchantConfirmAndPay.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm and pay {amount}'**
+  String merchantConfirmAndPay(String amount);
+
+  /// No description provided for @merchantFinancingConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Financing confirmed'**
+  String get merchantFinancingConfirmed;
+
+  /// No description provided for @merchantFinancingConfirmedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is funded by {method} and the funds are held in escrow.'**
+  String merchantFinancingConfirmedBody(String name, String method);
+
+  /// No description provided for @merchantBackToMyPlots.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to my plots'**
+  String get merchantBackToMyPlots;
+
+  /// No description provided for @merchantPayFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The payment could not be registered.'**
+  String get merchantPayFailed;
+
+  /// No description provided for @merchantFundSuccessTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment confirmed'**
+  String get merchantFundSuccessTitle;
+
+  /// No description provided for @merchantFundsSecured.
+  ///
+  /// In en, this message translates to:
+  /// **'Funds secured in Escrow'**
+  String get merchantFundsSecured;
+
+  /// No description provided for @merchantSuccessBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{plot} is now financed.\n{farmer} has received a confirmation.'**
+  String merchantSuccessBody(String plot, String farmer);
+
+  /// No description provided for @merchantAmountFunded.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount funded'**
+  String get merchantAmountFunded;
+
+  /// No description provided for @merchantPaymentMethodLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment method'**
+  String get merchantPaymentMethodLabel;
+
+  /// No description provided for @merchantReceiptStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get merchantReceiptStatus;
+
+  /// No description provided for @merchantHeldInEscrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Funds held in Escrow'**
+  String get merchantHeldInEscrow;
+
+  /// No description provided for @merchantReceiptDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get merchantReceiptDate;
+
+  /// No description provided for @merchantReleaseNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Payments will be released to the farmer as you approve each milestone.'**
+  String get merchantReleaseNote;
+
+  /// No description provided for @merchantViewFinancedPlot.
+  ///
+  /// In en, this message translates to:
+  /// **'View financed plot'**
+  String get merchantViewFinancedPlot;
+
+  /// No description provided for @merchantDownloadReceipt.
+  ///
+  /// In en, this message translates to:
+  /// **'Download receipt'**
+  String get merchantDownloadReceipt;
+
+  /// No description provided for @merchantReceiptSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Receipt saved to {path}'**
+  String merchantReceiptSaved(String path);
+
+  /// No description provided for @merchantReceiptSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The receipt could not be saved.'**
+  String get merchantReceiptSaveFailed;
+
+  /// No description provided for @muyuContactMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'No valid contact email is available.'**
+  String get muyuContactMissing;
+
+  /// No description provided for @muyuContactUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No email app could be opened.'**
+  String get muyuContactUnavailable;
+
+  /// No description provided for @merchantVisitRequestTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Request visit'**
+  String get merchantVisitRequestTitle;
+
+  /// No description provided for @merchantVisitStatusTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Visit request'**
+  String get merchantVisitStatusTitle;
+
+  /// No description provided for @merchantVisitProposedDate.
+  ///
+  /// In en, this message translates to:
+  /// **'PROPOSED DATE'**
+  String get merchantVisitProposedDate;
+
+  /// No description provided for @merchantVisitPreferredTime.
+  ///
+  /// In en, this message translates to:
+  /// **'PREFERRED TIME'**
+  String get merchantVisitPreferredTime;
+
+  /// No description provided for @merchantVisitMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Message to farmer (optional)'**
+  String get merchantVisitMessage;
+
+  /// No description provided for @merchantVisitMessageHint.
+  ///
+  /// In en, this message translates to:
+  /// **'I’d like to review the irrigation system'**
+  String get merchantVisitMessageHint;
+
+  /// No description provided for @merchantVisitDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Requesting a visit does not reserve or fund the plot. The farmer will record whether an agreement was reached.'**
+  String get merchantVisitDisclaimer;
+
+  /// No description provided for @merchantVisitSending.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending…'**
+  String get merchantVisitSending;
+
+  /// No description provided for @merchantVisitSendError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not send the visit request: {error}'**
+  String merchantVisitSendError(String error);
+
+  /// No description provided for @merchantVisitSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send request'**
+  String get merchantVisitSend;
+
+  /// No description provided for @merchantVisitSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Request sent'**
+  String get merchantVisitSent;
+
+  /// No description provided for @merchantVisitSentBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} received your visit proposal.'**
+  String merchantVisitSentBody(String name);
+
+  /// No description provided for @merchantVisitToPlot.
+  ///
+  /// In en, this message translates to:
+  /// **'Visit to {name}'**
+  String merchantVisitToPlot(String name);
+
+  /// No description provided for @merchantVisitDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get merchantVisitDate;
+
+  /// No description provided for @merchantVisitTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get merchantVisitTime;
+
+  /// No description provided for @merchantVisitPlace.
+  ///
+  /// In en, this message translates to:
+  /// **'Place'**
+  String get merchantVisitPlace;
+
+  /// No description provided for @merchantVisitCoordinationOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Visit coordination only. It does not reserve or fund the plot. No charges or Escrow deposit.'**
+  String get merchantVisitCoordinationOnly;
+
+  /// No description provided for @merchantVisitBackPlot.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to plot'**
+  String get merchantVisitBackPlot;
+
+  /// No description provided for @merchantVisitConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Visit confirmed'**
+  String get merchantVisitConfirmed;
+
+  /// No description provided for @merchantVisitConfirmedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} accepted your visit proposal.'**
+  String merchantVisitConfirmedBody(String name);
+
+  /// No description provided for @merchantVisitMeetingPoint.
+  ///
+  /// In en, this message translates to:
+  /// **'Meeting point'**
+  String get merchantVisitMeetingPoint;
+
+  /// No description provided for @merchantVisitMeetingHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Entrance to the plot near the main road. Coordinate with the farmer before arriving.'**
+  String get merchantVisitMeetingHint;
+
+  /// No description provided for @merchantViewEvidence.
+  ///
+  /// In en, this message translates to:
+  /// **'View evidence'**
+  String get merchantViewEvidence;
+
+  /// No description provided for @merchantVisitRequestButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Request visit'**
+  String get merchantVisitRequestButton;
+
+  /// No description provided for @merchantHarvestReceiptPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Harvest receipt · Pending'**
+  String get merchantHarvestReceiptPending;
+
+  /// No description provided for @merchantExactLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Exact location'**
+  String get merchantExactLocation;
+
+  /// No description provided for @merchantFarmerStats.
+  ///
+  /// In en, this message translates to:
+  /// **'12 years of experience · 8 plots completed'**
+  String get merchantFarmerStats;
+
+  /// No description provided for @merchantApprovalRate.
+  ///
+  /// In en, this message translates to:
+  /// **'94% approval rate'**
+  String get merchantApprovalRate;
+
+  /// No description provided for @merchantMilestoneApprovedLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{date} · Approved {amount}'**
+  String merchantMilestoneApprovedLine(String date, String amount);
+
+  /// No description provided for @merchantMilestoneAwaitingLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{date} · {time} · Awaiting review · {amount}'**
+  String merchantMilestoneAwaitingLine(String date, String time, String amount);
+
+  /// No description provided for @merchantMilestonePendingLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{date} · Pending {amount}'**
+  String merchantMilestonePendingLine(String date, String amount);
+
   /// No description provided for @farmerCountryPeru.
   ///
   /// In en, this message translates to:
@@ -2143,11 +2725,53 @@ abstract class AppLocalizations {
   /// **'Heavy rain expected'**
   String get weatherHeavyRain;
 
+  /// No description provided for @weatherModerateRain.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate rain expected'**
+  String get weatherModerateRain;
+
   /// No description provided for @weatherFrost.
   ///
   /// In en, this message translates to:
   /// **'Frost risk'**
   String get weatherFrost;
+
+  /// No description provided for @weatherEstTemp.
+  ///
+  /// In en, this message translates to:
+  /// **'Now'**
+  String get weatherEstTemp;
+
+  /// No description provided for @weatherEstTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated time'**
+  String get weatherEstTime;
+
+  /// No description provided for @weatherTonight.
+  ///
+  /// In en, this message translates to:
+  /// **'Tonight'**
+  String get weatherTonight;
+
+  /// No description provided for @weatherToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get weatherToday;
+
+  /// No description provided for @weatherForecast.
+  ///
+  /// In en, this message translates to:
+  /// **'5-day forecast'**
+  String get weatherForecast;
+
+  /// No description provided for @weatherCycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cycle {year}'**
+  String weatherCycle(String year);
 
   /// No description provided for @weatherRisk.
   ///
@@ -2242,20 +2866,32 @@ abstract class AppLocalizations {
   /// No description provided for @merchantAlertsEmpty.
   ///
   /// In en, this message translates to:
-  /// **'Alerts for financed plots will appear here.'**
+  /// **'When farmers send evidence or request extensions on your financed plots, you will see alerts here.'**
   String get merchantAlertsEmpty;
 
   /// No description provided for @merchantAlertPayment.
   ///
   /// In en, this message translates to:
-  /// **'Milestone evidence awaiting review'**
+  /// **'Payment review'**
   String get merchantAlertPayment;
 
   /// No description provided for @merchantAlertWeather.
   ///
   /// In en, this message translates to:
-  /// **'Weather risk near the financed plot'**
+  /// **'Weather alert'**
   String get merchantAlertWeather;
+
+  /// No description provided for @merchantAlertWeatherBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Heavy rain expected near {plot} over the next 24 hours.'**
+  String merchantAlertWeatherBody(String plot);
+
+  /// No description provided for @merchantAlertPaymentBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{farmer} sent {milestone} evidence. Review it to release {amount}.'**
+  String merchantAlertPaymentBody(String farmer, String milestone, String amount);
 
   /// No description provided for @resetTitle.
   ///

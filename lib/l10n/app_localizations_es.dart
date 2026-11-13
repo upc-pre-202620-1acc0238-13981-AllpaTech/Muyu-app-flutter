@@ -442,6 +442,344 @@ class AppLocalizationsEs extends AppLocalizations {
   String get merchantNoPlots => 'Aún no hay parcelas disponibles';
 
   @override
+  String get merchantNoFunded => 'Todavía no has financiado ninguna parcela';
+
+  @override
+  String merchantActiveFundedPlots(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count parcelas financiadas',
+      one: '1 parcela financiada',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get merchantRainRiskTitle => 'Riesgo de lluvia moderada';
+
+  @override
+  String merchantRainRiskBody(int count) {
+    return '$count parcela en Cusco requiere monitoreo';
+  }
+
+  @override
+  String merchantRainRiskBodyPlural(int count) {
+    return '$count parcelas en Cusco requieren monitoreo';
+  }
+
+  @override
+  String get merchantRainRiskTemp => '18°C';
+
+  @override
+  String get merchantShowReviewFirst => 'Mostrar primero parcelas por revisar';
+
+  @override
+  String merchantMilestonesFraction(int approved, int total) {
+    return 'Hitos: $approved/$total';
+  }
+
+  @override
+  String get merchantInProgress => 'En curso';
+
+  @override
+  String get merchantStatusFundedChip => 'Financiada';
+
+  @override
+  String get merchantNeedsYourReview => 'Requiere tu revisión';
+
+  @override
+  String get merchantCurrentMilestone => 'Hito actual:';
+
+  @override
+  String get merchantNextMilestone => 'Siguiente:';
+
+  @override
+  String get merchantPlotDetails => 'Detalles de la parcela';
+
+  @override
+  String get merchantAvailable => 'Disponible';
+
+  @override
+  String get merchantFinancialStatus => 'Estado financiero';
+
+  @override
+  String get merchantEscrowDeposit => 'Depósito en escrow';
+
+  @override
+  String get merchantFundingDate => 'Fecha de financiamiento';
+
+  @override
+  String get merchantFundsReleased => 'Fondos liberados';
+
+  @override
+  String get merchantEscrowBalance => 'Saldo en escrow';
+
+  @override
+  String merchantApprovedProgress(int approved, int total, int percent) {
+    return 'Hitos aprobados: $approved/$total · $percent %';
+  }
+
+  @override
+  String get merchantCropDetails => 'Detalles del cultivo';
+
+  @override
+  String get merchantCropLabel => 'Cultivo';
+
+  @override
+  String get merchantAreaLabel => 'Área';
+
+  @override
+  String get merchantHarvestLabel => 'Cosecha estimada';
+
+  @override
+  String get merchantPaymentPerMilestone => 'Pago por hito';
+
+  @override
+  String merchantFarmerFunder(String farmer, String funder, String company) {
+    return 'Agricultor: $farmer · Financiador: $funder ($company)';
+  }
+
+  @override
+  String merchantContactFarmer(String name) {
+    return 'Contactar a $name';
+  }
+
+  @override
+  String get merchantFundPlot => 'Financiar parcela';
+
+  @override
+  String get merchantFundTitle => 'Financiar parcela';
+
+  @override
+  String get merchantTotalInvestment => 'INVERSIÓN TOTAL';
+
+  @override
+  String get merchantListedAmount => 'Monto publicado por el agricultor';
+
+  @override
+  String get merchantFixedAmount => 'Monto fijo';
+
+  @override
+  String get merchantDisbursement => 'PLAN DE DESEMBOLSOS';
+
+  @override
+  String get merchantEscrowHow => 'CÓMO TE PROTEGE ESCROW';
+
+  @override
+  String get merchantEscrowSafe => 'Tus fondos quedan seguros';
+
+  @override
+  String get merchantEscrowApprove => 'Apruebas cada evidencia';
+
+  @override
+  String get merchantEscrowHarvest => 'Recibes tu cosecha';
+
+  @override
+  String get merchantPaymentMethodTitle => 'MÉTODO DE PAGO';
+
+  @override
+  String get merchantPayCard => 'Tarjeta';
+
+  @override
+  String get merchantPayWallet => 'Billetera';
+
+  @override
+  String get merchantPayAgent => 'Depósito en agente';
+
+  @override
+  String get merchantPayBank => 'Transferencia bancaria';
+
+  @override
+  String get merchantFundTerms =>
+      'He leído y acepto los términos del acuerdo de financiamiento con escrow';
+
+  @override
+  String get merchantAcceptFirst => 'Acepta los términos primero';
+
+  @override
+  String get merchantContinue => 'Continuar';
+
+  @override
+  String merchantConfirmAndPay(String amount) {
+    return 'Confirmar y pagar $amount';
+  }
+
+  @override
+  String get merchantFinancingConfirmed => 'Financiamiento confirmado';
+
+  @override
+  String merchantFinancingConfirmedBody(String name, String method) {
+    return '$name ya está financiada con $method y los fondos están en custodia.';
+  }
+
+  @override
+  String get merchantBackToMyPlots => 'Volver a mis parcelas';
+
+  @override
+  String get merchantPayFailed => 'No se pudo registrar el pago.';
+
+  @override
+  String get merchantFundSuccessTitle => 'Pago confirmado';
+
+  @override
+  String get merchantFundsSecured => 'Fondos asegurados en Escrow';
+
+  @override
+  String merchantSuccessBody(String plot, String farmer) {
+    return '$plot ya está financiada.\n$farmer recibió una confirmación.';
+  }
+
+  @override
+  String get merchantAmountFunded => 'Monto financiado';
+
+  @override
+  String get merchantPaymentMethodLabel => 'Método de pago';
+
+  @override
+  String get merchantReceiptStatus => 'Estado';
+
+  @override
+  String get merchantHeldInEscrow => 'Fondos retenidos en Escrow';
+
+  @override
+  String get merchantReceiptDate => 'Fecha';
+
+  @override
+  String get merchantReleaseNote =>
+      'Los pagos se liberarán al agricultor a medida que apruebes cada hito.';
+
+  @override
+  String get merchantViewFinancedPlot => 'Ver parcela financiada';
+
+  @override
+  String get merchantDownloadReceipt => 'Descargar recibo';
+
+  @override
+  String merchantReceiptSaved(String path) {
+    return 'Recibo guardado en $path';
+  }
+
+  @override
+  String get merchantReceiptSaveFailed => 'No se pudo guardar el recibo.';
+
+  @override
+  String get muyuContactMissing => 'No hay un correo de contacto válido disponible.';
+
+  @override
+  String get muyuContactUnavailable => 'No se pudo abrir una aplicación de correo.';
+
+  @override
+  String get merchantVisitRequestTitle => 'Solicitar visita';
+
+  @override
+  String get merchantVisitStatusTitle => 'Solicitud de visita';
+
+  @override
+  String get merchantVisitProposedDate => 'FECHA PROPUESTA';
+
+  @override
+  String get merchantVisitPreferredTime => 'HORA PREFERIDA';
+
+  @override
+  String get merchantVisitMessage => 'Mensaje al agricultor (opcional)';
+
+  @override
+  String get merchantVisitMessageHint => 'Me gustaría revisar el sistema de riego';
+
+  @override
+  String get merchantVisitDisclaimer =>
+      'Solicitar una visita no reserva ni financia la parcela. El agricultor registrará si se llegó a un acuerdo.';
+
+  @override
+  String get merchantVisitSending => 'Enviando…';
+
+  @override
+  String merchantVisitSendError(String error) {
+    return 'No se pudo enviar la solicitud de visita: $error';
+  }
+
+  @override
+  String get merchantVisitSend => 'Enviar solicitud';
+
+  @override
+  String get merchantVisitSent => 'Solicitud enviada';
+
+  @override
+  String merchantVisitSentBody(String name) {
+    return '$name recibió tu propuesta de visita.';
+  }
+
+  @override
+  String merchantVisitToPlot(String name) {
+    return 'Visita a $name';
+  }
+
+  @override
+  String get merchantVisitDate => 'Fecha';
+
+  @override
+  String get merchantVisitTime => 'Hora';
+
+  @override
+  String get merchantVisitPlace => 'Lugar';
+
+  @override
+  String get merchantVisitCoordinationOnly =>
+      'Solo coordinación de visita. No reserva ni financia la parcela. No hay cargos ni depósito en Escrow.';
+
+  @override
+  String get merchantVisitBackPlot => 'Volver a la parcela';
+
+  @override
+  String get merchantVisitConfirmed => 'Visita confirmada';
+
+  @override
+  String merchantVisitConfirmedBody(String name) {
+    return '$name aceptó tu propuesta de visita.';
+  }
+
+  @override
+  String get merchantVisitMeetingPoint => 'Punto de encuentro';
+
+  @override
+  String get merchantVisitMeetingHint =>
+      'Entrada de la parcela cerca de la vía principal. Coordina con el agricultor antes de llegar.';
+
+  @override
+  String get merchantViewEvidence => 'Ver evidencia';
+
+  @override
+  String get merchantVisitRequestButton => 'Solicitar visita';
+
+  @override
+  String get merchantHarvestReceiptPending => 'Recepción de cosecha · Pendiente';
+
+  @override
+  String get merchantExactLocation => 'Ubicación exacta';
+
+  @override
+  String get merchantFarmerStats => '12 años de experiencia · 8 parcelas completadas';
+
+  @override
+  String get merchantApprovalRate => '94% de aprobación';
+
+  @override
+  String merchantMilestoneApprovedLine(String date, String amount) {
+    return '$date · Aprobado $amount';
+  }
+
+  @override
+  String merchantMilestoneAwaitingLine(String date, String time, String amount) {
+    return '$date · $time · En revisión · $amount';
+  }
+
+  @override
+  String merchantMilestonePendingLine(String date, String amount) {
+    return '$date · Pendiente $amount';
+  }
+
+  @override
   String get farmerCountryPeru => 'PERÚ';
 
   @override
@@ -1091,7 +1429,30 @@ class AppLocalizationsEs extends AppLocalizations {
   String get weatherHeavyRain => 'Lluvia fuerte prevista';
 
   @override
+  String get weatherModerateRain => 'Lluvia moderada prevista';
+
+  @override
   String get weatherFrost => 'Riesgo de helada';
+
+  @override
+  String get weatherEstTemp => 'Ahora';
+
+  @override
+  String get weatherEstTime => 'Hora estimada';
+
+  @override
+  String get weatherTonight => 'Esta noche';
+
+  @override
+  String get weatherToday => 'Hoy';
+
+  @override
+  String get weatherForecast => 'Pronóstico a 5 días';
+
+  @override
+  String weatherCycle(String year) {
+    return 'Ciclo $year';
+  }
 
   @override
   String get weatherRisk => 'Nivel de riesgo';
@@ -1139,13 +1500,24 @@ class AppLocalizationsEs extends AppLocalizations {
   String get merchantAlertsTitle => 'Alertas';
 
   @override
-  String get merchantAlertsEmpty => 'Aquí aparecerán las alertas de las parcelas financiadas.';
+  String get merchantAlertsEmpty =>
+      'Cuando los agricultores envíen evidencias o pidan prórrogas en tus parcelas financiadas, verás alertas aquí.';
 
   @override
-  String get merchantAlertPayment => 'Evidencia de hito pendiente de revisión';
+  String get merchantAlertPayment => 'Revisión de pago';
 
   @override
-  String get merchantAlertWeather => 'Riesgo climático cerca de la parcela financiada';
+  String get merchantAlertWeather => 'Alerta climática';
+
+  @override
+  String merchantAlertWeatherBody(String plot) {
+    return 'Se espera lluvia fuerte cerca de $plot en las próximas 24 horas.';
+  }
+
+  @override
+  String merchantAlertPaymentBody(String farmer, String milestone, String amount) {
+    return '$farmer envió evidencia de $milestone. Revísala para liberar $amount.';
+  }
 
   @override
   String get resetTitle => 'Recuperar contraseña';
